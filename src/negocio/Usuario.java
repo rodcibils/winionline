@@ -1,10 +1,11 @@
 package negocio;
 
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class Usuario {
 	private int id;
-	private String usuario;
+	private String nombre;
 	private String password;
 	private String email;
 	private Date fechanac;
@@ -14,7 +15,7 @@ public class Usuario {
 	private String skype;
 	private String ip;
 	private String avatar;
-	private int id_rol;
+	private Rol rol;
 	
 	public int getId() {
 		return id;
@@ -24,12 +25,12 @@ public class Usuario {
 		this.id = id;
 	}
 	
-	public String getUsuario() {
-		return usuario;
+	public String getNombre() {
+		return nombre;
 	}
 	
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 	
 	public String getEmail() {
@@ -50,6 +51,11 @@ public class Usuario {
 	
 	public Date getFechanac() {
 		return fechanac;
+	}
+	
+	public void setFechanac(java.util.Date fechanac) {
+		Date sqlDate = new Date(fechanac.getTime());
+		this.fechanac = sqlDate;
 	}
 	
 	public void setFechanac(Date fechanac) {
@@ -104,12 +110,12 @@ public class Usuario {
 		this.avatar = avatar;
 	}
 
-	public int getIdRol() {
-		return id_rol;
+	public Rol getRol() {
+		return rol;
 	}
 
-	public void setIdRol(int id_rol) {
-		this.id_rol = id_rol;
+	public void setRol(Rol rol) {
+		this.rol = rol;
 	}
 	
 }
