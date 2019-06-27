@@ -17,10 +17,11 @@ public class ConnectionManager
 		return instance;
 	}
 	
-	public Connection getConnection() throws SQLException
+	public Connection getConnection() throws SQLException, ClassNotFoundException
 	{
 		if(conn == null)
 		{
+			Class.forName("com.mysql.jdbc.Driver");
 			conn = DriverManager
 					.getConnection("jdbc:mysql://localhost:3306/winionline", "root", 
 							"root");
