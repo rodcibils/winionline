@@ -42,29 +42,9 @@
 	  		<div class="form-group col-5 mx-auto">
 			    <label for="pais" class="text-light">País</label>
 		    	<select class="custom-select" id="pais" name="pais">
-		    		<option selected value="1">Argentina</option>
-		    		<option value="2">Bolivia</option>
-		    		<option value="3">Brasil</option>
-		    		<option value="4">Chile</option>
-		    		<option value="5">Colombia</option>
-		    		<option value="6">Costa Rica</option>
-		    		<option value="7">Ecuador</option>
-		    		<option value="8">El Salvador</option>
-		    		<option value="9">Estados Unidos</option>
-		    		<option value="10">Guatemala</option>
-		    		<option value="11">Haiti</option>
-		    		<option value="12">Honduras</option>
-		    		<option value="13">Jamaica</option>
-		    		<option value="14">Mexico</option>
-		    		<option value="15">Nicaragua</option>
-		    		<option value="16">Panama</option>
-		    		<option value="17">Paraguay</option>
-		    		<option value="18">Peru</option>
-		    		<option value="19">Puerto Rico</option>
-		    		<option value="20">Republica Dominicana</option>
-		    		<option value="21">Uruguay</option>
-		    		<option value="22">Venezuela</option>
-		    		<option value="23">Otro</option>
+		    		<c:forEach items="${paises}" var="pais">
+		    			<option value="${pais.getNombre()}">${pais.getNombre()}</option>
+		    		</c:forEach>
 		    	</select>
 	  		</div>
 	  		<div class="form-group col-5 mx-auto">

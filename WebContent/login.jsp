@@ -19,7 +19,7 @@
 	  		</ul>
 		</form>
 		<ul class="pagination justify-content-center">
-			<li class="page-item"><a href="register.jsp">¿No tiene un usuario? Regístrese aquí</a></li>
+			<li class="page-item"><a href="register">¿No tiene un usuario? Regístrese aquí</a></li>
 		</ul>
 	</jsp:body>
 </t:layout>
