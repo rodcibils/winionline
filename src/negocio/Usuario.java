@@ -11,7 +11,7 @@ public class Usuario {
 	private Date fechanac;
 	private String apodo;
 	private Date ultima_conexion;
-	private String pais;
+	private Pais pais;
 	private String skype;
 	private String ip;
 	private String avatar;
@@ -78,11 +78,11 @@ public class Usuario {
 		this.ultima_conexion = ultima_conexion;
 	}
 	
-	public String getPais() {
+	public Pais getPais() {
 		return pais;
 	}
 	
-	public void setPais(String pais) {
+	public void setPais(Pais pais) {
 		this.pais = pais;
 	}
 	

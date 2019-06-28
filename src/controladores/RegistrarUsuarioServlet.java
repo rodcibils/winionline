@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -13,29 +14,34 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import negocio.Usuario;
-
 /**
  * Servlet implementation class RegistrarUsuarioServlet
  */
 @WebServlet("/register")
 public class RegistrarUsuarioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private ArrayList<negocio.Pais> paises = null;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
     public RegistrarUsuarioServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		try {
+			paises = datos.Pais.getInstance().getAll();
+			request.setAttribute("paises", paises);
+			request.getRequestDispatcher("register.jsp").forward(request, response);
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -49,7 +55,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 		String birthdate = request.getParameter("birthdate");
 		String email = request.getParameter("email");
 		String apodo = request.getParameter("apodo");
-		String pais = request.getParameter("pais");
+		String nombre_pais = request.getParameter("pais");
 		String skype = request.getParameter("skype");
 		String ip = request.getParameter("ip");
 		//TODO: Ver como es el tema de subir un avatar desde la pc del usuario
@@ -106,6 +112,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 			request.setAttribute("old_apodo", apodo);
 			request.setAttribute("old_skype", skype);
 			request.setAttribute("old_ip", ip);
+			request.setAttribute("paises", paises);
 			request.getRequestDispatcher("register.jsp").forward(request, response);
 		} else {
 			negocio.Usuario usuario = new negocio.Usuario();
@@ -116,9 +123,14 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 			usuario.setEmail(email);
 			usuario.setSkype(skype);
 			usuario.setIp(ip);
+			for(negocio.Pais pais : paises) {
+				if(pais.getNombre().equals(nombre_pais)) {
+					usuario.setPais(pais);
+					break;
+				}
+			}
 			//TODO: reemplazar cuando se implemente lo del avatar
 			usuario.setAvatar("prueba");
-			usuario.setPais(pais);
 			datos.Usuario dUsuario = datos.Usuario.getInstance();
 			try {
 				dUsuario.insert(usuario);
