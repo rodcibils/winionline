@@ -87,6 +87,22 @@ CREATE TABLE `ligas` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `paises`
+--
+
+DROP TABLE IF EXISTS `paises`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `paises` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `nombre_UNIQUE` (`nombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `partido_estado`
 --
 
@@ -96,6 +112,7 @@ DROP TABLE IF EXISTS `partido_estado`;
 CREATE TABLE `partido_estado` (
   `id_partido` int(11) NOT NULL,
   `id_estado` int(11) NOT NULL,
+  PRIMARY KEY (`id_partido`,`id_estado`),
   KEY `fk_partido_estado_partido_idx` (`id_partido`),
   KEY `fk_partido_estado_estado_idx` (`id_estado`),
   CONSTRAINT `fk_partido_estado_estado` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id`),
@@ -155,7 +172,7 @@ CREATE TABLE `roles` (
   `descripcion` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -168,6 +185,7 @@ DROP TABLE IF EXISTS `solicitud_estado`;
 CREATE TABLE `solicitud_estado` (
   `id_solicitud` int(11) NOT NULL,
   `id_estado` int(11) NOT NULL,
+  PRIMARY KEY (`id_solicitud`,`id_estado`),
   KEY `fk_solicitud_estado_solicitud_idx` (`id_solicitud`),
   KEY `fk_solicitud_estado_estado_idx` (`id_estado`),
   CONSTRAINT `fk_solicitud_estado_estado` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id`),
@@ -204,6 +222,7 @@ CREATE TABLE `usuario_apelacion` (
   `id_usuario` int(11) NOT NULL,
   `id_apelacion` int(11) NOT NULL,
   `voto` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id_usuario`,`id_apelacion`),
   KEY `fk_usuario_apelacion_usuario_idx` (`id_usuario`),
   KEY `fk_usuario_apelacion_voto_idx` (`voto`),
   CONSTRAINT `fk_usuario_apelacion_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
@@ -222,12 +241,30 @@ CREATE TABLE `usuario_disputa` (
   `id_usuario` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
   `id_voto` int(11) NOT NULL,
+  PRIMARY KEY (`id_usuario`,`id_partido`,`id_voto`),
   KEY `fk_usuario_disputa_usuario_idx` (`id_usuario`),
   KEY `fk_usuario_disputa_partido_idx` (`id_partido`),
   KEY `fk_usuario_disputa_voto_idx` (`id_voto`),
   CONSTRAINT `fk_usuario_disputa_partido` FOREIGN KEY (`id_partido`) REFERENCES `partidos` (`id`),
   CONSTRAINT `fk_usuario_disputa_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_usuario_disputa_voto` FOREIGN KEY (`id_voto`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `usuario_pais`
+--
+
+DROP TABLE IF EXISTS `usuario_pais`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `usuario_pais` (
+  `id_usuario` int(11) NOT NULL,
+  `id_pais` int(11) NOT NULL,
+  PRIMARY KEY (`id_usuario`,`id_pais`),
+  KEY `fk_usuario_pais_pais_idx` (`id_pais`),
+  CONSTRAINT `fk_usuario_pais_pais` FOREIGN KEY (`id_pais`) REFERENCES `paises` (`id`),
+  CONSTRAINT `fk_usuario_pais_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -241,9 +278,9 @@ DROP TABLE IF EXISTS `usuario_rol`;
 CREATE TABLE `usuario_rol` (
   `id_usuario` int(11) NOT NULL,
   `id_rol` int(11) NOT NULL,
-  KEY `fk_rol_idx` (`id_rol`),
-  KEY `fk_usuario_idx` (`id_usuario`),
-  CONSTRAINT `fk_usuario_rol_rol` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  PRIMARY KEY (`id_usuario`,`id_rol`),
+  KEY `fk_usuario_rol_rol_idx` (`id_rol`),
+  CONSTRAINT `fk_usuario_rol_rol` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id`),
   CONSTRAINT `fk_usuario_rol_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -263,14 +300,13 @@ CREATE TABLE `usuarios` (
   `email` varchar(45) DEFAULT NULL,
   `apodo` varchar(20) DEFAULT NULL,
   `ultima_conexion` datetime NOT NULL,
-  `pais` varchar(30) DEFAULT NULL,
   `skype` varchar(45) DEFAULT NULL,
   `ip` varchar(40) DEFAULT NULL,
   `avatar` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `nombre_UNIQUE` (`nombre`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -282,4 +318,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-22 14:23:26
+-- Dump completed on 2019-06-27 23:16:19
