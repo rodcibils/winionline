@@ -252,23 +252,6 @@ CREATE TABLE `usuario_disputa` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `usuario_pais`
---
-
-DROP TABLE IF EXISTS `usuario_pais`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `usuario_pais` (
-  `id_usuario` int(11) NOT NULL,
-  `id_pais` int(11) NOT NULL,
-  PRIMARY KEY (`id_usuario`,`id_pais`),
-  KEY `fk_usuario_pais_pais_idx` (`id_pais`),
-  CONSTRAINT `fk_usuario_pais_pais` FOREIGN KEY (`id_pais`) REFERENCES `paises` (`id`),
-  CONSTRAINT `fk_usuario_pais_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `usuario_rol`
 --
 
@@ -299,14 +282,17 @@ CREATE TABLE `usuarios` (
   `fechanac` datetime DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `apodo` varchar(20) DEFAULT NULL,
-  `ultima_conexion` datetime NOT NULL,
+  `ultima_conexion` timestamp(6) NOT NULL,
   `skype` varchar(45) DEFAULT NULL,
   `ip` varchar(40) DEFAULT NULL,
   `avatar` varchar(45) NOT NULL,
+  `pais` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `nombre_UNIQUE` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `nombre_UNIQUE` (`nombre`),
+  KEY `fk_usuarios_pais_idx` (`pais`),
+  CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -318,4 +304,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-27 23:16:19
+-- Dump completed on 2019-06-28 22:25:06
