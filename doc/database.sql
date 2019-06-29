@@ -282,7 +282,7 @@ CREATE TABLE `usuarios` (
   `fechanac` datetime DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `apodo` varchar(20) DEFAULT NULL,
-  `ultima_conexion` datetime NOT NULL,
+  `ultima_conexion` timestamp(6) NOT NULL,
   `skype` varchar(45) DEFAULT NULL,
   `ip` varchar(40) DEFAULT NULL,
   `avatar` varchar(45) NOT NULL,

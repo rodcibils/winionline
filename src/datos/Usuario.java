@@ -1,11 +1,12 @@
 package datos;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class Usuario {
 	
@@ -37,8 +38,9 @@ public class Usuario {
 		stmt.setString(4, usuario.getEmail());
 		stmt.setString(5, usuario.getApodo());
 		// la fecha de ultima conexion al registrar usuario es la fecha del registro mismo
-		Date todayDate = new Date(System.currentTimeMillis());
-		stmt.setDate(6, todayDate);
+		LocalDateTime todayDate = LocalDateTime.now();
+		Timestamp timestamp = Timestamp.valueOf(todayDate);
+		stmt.setTimestamp(6, timestamp);;
 		stmt.setString(7, usuario.getSkype());
 		stmt.setString(8, usuario.getIp());
 		stmt.setString(9, usuario.getAvatar());

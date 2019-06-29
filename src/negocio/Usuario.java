@@ -1,7 +1,7 @@
 package negocio;
 
 import java.sql.Date;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 public class Usuario {
 	private int id;
@@ -10,7 +10,7 @@ public class Usuario {
 	private String email;
 	private Date fechanac;
 	private String apodo;
-	private Date ultima_conexion;
+	private Timestamp ultima_conexion;
 	private Pais pais;
 	private String skype;
 	private String ip;
@@ -70,11 +70,11 @@ public class Usuario {
 		this.apodo = apodo;
 	}
 	
-	public Date getUltima_conexion() {
+	public Timestamp getUltimaConexion() {
 		return ultima_conexion;
 	}
 	
-	public void setUltima_conexion(Date ultima_conexion) {
+	public void setUltimaConexion(Timestamp ultima_conexion) {
 		this.ultima_conexion = ultima_conexion;
 	}
 	
