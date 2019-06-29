@@ -133,11 +133,25 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 			usuario.setAvatar("prueba");
 			datos.Usuario dUsuario = datos.Usuario.getInstance();
 			try {
-				dUsuario.insert(usuario);
+				if(!dUsuario.checkIfUserExists(usuario.getNombre())) {
+					dUsuario.insert(usuario);
+					response.sendRedirect("login.jsp");
+				} else {
+					request.setAttribute("err_nombre", "Ya existe un usuario con ese nombre");
+					request.setAttribute("old_nombre", nombre);
+					request.setAttribute("old_pass", password);
+					request.setAttribute("old_rpass", repeatedPassword);
+					request.setAttribute("old_birthdate", birthdate);
+					request.setAttribute("old_email", email);
+					request.setAttribute("old_apodo", apodo);
+					request.setAttribute("old_skype", skype);
+					request.setAttribute("old_ip", ip);
+					request.setAttribute("paises", paises);
+					request.getRequestDispatcher("register.jsp").forward(request, response);
+				}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
-			response.sendRedirect("login.jsp");
 		}
 	}
 }
