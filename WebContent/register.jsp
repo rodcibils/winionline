@@ -55,10 +55,6 @@
 			    <label for="ip" class="text-light">Dirección IP</label>
 		    	<input type="text" maxlength="40" size="40" class="form-control" id="ip" name="ip" value="${old_ip}" placeholder="Ingrese su dirección IP aquí">
 	  		</div>
-	  		<div class="form-group col-5 mx-auto">
-			    <label for="avatar" class="text-light">Avatar</label>
-		    	<input type="file" class="form-control-file" id="avatar" name="avatar">
-	  		</div>
 	  		<ul class="pagination justify-content-center">
 	  			<li class="page-item"><button type="submit" class="btn btn-primary">Registrarse</button></li>
 	  		</ul>

@@ -58,8 +58,6 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 		String nombre_pais = request.getParameter("pais");
 		String skype = request.getParameter("skype");
 		String ip = request.getParameter("ip");
-		//TODO: Ver como es el tema de subir un avatar desde la pc del usuario
-		String avatar = request.getParameter("avatar");
 		
 		boolean isValid = true;
 		
@@ -129,8 +127,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 					break;
 				}
 			}
-			//TODO: reemplazar cuando se implemente lo del avatar
-			usuario.setAvatar("prueba");
+			
 			datos.Usuario dUsuario = datos.Usuario.getInstance();
 			try {
 				if(!dUsuario.checkIfUserExists(usuario.getNombre())) {
