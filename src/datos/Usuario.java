@@ -28,7 +28,7 @@ public class Usuario {
 		Connection conn = manager.getConnection();
 		
 		String query = "INSERT INTO usuarios(nombre, password, fechanac, email, apodo, " +
-				"ultima_conexion, skype, ip, avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"ultima_conexion, skype, ip, avatar, pais) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		stmt.setString(1, usuario.getNombre());
@@ -42,33 +42,15 @@ public class Usuario {
 		stmt.setString(7, usuario.getSkype());
 		stmt.setString(8, usuario.getIp());
 		stmt.setString(9, usuario.getAvatar());
+		stmt.setInt(10, usuario.getPais().getId());
 		
 		stmt.execute();
 		ResultSet rs = stmt.getGeneratedKeys();
 		if(rs.next()) {
 			int usuarioId = rs.getInt(1);
 			setNuevoUsuarioRol(usuarioId);
-			setNuevoUsuarioPais(usuarioId, usuario.getPais().getId());
 		}
 		rs.close();
-		stmt.close();
-		manager.closeConnection();
-	}
-	
-	public void setNuevoUsuarioPais(int id_usuario, int id_pais) 
-			throws ClassNotFoundException, SQLException
-	{
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		
-		String query = "INSERT INTO usuario_pais(id_usuario, id_pais) VALUES (?, ?)";
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, id_usuario);
-		stmt.setInt(2, id_pais);
-		
-		stmt.execute();
 		stmt.close();
 		manager.closeConnection();
 	}
