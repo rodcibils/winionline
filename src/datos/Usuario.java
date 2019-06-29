@@ -74,4 +74,26 @@ public class Usuario {
 		stmt.close();
 		manager.closeConnection();
 	}
+	
+	public boolean checkIfUserExists(String nombre) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "SELECT id FROM usuarios WHERE nombre=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setString(1, nombre);
+		
+		ResultSet rs = stmt.executeQuery();
+		boolean result = false;
+		if(rs.next()) {
+			result = true;
+		}
+		
+		stmt.close();
+		manager.closeConnection();
+		return result;
+	}
 }
