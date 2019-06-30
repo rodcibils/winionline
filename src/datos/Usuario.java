@@ -28,8 +28,9 @@ public class Usuario {
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "INSERT INTO usuarios(nombre, password, fechanac, email, apodo, " +
-				"ultima_conexion, skype, ip, pais, avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String query = "INSERT INTO usuarios(nombre, password, fechanac, email, apodo, "
+				+ "ultima_conexion, skype, ip, avatar, pais, rol) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		stmt.setString(1, usuario.getNombre());
@@ -42,33 +43,30 @@ public class Usuario {
 		Timestamp timestamp = Timestamp.valueOf(todayDate);
 		stmt.setTimestamp(6, timestamp);;
 		stmt.setString(7, usuario.getSkype());
-		stmt.setString(8, usuario.getIp());
-		stmt.setInt(9, usuario.getPais().getId());
-		stmt.setString(10, usuario.getAvatar());
+		stmt.setString(8, usuario.getIp());		
+		stmt.setString(9, usuario.getAvatar());
+		stmt.setInt(10, usuario.getPais().getId());
+		// seteo como predeterminado el rol como jugador
+		stmt.setInt(11, ROL_JUGADOR);	
+		
 		
 		stmt.execute();
-		ResultSet rs = stmt.getGeneratedKeys();
-		if(rs.next()) {
-			int usuarioId = rs.getInt(1);
-			setNuevoUsuarioRol(usuarioId);
-		}
-		rs.close();
 		stmt.close();
 		manager.closeConnection();
 	}
 	
-	public void setNuevoUsuarioRol(int id) throws SQLException, ClassNotFoundException
+	
+	public void updateUsuarioRol(int rol, int id) throws SQLException, ClassNotFoundException
 	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "INSERT INTO usuario_rol(id_usuario, id_rol) VALUES (?, ?)";
+		String query = "update usuarios set rol = ? where id = ?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, id);
-		// todos los usuarios nuevos tienen el rol de jugador por defecto
-		stmt.setInt(2, ROL_JUGADOR);
+		stmt.setInt(1, rol);
+		stmt.setInt(2, id);
 		
 		stmt.execute();
 		stmt.close();
@@ -96,4 +94,30 @@ public class Usuario {
 		manager.closeConnection();
 		return result;
 	}
+	public negocio.Usuario autenticate(String usermail, String password)throws SQLException, Exception  {
+		// usuario a devolver
+		negocio.Usuario usuario = new negocio.Usuario();
+		
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		// busco el usuario con el email y contraseña
+        String query = "SELECT * FROM usuarios WHERE email=? and password=?";
+        stmt = conn.prepareStatement(query);
+        stmt.setString(1, usermail);
+        stmt.setString(2, password);
+        
+        ResultSet rs = stmt.executeQuery();
+
+        if(rs.next()){
+            usuario.setId(rs.getInt(1));
+            usuario.setNombre(rs.getString(2));
+            usuario.setEmail(rs.getString(4));
+        } else {
+            return null;
+        }
+        stmt.close();
+		manager.closeConnection();
+        return usuario;
+    }
 }

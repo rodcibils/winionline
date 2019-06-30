@@ -6,14 +6,16 @@
 </head>
 <t:layout>
 	<jsp:body>
-		<form>
+		<form action="login" method="post">
 			<div class="form-group col-5 mx-auto">
 			    <label for="userEmail" class="text-light">Email</label>
-			    <input type="email" class="form-control" id="userEmail" placeholder="Ingrese su Email aquí">
+			    <input type="email" class="form-control" id="userEmail" name='userEmail' value='${old_nombre}' placeholder="Ingrese su Email aquí">
+			    <small class="form-text" style="color:red">${err_email}</small>
 		  	</div>
 		  	<div class="form-group col-5 mx-auto">
 			    <label for="userPassword" class="text-light">Password</label>
-		    	<input type="password" class="form-control" id="userPassword" placeholder="Password">
+		    	<input type="password" class="form-control" id="userPassword" name='userPassword' placeholder="Password">
+		    	<small class="form-text" style="color:red">${err_pass}</small>
 	  		</div>
 	  		<ul class="pagination justify-content-center">
 	  			<li class="page-item"><button type="submit" class="btn btn-primary">Ingresar</button></li>
