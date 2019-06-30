@@ -268,7 +268,7 @@ CREATE TABLE `usuarios` (
   `ultima_conexion` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `skype` varchar(45) DEFAULT NULL,
   `ip` varchar(40) DEFAULT NULL,
-  `avatar` varchar(45) NOT NULL,
+  `avatar` varchar(200) DEFAULT NULL,
   `pais` int(11) NOT NULL,
   `rol` int(11) NOT NULL,
   PRIMARY KEY (`id`),
@@ -278,7 +278,7 @@ CREATE TABLE `usuarios` (
   KEY `fk_usuarios_rol_idx` (`rol`),
   CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`),
   CONSTRAINT `fk_usuarios_rol` FOREIGN KEY (`rol`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -290,4 +290,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-30 17:36:17
+-- Dump completed on 2019-06-30 18:50:39

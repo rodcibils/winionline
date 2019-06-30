@@ -1,6 +1,11 @@
 package controladores;
 
+import java.awt.Image;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.sql.SQLException;
@@ -8,16 +13,22 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import utils.Utils;
 
 /**
  * Servlet implementation class RegistrarUsuarioServlet
  */
 @WebServlet("/register")
+@MultipartConfig
 public class RegistrarUsuarioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<negocio.Pais> paises = null;
@@ -58,8 +69,6 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 		String nombre_pais = request.getParameter("pais");
 		String skype = request.getParameter("skype");
 		String ip = request.getParameter("ip");
-		//TODO: Ver como es el tema de subir un avatar desde la pc del usuario
-		String avatar = request.getParameter("avatar");
 		
 		boolean isValid = true;
 		
@@ -84,6 +93,31 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 		else if(!password.equals(repeatedPassword)) {
 			request.setAttribute("err_rpass", "Las contraseñas no coinciden");
 			isValid = false;
+		}
+		
+		Part filePart = request.getPart("avatar");
+		String fileName = Paths.get(filePart.getSubmittedFileName()).toString();
+		if(fileName != null && !fileName.isEmpty()) {
+			if(!fileName.contains(".jpg") && !fileName.contains(".jpeg") && 
+					!fileName.contains(".png")) 
+			{
+				request.setAttribute("err_avatar", "El formato de imagen cargado no es valido");
+				isValid = false;
+			} else {
+				try(InputStream stream = filePart.getInputStream()){
+					Image image = ImageIO.read(stream);
+					int width = image.getWidth(null);
+					int height = image.getHeight(null);
+					if(width > 500 || height > 500) {
+						isValid = false;
+						request.setAttribute("err_avatar", 
+								"El tamaño maximo permitido para el avatar es de 500x500");
+					}
+				} catch (Exception e) {
+					isValid = false;
+					request.setAttribute("err_avatar", "Error al subir la imagen al servidor");
+				}
+			}
 		}
 		
 		Date fechanac = null;
@@ -129,11 +163,22 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 					break;
 				}
 			}
-			//TODO: reemplazar cuando se implemente lo del avatar
-			usuario.setAvatar("prueba");
+			
 			datos.Usuario dUsuario = datos.Usuario.getInstance();
 			try {
 				if(!dUsuario.checkIfUserExists(usuario.getNombre())) {
+					if(fileName != null && !fileName.isEmpty()) {
+						String fileExt = Utils.getFileExtension(fileName);
+						File file = new File("/media/datos/eclipse-java/winionline/avatars/", 
+								usuario.getNombre() + "." + fileExt);
+						try(InputStream stream = filePart.getInputStream()){
+							Files.copy(stream, file.toPath());
+							usuario.setAvatar(file.toPath().toString());
+							System.out.println(file.toPath().toString());
+						} catch(Exception e) {
+							System.out.println(e.getMessage());
+						}
+					}
 					dUsuario.insert(usuario);
 					response.sendRedirect("login.jsp");
 				} else {

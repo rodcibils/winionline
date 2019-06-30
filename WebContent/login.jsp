@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
-
+<head>
+	<title>Winionline | Iniciar Sesion</title>
+</head>
 <t:layout>
-	<jsp:attribute name="title">Login</jsp:attribute>
 	<jsp:body>
 		<form action="login" method="post">
 			<div class="form-group col-5 mx-auto">
