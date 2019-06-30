@@ -1,15 +1,15 @@
-CREATE DATABASE  IF NOT EXISTS `winionline` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `winionline` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `winionline`;
--- MySQL dump 10.13  Distrib 8.0.16, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
 --
 -- Host: localhost    Database: winionline
 -- ------------------------------------------------------
--- Server version	8.0.16
+-- Server version	5.7.26-0ubuntu0.18.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
- SET NAMES utf8 ;
+/*!40101 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -23,7 +23,7 @@ USE `winionline`;
 
 DROP TABLE IF EXISTS `apelaciones`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `apelaciones` (
   `id_disputa` int(11) NOT NULL,
   `fecha` datetime DEFAULT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `apelaciones` (
 
 DROP TABLE IF EXISTS `disputas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `disputas` (
   `id` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE `disputas` (
 
 DROP TABLE IF EXISTS `estados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `estados` (
   `id` int(11) NOT NULL,
   `descripcion` varchar(45) NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE `estados` (
 
 DROP TABLE IF EXISTS `ligas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `ligas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
@@ -92,14 +92,14 @@ CREATE TABLE `ligas` (
 
 DROP TABLE IF EXISTS `paises`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `paises` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `nombre_UNIQUE` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -108,7 +108,7 @@ CREATE TABLE `paises` (
 
 DROP TABLE IF EXISTS `partido_estado`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `partido_estado` (
   `id_partido` int(11) NOT NULL,
   `id_estado` int(11) NOT NULL,
@@ -126,7 +126,7 @@ CREATE TABLE `partido_estado` (
 
 DROP TABLE IF EXISTS `partidos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `partidos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_uno` int(11) NOT NULL,
@@ -147,7 +147,7 @@ CREATE TABLE `partidos` (
 
 DROP TABLE IF EXISTS `resultados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `resultados` (
   `id_jugador` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE `resultados` (
 
 DROP TABLE IF EXISTS `roles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) DEFAULT NULL,
@@ -181,7 +181,7 @@ CREATE TABLE `roles` (
 
 DROP TABLE IF EXISTS `solicitud_estado`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `solicitud_estado` (
   `id_solicitud` int(11) NOT NULL,
   `id_estado` int(11) NOT NULL,
@@ -199,7 +199,7 @@ CREATE TABLE `solicitud_estado` (
 
 DROP TABLE IF EXISTS `solicitudes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `solicitudes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_partido` int(11) DEFAULT NULL,
@@ -217,7 +217,7 @@ CREATE TABLE `solicitudes` (
 
 DROP TABLE IF EXISTS `usuario_apelacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `usuario_apelacion` (
   `id_usuario` int(11) NOT NULL,
   `id_apelacion` int(11) NOT NULL,
@@ -236,7 +236,7 @@ CREATE TABLE `usuario_apelacion` (
 
 DROP TABLE IF EXISTS `usuario_disputa`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `usuario_disputa` (
   `id_usuario` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
@@ -252,29 +252,12 @@ CREATE TABLE `usuario_disputa` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `usuario_rol`
---
-
-DROP TABLE IF EXISTS `usuario_rol`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `usuario_rol` (
-  `id_usuario` int(11) NOT NULL,
-  `id_rol` int(11) NOT NULL,
-  PRIMARY KEY (`id_usuario`,`id_rol`),
-  KEY `fk_usuario_rol_rol_idx` (`id_rol`),
-  CONSTRAINT `fk_usuario_rol_rol` FOREIGN KEY (`id_rol`) REFERENCES `roles` (`id`),
-  CONSTRAINT `fk_usuario_rol_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `usuarios`
 --
 
 DROP TABLE IF EXISTS `usuarios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(20) NOT NULL,
@@ -282,17 +265,20 @@ CREATE TABLE `usuarios` (
   `fechanac` datetime DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `apodo` varchar(20) DEFAULT NULL,
-  `ultima_conexion` timestamp(6) NOT NULL,
+  `ultima_conexion` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
   `skype` varchar(45) DEFAULT NULL,
   `ip` varchar(40) DEFAULT NULL,
   `avatar` varchar(45) NOT NULL,
   `pais` int(11) NOT NULL,
+  `rol` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `nombre_UNIQUE` (`nombre`),
   KEY `fk_usuarios_pais_idx` (`pais`),
-  CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+  KEY `fk_usuarios_rol_idx` (`rol`),
+  CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`),
+  CONSTRAINT `fk_usuarios_rol` FOREIGN KEY (`rol`) REFERENCES `roles` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -304,4 +290,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-28 22:25:06
+-- Dump completed on 2019-06-30 17:36:17

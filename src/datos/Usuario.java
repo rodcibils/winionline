@@ -29,7 +29,7 @@ public class Usuario {
 		Connection conn = manager.getConnection();
 		
 		String query = "INSERT INTO usuarios(nombre, password, fechanac, email, apodo, " +
-				"ultima_conexion, skype, ip, avatar, pais) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"ultima_conexion, skype, ip, avatar, pais, rol) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		stmt.setString(1, usuario.getNombre());
@@ -45,30 +45,26 @@ public class Usuario {
 		stmt.setString(8, usuario.getIp());
 		stmt.setString(9, usuario.getAvatar());
 		stmt.setInt(10, usuario.getPais().getId());
+		// seteo como predeterminado el rol como jugador
+		stmt.setInt(11, ROL_JUGADOR);
 		
 		stmt.execute();
-		ResultSet rs = stmt.getGeneratedKeys();
-		if(rs.next()) {
-			int usuarioId = rs.getInt(1);
-			setNuevoUsuarioRol(usuarioId);
-		}
-		rs.close();
 		stmt.close();
 		manager.closeConnection();
 	}
 	
-	public void setNuevoUsuarioRol(int id) throws SQLException, ClassNotFoundException
+	
+	public void updateUsuarioRol(int rol, int id) throws SQLException, ClassNotFoundException
 	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "INSERT INTO usuario_rol(id_usuario, id_rol) VALUES (?, ?)";
+		String query = "update usuarios set rol = ? where id = ?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, id);
-		// todos los usuarios nuevos tienen el rol de jugador por defecto
-		stmt.setInt(2, ROL_JUGADOR);
+		stmt.setInt(1, rol);
+		stmt.setInt(2, id);
 		
 		stmt.execute();
 		stmt.close();
