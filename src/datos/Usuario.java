@@ -92,4 +92,30 @@ public class Usuario {
 		manager.closeConnection();
 		return result;
 	}
+	public negocio.Usuario autenticate(String usermail, String password)throws SQLException, Exception  {
+		// usuario a devolver
+		negocio.Usuario usuario = new negocio.Usuario();
+		
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		// busco el usuario con el email y contraseña
+        String query = "SELECT * FROM usuarios WHERE email=? and password=?";
+        stmt = conn.prepareStatement(query);
+        stmt.setString(1, usermail);
+        stmt.setString(2, password);
+        
+        ResultSet rs = stmt.executeQuery();
+
+        if(rs.next()){
+            usuario.setId(rs.getInt(1));
+            usuario.setNombre(rs.getString(2));
+            usuario.setEmail(rs.getString(4));
+        } else {
+            return null;
+        }
+        stmt.close();
+		manager.closeConnection();
+        return usuario;
+    }
 }
