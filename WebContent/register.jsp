@@ -2,11 +2,12 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<head>
+	<title>Winionline | Registar Nuevo Usuario</title>
+</head>
 <t:layout>
-	<jsp:attribute name="title">Registro</jsp:attribute>
 	<jsp:body>
-		<form action="register" method="post">
+		<form action="register" method="post" enctype="multipart/form-data">
 			<div class="form-group col-5 mx-auto">
 			    <label for="username" class="text-light">Nombre de Usuario</label>
 			    <input type="text" maxlength="20" size="20" class="form-control" id="username" name="username" value="${old_nombre}"  placeholder="Ingrese su nombre de usuario aquí">		    	
@@ -56,8 +57,9 @@
 		    	<input type="text" maxlength="40" size="40" class="form-control" id="ip" name="ip" value="${old_ip}" placeholder="Ingrese su dirección IP aquí">
 	  		</div>
 	  		<div class="form-group col-5 mx-auto">
-			    <label for="avatar" class="text-light">Avatar</label>
-		    	<input type="file" class="form-control-file" id="avatar" name="avatar">
+			    <label for="userAvatar" class="text-light">Subir avatar</label>
+		    	<input type="file" id="userAvatar" name="avatar"/>
+		    	<small class="form-text" style="color:red">${err_avatar}</small>
 	  		</div>
 	  		<ul class="pagination justify-content-center">
 	  			<li class="page-item"><button type="submit" class="btn btn-primary">Registrarse</button></li>

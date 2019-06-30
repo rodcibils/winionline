@@ -29,7 +29,7 @@ public class Usuario {
 		Connection conn = manager.getConnection();
 		
 		String query = "INSERT INTO usuarios(nombre, password, fechanac, email, apodo, " +
-				"ultima_conexion, skype, ip, avatar, pais) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"ultima_conexion, skype, ip, pais, avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		stmt.setString(1, usuario.getNombre());
@@ -43,8 +43,8 @@ public class Usuario {
 		stmt.setTimestamp(6, timestamp);;
 		stmt.setString(7, usuario.getSkype());
 		stmt.setString(8, usuario.getIp());
-		stmt.setString(9, usuario.getAvatar());
-		stmt.setInt(10, usuario.getPais().getId());
+		stmt.setInt(9, usuario.getPais().getId());
+		stmt.setString(10, usuario.getAvatar());
 		
 		stmt.execute();
 		ResultSet rs = stmt.getGeneratedKeys();
