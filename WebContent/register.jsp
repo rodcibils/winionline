@@ -2,9 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<head>
+	<title>Winionline | Registar Nuevo Usuario</title>
+</head>
 <t:layout>
-	<jsp:attribute name="title">Registro</jsp:attribute>
 	<jsp:body>
 		<form action="register" method="post" enctype="multipart/form-data">
 			<div class="form-group col-5 mx-auto">
