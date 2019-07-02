@@ -27,16 +27,31 @@
   			</div>
   		</div>
   	</header>
+  	
+  	<c:if test="${sessionScope.usuario != null}">
+	  	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	  		<a class="navbar-brand" href="#">Menú Principal</a>
+	  		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+	    		<span class="navbar-toggler-icon"></span>
+	  		</button>
+	  		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+	  			<ul class="navbar-nav">
+	  				<li class="nav-item dropdown">
+	  					<a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	  					Administrar
+	  					</a>
+	  					<div class="dropdown-menu" aria-labelledby="navbarAdmin">
+	  						<a class="dropdown-item" href="#">Permisos</a>
+	  					</div>
+	  				</li>
+	  				<li class="nav-item">
+	  					<a class="nav-link" href="login">Cerrar Sesión</a>
+	  				</li>
+	  			</ul>
+	  		</div>
+	  	</nav>
+  	</c:if>
+  	
   	<jsp:doBody/>
-  	<!-- 
-    <ul class="nav justify-content-center">
-	  <li class="nav-item">
-	    <a class="nav-link" href="#">Iniciar Sesión</a>
-	  </li>
-	  <li class="nav-item">
-	    <a class="nav-link" href="#">Registrarse</a>
-	  </li>
-	</ul>
-	 -->   
   </body>
 </html>
