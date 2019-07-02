@@ -7,7 +7,7 @@
 </head>
 <t:layout>
 	<jsp:body>
-		<form action="login" method="post">
+		<form action="login" method="post" style="margin-top:50px">
 			<div class="form-group col-5 mx-auto">
 			    <label for="userEmail" class="text-light">Email</label>
 			    <input type="email" class="form-control" id="userEmail" name='userEmail' value='${old_nombre}' placeholder="Ingrese su Email aquí">

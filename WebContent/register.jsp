@@ -7,7 +7,7 @@
 </head>
 <t:layout>
 	<jsp:body>
-		<form action="register" method="post" enctype="multipart/form-data">
+		<form action="register" method="post" enctype="multipart/form-data" style="margin-top:50px">
 			<div class="form-group col-5 mx-auto">
 			    <label for="username" class="text-light">Nombre de Usuario</label>
 			    <input type="text" maxlength="20" size="20" class="form-control" id="username" name="username" value="${old_nombre}"  placeholder="Ingrese su nombre de usuario aquí">		    	
