@@ -34,6 +34,15 @@ CREATE TABLE `apelaciones` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `apelaciones`
+--
+
+LOCK TABLES `apelaciones` WRITE;
+/*!40000 ALTER TABLE `apelaciones` DISABLE KEYS */;
+/*!40000 ALTER TABLE `apelaciones` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `disputas`
 --
 
@@ -53,6 +62,15 @@ CREATE TABLE `disputas` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `disputas`
+--
+
+LOCK TABLES `disputas` WRITE;
+/*!40000 ALTER TABLE `disputas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `disputas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `estados`
 --
 
@@ -67,6 +85,15 @@ CREATE TABLE `estados` (
   UNIQUE KEY `descripcion_UNIQUE` (`descripcion`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estados`
+--
+
+LOCK TABLES `estados` WRITE;
+/*!40000 ALTER TABLE `estados` DISABLE KEYS */;
+/*!40000 ALTER TABLE `estados` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ligas`
@@ -87,6 +114,15 @@ CREATE TABLE `ligas` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `ligas`
+--
+
+LOCK TABLES `ligas` WRITE;
+/*!40000 ALTER TABLE `ligas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ligas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `paises`
 --
 
@@ -101,6 +137,42 @@ CREATE TABLE `paises` (
   UNIQUE KEY `nombre_UNIQUE` (`nombre`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `paises`
+--
+
+LOCK TABLES `paises` WRITE;
+/*!40000 ALTER TABLE `paises` DISABLE KEYS */;
+INSERT INTO `paises` VALUES (1,'Argentina'),(2,'Brasil'),(3,'Chile'),(5,'Colombia'),(7,'Paraguay'),(4,'Peru'),(6,'Uruguay');
+/*!40000 ALTER TABLE `paises` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `parametros`
+--
+
+DROP TABLE IF EXISTS `parametros`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `parametros` (
+  `parametroid` int(11) NOT NULL AUTO_INCREMENT,
+  `pathavatar` varchar(100) DEFAULT NULL,
+  `key` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`parametroid`),
+  UNIQUE KEY `parametroid_UNIQUE` (`parametroid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `parametros`
+--
+
+LOCK TABLES `parametros` WRITE;
+/*!40000 ALTER TABLE `parametros` DISABLE KEYS */;
+INSERT INTO `parametros` VALUES (1,'/media/datos/eclipse-java/winionline/avatars/','1751993782');
+/*!40000 ALTER TABLE `parametros` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `partido_estado`
@@ -119,6 +191,15 @@ CREATE TABLE `partido_estado` (
   CONSTRAINT `fk_partido_estado_partido` FOREIGN KEY (`id_partido`) REFERENCES `partidos` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `partido_estado`
+--
+
+LOCK TABLES `partido_estado` WRITE;
+/*!40000 ALTER TABLE `partido_estado` DISABLE KEYS */;
+/*!40000 ALTER TABLE `partido_estado` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `partidos`
@@ -142,6 +223,15 @@ CREATE TABLE `partidos` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `partidos`
+--
+
+LOCK TABLES `partidos` WRITE;
+/*!40000 ALTER TABLE `partidos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `partidos` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `resultados`
 --
 
@@ -160,6 +250,15 @@ CREATE TABLE `resultados` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `resultados`
+--
+
+LOCK TABLES `resultados` WRITE;
+/*!40000 ALTER TABLE `resultados` DISABLE KEYS */;
+/*!40000 ALTER TABLE `resultados` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `roles`
 --
 
@@ -174,6 +273,16 @@ CREATE TABLE `roles` (
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles`
+--
+
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'Admin','Administrador'),(2,'Jugador','Usuario jugador comun');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `solicitud_estado`
@@ -194,6 +303,15 @@ CREATE TABLE `solicitud_estado` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `solicitud_estado`
+--
+
+LOCK TABLES `solicitud_estado` WRITE;
+/*!40000 ALTER TABLE `solicitud_estado` DISABLE KEYS */;
+/*!40000 ALTER TABLE `solicitud_estado` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `solicitudes`
 --
 
@@ -210,6 +328,15 @@ CREATE TABLE `solicitudes` (
   CONSTRAINT `fk_solicitudes_partido` FOREIGN KEY (`id_partido`) REFERENCES `partidos` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `solicitudes`
+--
+
+LOCK TABLES `solicitudes` WRITE;
+/*!40000 ALTER TABLE `solicitudes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `solicitudes` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `usuario_apelacion`
@@ -229,6 +356,15 @@ CREATE TABLE `usuario_apelacion` (
   CONSTRAINT `fk_usuario_apelacion_voto` FOREIGN KEY (`voto`) REFERENCES `usuarios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario_apelacion`
+--
+
+LOCK TABLES `usuario_apelacion` WRITE;
+/*!40000 ALTER TABLE `usuario_apelacion` DISABLE KEYS */;
+/*!40000 ALTER TABLE `usuario_apelacion` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `usuario_disputa`
@@ -252,6 +388,15 @@ CREATE TABLE `usuario_disputa` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Dumping data for table `usuario_disputa`
+--
+
+LOCK TABLES `usuario_disputa` WRITE;
+/*!40000 ALTER TABLE `usuario_disputa` DISABLE KEYS */;
+/*!40000 ALTER TABLE `usuario_disputa` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `usuarios`
 --
 
@@ -261,7 +406,7 @@ DROP TABLE IF EXISTS `usuarios`;
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(20) NOT NULL,
-  `password` varchar(20) NOT NULL,
+  `password` varchar(64) NOT NULL,
   `fechanac` datetime DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `apodo` varchar(20) DEFAULT NULL,
@@ -278,8 +423,17 @@ CREATE TABLE `usuarios` (
   KEY `fk_usuarios_rol_idx` (`rol`),
   CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`),
   CONSTRAINT `fk_usuarios_rol` FOREIGN KEY (`rol`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuarios`
+--
+
+LOCK TABLES `usuarios` WRITE;
+/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -290,4 +444,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-30 18:50:39
+-- Dump completed on 2019-07-04 22:29:46

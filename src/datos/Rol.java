@@ -6,33 +6,34 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class Pais {
-	private static Pais instance = null;
+public class Rol {
+	private static Rol instance = null;
 	
-	public static Pais getInstance() {
+	public static Rol getInstance() {
 		if(instance == null) {
-			instance = new Pais();
+			instance = new Rol();
 		}
 		
 		return instance;
 	}
 	
-	public ArrayList<negocio.Pais> getAll() throws SQLException, ClassNotFoundException{
+	public ArrayList<negocio.Rol> getAll() throws SQLException, ClassNotFoundException{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from paises";
+		String query = "SELECT * from roles";
 		
 		stmt = conn.prepareStatement(query);
 		ResultSet rs = stmt.executeQuery();
 		
-		ArrayList<negocio.Pais> paises = new ArrayList<negocio.Pais>();
+		ArrayList<negocio.Rol> roles = new ArrayList<negocio.Rol>();
 		while(rs.next()) {
-			negocio.Pais pais = new negocio.Pais();
-			pais.setId(rs.getInt(1));
-			pais.setNombre(rs.getString(2));
-			paises.add(pais);
+			negocio.Rol rol = new negocio.Rol();
+			rol.setId(rs.getInt(1));
+			rol.setNombre(rs.getString(2));
+			rol.setDescripcion(rs.getString(3));
+			roles.add(rol);
 		}
 		
 		stmt.close();
@@ -40,29 +41,31 @@ public class Pais {
 		conn.close();
 		manager.closeConnection();
 		
-		return paises;
+		return roles;
 	}
 	
-	public negocio.Pais getOne(int id) throws ClassNotFoundException, SQLException{
-		negocio.Pais pais = new negocio.Pais();
+	public negocio.Rol getOne(int id) throws ClassNotFoundException, SQLException{
+		negocio.Rol rol = new negocio.Rol();
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from paises where id=?";
+		String query = "SELECT * from roles where id=?";
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
 		ResultSet rs = stmt.executeQuery();
 		
 		if(rs.next()) {
-			pais.setId(rs.getInt(1));
-			pais.setNombre(rs.getString(2));
+			rol.setId(rs.getInt(1));
+			rol.setNombre(rs.getString(2));
+			rol.setDescripcion(rs.getString(3));
 		}
 		
 		stmt.close();
 		rs.close();
+		conn.close();
 		manager.closeConnection();
 		
-		return pais;
+		return rol;
 	}
 }

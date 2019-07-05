@@ -68,7 +68,7 @@ public class LoginUsuarioServlet extends HttpServlet {
 			try {
 				Usuario user = dUsuario.autenticate(email, password);
 				if(user != null) {
-	                sesion.setAttribute("usuario", user);               
+	                sesion.setAttribute("usuario", user);
 	                response.sendRedirect("index.jsp");
 	                return;
 	            }
