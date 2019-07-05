@@ -181,7 +181,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 						}
 					}
 					dUsuario.insert(usuario);
-					response.sendRedirect("login.jsp");
+					response.sendRedirect("login.jsp?success=true");
 				} else {
 					request.setAttribute("err_nombre", "Ya existe un usuario con ese nombre");
 					request.setAttribute("old_nombre", nombre);
