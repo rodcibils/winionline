@@ -168,8 +168,9 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 			try {
 				if(!dUsuario.checkIfUserExists(usuario.getNombre())) {
 					if(fileName != null && !fileName.isEmpty()) {
+						
 						String fileExt = Utils.getFileExtension(fileName);
-						File file = new File("/media/datos/eclipse-java/winionline/avatars/", 
+						File file = new File(dUsuario.getParametroPath(), 
 								usuario.getNombre() + "." + fileExt);
 						try(InputStream stream = filePart.getInputStream()){
 							Files.copy(stream, file.toPath());
