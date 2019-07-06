@@ -36,14 +36,8 @@
 	  		</button>
 	  		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 	  			<ul class="navbar-nav">
-	  				<li class="nav-item dropdown">
-	  					<a class="nav-link dropdown-toggle" href="#" id="navbarAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	  					Administrar
-	  					</a>
-	  					<div class="dropdown-menu" aria-labelledby="navbarAdmin">
-	  						<a class="dropdown-item" href="#">Permisos</a>
-	  					</div>
-	  				</li>
+	  				<li class="nav-item">
+	  					<a class="nav-link" href="editUser">Editar Usuario</a>
 	  				<li class="nav-item">
 	  					<a class="nav-link" href="login">Cerrar Sesión</a>
 	  				</li>

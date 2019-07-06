@@ -68,18 +68,23 @@ public class Usuario {
 		manager.closeConnection();
 	}
 	
-	
-	public void updateUsuarioRol(int rol, int id) throws SQLException, ClassNotFoundException
+	public void update(negocio.Usuario usuario) throws SQLException, ClassNotFoundException
 	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "update usuarios set rol = ? where id = ?";
+		String query = "UPDATE usuarios SET fechanac=?, apodo=?, skype=?, ip=?, avatar=?, pais=?"
+				+ " WHERE id=?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, rol);
-		stmt.setInt(2, id);
+		stmt.setDate(1, usuario.getFechanac());
+		stmt.setString(2, usuario.getApodo());
+		stmt.setString(3, usuario.getSkype());
+		stmt.setString(4, usuario.getIp());
+		stmt.setString(5, usuario.getAvatar());
+		stmt.setInt(6, usuario.getPais().getId());
+		stmt.setInt(7, usuario.getId());
 		
 		stmt.execute();
 		stmt.close();
@@ -107,6 +112,7 @@ public class Usuario {
 		manager.closeConnection();
 		return result;
 	}
+	
 	public negocio.Usuario login(String username, String password)throws SQLException, Exception  {
 		// encripto contraseña 
 		String key = getParametroKey();
