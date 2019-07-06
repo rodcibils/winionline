@@ -36,11 +36,16 @@
 	  		</button>
 	  		<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 	  			<ul class="navbar-nav">
-	  				<li class="nav-item">
-	  					<a class="nav-link" href="editUser">Editar Usuario</a>
+	  				<li class="nav-item dropdown">
+	  					<a class="nav-link dropdown-toggle" href="#" id="dropUsuario" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Usuario</a>
+	  					<div class="dropdown-menu" aria-labelledby="dropUsuario">
+	  						<a class="dropdown-item" href="editUser">Editar Datos Personales</a>
+	  						<a class="dropdown-item" href="editPassword.jsp">Cambiar Contraseña</a>
+	  					</div>
+	  				</li>
 	  				<li class="nav-item">
 	  					<a class="nav-link" href="login">Cerrar Sesión</a>
-	  				</li>
+	  				</li>	  				
 	  			</ul>
 	  		</div>
 	  	</nav>

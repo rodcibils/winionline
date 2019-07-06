@@ -27,6 +27,29 @@ public class Usuario {
 		return instance;
 	}
 	
+	public void updatePassword(negocio.Usuario usuario) throws Exception
+	{
+		String key = getParametroKey();
+		if (key == null) {
+			key = setParametroKey();
+		}
+		String contrasenaEnc = EncPassword(key, usuario.getPassword());
+		
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "UPDATE usuarios SET password=? WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setString(1, contrasenaEnc);
+		stmt.setInt(2, usuario.getId());
+		
+		stmt.execute();
+		stmt.close();
+		manager.closeConnection();
+	}
+	
 	public void insert(negocio.Usuario usuario) throws Exception 
 	{
 		// recupero clave de encriptacion
