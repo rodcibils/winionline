@@ -91,6 +91,23 @@ public class Usuario {
 		manager.closeConnection();
 	}
 	
+	public void updateUltimaConexion(negocio.Usuario usuario) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "UPDATE usuarios SET ultima_conexion=? WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setTimestamp(1, usuario.getUltimaConexion());
+		stmt.setInt(2, usuario.getId());
+		
+		stmt.execute();
+		stmt.close();
+		manager.closeConnection();
+	}
+	
 	public boolean checkIfUserExists(String nombre) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;

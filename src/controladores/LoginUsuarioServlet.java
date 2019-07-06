@@ -1,6 +1,8 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -67,6 +69,10 @@ public class LoginUsuarioServlet extends HttpServlet {
 			try {
 				Usuario user = dUsuario.login(username, password);
 				if(user != null) {
+					LocalDateTime todayDate = LocalDateTime.now();
+					Timestamp timestamp = Timestamp.valueOf(todayDate);
+					user.setUltimaConexion(timestamp);
+					dUsuario.updateUltimaConexion(user);
 	                sesion.setAttribute("usuario", user);
 	                response.sendRedirect("index.jsp");
 	                return;

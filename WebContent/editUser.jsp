@@ -53,7 +53,7 @@
 	  		</div>
 	  		<div class="form-group col-5 mx-auto">
 	  			<c:if test="${has_avatar == true}">
-	  				<img src="showAvatar"/>
+	  				<img src="showAvatar" width=100 height=100/>
 	  			</c:if>
 			    <label for="userAvatar" class="text-light">Cambiar avatar</label>
 		    	<input type="file" id="userAvatar" name="avatar"/>
