@@ -9,13 +9,13 @@
 	<jsp:body>
 		<form action="login" method="post" style="margin-top:50px">
 			<div class="form-group col-5 mx-auto">
-			    <label for="userEmail" class="text-light">Email</label>
-			    <input type="email" class="form-control" id="userEmail" name='userEmail' value='${old_nombre}' placeholder="Ingrese su Email aquí">
-			    <small class="form-text" style="color:red">${err_email}</small>
+			    <label for="username" class="text-light">Nombre de Usuario</label>
+			    <input type="text" class="form-control" id="username" name='username' value='${old_username}' placeholder="Ingrese su nombre de usuario aquí">
+			    <small class="form-text" style="color:red">${err_username}</small>
 		  	</div>
 		  	<div class="form-group col-5 mx-auto">
-			    <label for="userPassword" class="text-light">Password</label>
-		    	<input type="password" class="form-control" id="userPassword" name='userPassword' placeholder="Password">
+			    <label for="password" class="text-light">Password</label>
+		    	<input type="password" class="form-control" id="password" name='password' placeholder="Ingrese su contraseña aquí">
 		    	<small class="form-text" style="color:red">${err_pass}</small>
 	  		</div>
 	  		<ul class="pagination justify-content-center">

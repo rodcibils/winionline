@@ -108,7 +108,7 @@ public class Usuario {
 		manager.closeConnection();
 		return result;
 	}
-	public negocio.Usuario autenticate(String usermail, String password)throws SQLException, Exception  {
+	public negocio.Usuario login(String username, String password)throws SQLException, Exception  {
 		// encripto contraseña 
 		String key = getParametroKey();
 		String contrasenaEnc = EncPassword(key, password);
@@ -121,9 +121,9 @@ public class Usuario {
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		// busco el usuario con el email y contraseña
-        String query = "SELECT * FROM usuarios WHERE email=? and password=?";
+        String query = "SELECT * FROM usuarios WHERE nombre=? and password=?";
         stmt = conn.prepareStatement(query);
-        stmt.setString(1, usermail);
+        stmt.setString(1, username);
         stmt.setString(2, contrasenaEnc);
         
         ResultSet rs = stmt.executeQuery();

@@ -46,14 +46,14 @@ public class LoginUsuarioServlet extends HttpServlet {
 		
 		// agarro el nombre y contraseña del login
 		datos.Usuario dUsuario = datos.Usuario.getInstance();
-		String email = request.getParameter("userEmail");
-		String password = request.getParameter("userPassword");
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
 		
 		boolean isValid = true;
 		
 		// valido que haya ingresado usuario y contraseña
-		if(email == null || email.isEmpty()){
-			request.setAttribute("err_email", "Debe ingresar usuario");
+		if(username == null || username.isEmpty()){
+			request.setAttribute("err_username", "Debe ingresar nombre de usuario");
 			isValid = false;
 		}	
 		if(password == null || password.isEmpty()) {
@@ -62,11 +62,11 @@ public class LoginUsuarioServlet extends HttpServlet {
 		}
 		
 		if(!isValid) {
-			request.setAttribute("old_nombre", email);
+			request.setAttribute("old_username", username);
 			request.getRequestDispatcher("login.jsp").forward(request, response);
 		} else {
 			try {
-				Usuario user = dUsuario.autenticate(email, password);
+				Usuario user = dUsuario.login(username, password);
 				if(user != null) {
 	                sesion.setAttribute("usuario", user);
 	                response.sendRedirect("index.jsp");
@@ -74,7 +74,7 @@ public class LoginUsuarioServlet extends HttpServlet {
 	            }
 				else {
 					request.setAttribute("err_email", "Usuario y/o contraseña inválida");
-					request.setAttribute("old_nombre", email);
+					request.setAttribute("old_username", username);
 					request.getRequestDispatcher("login.jsp").forward(request, response);
 				}
 			}catch (Exception e) {
