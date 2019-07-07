@@ -16,6 +16,8 @@ public class Usuario {
 	private static Usuario instance = null;
 	private static final int ROL_JUGADOR = 2;
 	private static final int ID_PARAMETRO = 1;
+	private static final int ESTADO_ACTIVO = 1;
+	private static final int ESTADO_ELIMINADO = 2;
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	
 	public static Usuario getInstance()
@@ -97,8 +99,8 @@ public class Usuario {
 		Connection conn = manager.getConnection();
 		
 		String query = "INSERT INTO usuarios(nombre, password, fechanac, email, apodo, "
-				+ "ultima_conexion, skype, ip, avatar, pais, rol) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "ultima_conexion, skype, ip, avatar, pais, rol, estado) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		stmt.setString(1, usuario.getNombre());
@@ -115,8 +117,26 @@ public class Usuario {
 		stmt.setString(9, usuario.getAvatar());
 		stmt.setInt(10, usuario.getPais().getId());
 		// seteo como predeterminado el rol como jugador
-		stmt.setInt(11, ROL_JUGADOR);	
+		stmt.setInt(11, ROL_JUGADOR);
+		stmt.setInt(12, ESTADO_ACTIVO);
 		
+		
+		stmt.execute();
+		stmt.close();
+		manager.closeConnection();
+	}
+	
+	public void delete(negocio.Usuario usuario) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "UPDATE usuarios SET estado=? WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, ESTADO_ELIMINADO);
+		stmt.setInt(2, usuario.getId());
 		
 		stmt.execute();
 		stmt.close();
@@ -199,10 +219,12 @@ public class Usuario {
 		Connection conn = manager.getConnection();
 		
 		// busco el usuario con el email y contraseña
-        String query = "SELECT * FROM usuarios WHERE nombre=? and password=?";
+        String query = "SELECT * FROM usuarios WHERE nombre=? and password=? and "
+        		+ "estado=?";
         stmt = conn.prepareStatement(query);
         stmt.setString(1, username);
         stmt.setString(2, contrasenaEnc);
+        stmt.setInt(3, ESTADO_ACTIVO);
         
         ResultSet rs = stmt.executeQuery();
 

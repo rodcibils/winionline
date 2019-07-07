@@ -78,7 +78,7 @@ public class LoginUsuarioServlet extends HttpServlet {
 	                return;
 	            }
 				else {
-					request.setAttribute("err_email", "Usuario y/o contraseña inválida");
+					request.setAttribute("err_username", "Usuario y/o contraseña inválida");
 					request.setAttribute("old_username", username);
 					request.getRequestDispatcher("login.jsp").forward(request, response);
 				}

@@ -41,6 +41,7 @@
 	  					<div class="dropdown-menu" aria-labelledby="dropUsuario">
 	  						<a class="dropdown-item" href="editUser">Editar Datos Personales</a>
 	  						<a class="dropdown-item" href="editPassword.jsp">Cambiar Contraseña</a>
+	  						<a class="dropdown-item" data-toggle="modal" data-target="#userDeleteModal">Eliminar Usuario</a>
 	  					</div>
 	  				</li>
 	  				<li class="nav-item">
@@ -49,8 +50,28 @@
 	  			</ul>
 	  		</div>
 	  	</nav>
+	  	
+	  	<div id="userDeleteModal" class="modal fade" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Esta seguro que desea eliminar su usuario?</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Perderá acceso a esta cuenta y sólo podrá recuperarlo contactándose con los administradores
+		        de esta página. Toda la información de su cuenta permanecerá guardada en nuestros servidores.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		        <button type="button" class="btn btn-primary" onclick="location.href='deleteUser';">Aceptar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
   	</c:if>
-  	
   	<jsp:doBody/>
   </body>
 </html>
