@@ -27,6 +27,38 @@ public class Usuario {
 		return instance;
 	}
 	
+	public boolean checkPassword(String password, negocio.Usuario usuario) throws SQLException, Exception
+	{
+		String key = getParametroKey();
+		if (key == null) {
+			key = setParametroKey();
+		}
+		String contrasenaEnc = EncPassword(key, password);
+		
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+
+        String query = "SELECT * FROM usuarios WHERE nombre=? and password=?";
+        stmt = conn.prepareStatement(query);
+        stmt.setString(1, usuario.getNombre());
+        stmt.setString(2, contrasenaEnc);
+        
+        ResultSet rs = stmt.executeQuery();
+        
+        boolean result = false;
+        
+        while(rs.next()) {
+        	result = true;
+        }
+        
+        rs.close();
+        stmt.close();
+        manager.closeConnection();
+        
+        return result;
+	}
+	
 	public void updatePassword(negocio.Usuario usuario) throws Exception
 	{
 		String key = getParametroKey();
@@ -165,6 +197,7 @@ public class Usuario {
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
+		
 		// busco el usuario con el email y contraseña
         String query = "SELECT * FROM usuarios WHERE nombre=? and password=?";
         stmt = conn.prepareStatement(query);
@@ -193,7 +226,8 @@ public class Usuario {
 		manager.closeConnection();
 		usuario.setRol(Rol.getInstance().getOne(idRol));
     	usuario.setPais(Pais.getInstance().getOne(idPais));
-        return usuario;
+        
+    	return usuario;
     }
 	
 	public String getParametroKey()throws SQLException, Exception {

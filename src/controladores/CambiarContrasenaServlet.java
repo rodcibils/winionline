@@ -34,10 +34,16 @@ public class CambiarContrasenaServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String oldPassword = request.getParameter("oldPassword");
 		String password = request.getParameter("password");
 		String repeatedPassword = request.getParameter("repeatedPassword");
 		
 		boolean isValid = true;
+		
+		if(oldPassword == null || oldPassword.isEmpty()) {
+			request.setAttribute("err_opass", "Campo obligatorio");
+			isValid = false;
+		}
 		
 		if(password == null || password.isEmpty()) {
 			request.setAttribute("err_pass", "Campo obligatorio");
@@ -63,11 +69,16 @@ public class CambiarContrasenaServlet extends HttpServlet {
 			request.getRequestDispatcher("editPassword.jsp").forward(request, response);
 		} else {
 			negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
-			usuario.setPassword(password);
 			datos.Usuario dUsuario = datos.Usuario.getInstance();
 			try {
-				dUsuario.updatePassword(usuario);
-				response.sendRedirect("index.jsp?password_changed=true");
+				if(dUsuario.checkPassword(oldPassword, usuario)) {
+					usuario.setPassword(password);
+					dUsuario.updatePassword(usuario);
+					response.sendRedirect("index.jsp?password_changed=true");
+				} else {
+					request.setAttribute("err_opass", "La contraseña es incorrecta");
+					request.getRequestDispatcher("editPassword.jsp").forward(request, response);
+				}
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
 			}
