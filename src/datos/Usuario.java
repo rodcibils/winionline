@@ -11,14 +11,13 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Random;
 
+import negocio.Estado;
+
 public class Usuario {
 	
 	private static Usuario instance = null;
 
 	private static final int ID_PARAMETRO = 1;
-	
-	private static final int ESTADO_ACTIVO = 1;
-	private static final int ESTADO_ELIMINADO = 2;
 	
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	
@@ -120,7 +119,7 @@ public class Usuario {
 		stmt.setInt(10, usuario.getPais().getId());
 		// seteo como predeterminado el rol como jugador
 		stmt.setInt(11, datos.Rol.JUGADOR);
-		stmt.setInt(12, ESTADO_ACTIVO);
+		stmt.setInt(12, Estado.USUARIO_ACTIVO);
 		
 		
 		stmt.execute();
@@ -137,7 +136,7 @@ public class Usuario {
 		String query = "UPDATE usuarios SET estado=? WHERE id=?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, ESTADO_ELIMINADO);
+		stmt.setInt(1, Estado.USUARIO_ELIMINADO);
 		stmt.setInt(2, usuario.getId());
 		
 		stmt.execute();
@@ -226,7 +225,7 @@ public class Usuario {
         stmt = conn.prepareStatement(query);
         stmt.setString(1, username);
         stmt.setString(2, contrasenaEnc);
-        stmt.setInt(3, ESTADO_ACTIVO);
+        stmt.setInt(3, Estado.USUARIO_ACTIVO);
         
         ResultSet rs = stmt.executeQuery();
 
@@ -244,6 +243,8 @@ public class Usuario {
         	idPais = rs.getInt(11);
         	idRol = rs.getInt(12);
         } else {
+        	stmt.close();
+    		manager.closeConnection();
             return null;
         }
         stmt.close();

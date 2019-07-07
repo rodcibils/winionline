@@ -92,7 +92,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-INSERT INTO `estados` VALUES (1,'Activo'),(2,'Eliminado');
+INSERT INTO `estados` VALUES (4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -108,10 +108,13 @@ CREATE TABLE `ligas` (
   `nombre` varchar(45) NOT NULL,
   `temporada` int(11) NOT NULL,
   `fecha_inicio` datetime NOT NULL,
-  `fecha_fin` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `fecha_fin` datetime NOT NULL,
+  `estado` int(11) NOT NULL,
+  PRIMARY KEY (`id`,`nombre`,`temporada`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_ligas_estado_idx` (`estado`),
+  CONSTRAINT `fk_ligas_estado` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -427,7 +430,7 @@ CREATE TABLE `usuarios` (
   CONSTRAINT `fk_usuarios_estado` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`),
   CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`),
   CONSTRAINT `fk_usuarios_rol` FOREIGN KEY (`rol`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -448,4 +451,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-06 23:43:32
+-- Dump completed on 2019-07-07 19:33:30
