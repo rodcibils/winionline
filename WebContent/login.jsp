@@ -42,6 +42,22 @@
 				});
 			</script>
 		</c:if>
+		<c:if test="${param.delete_success == true}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Usuario eliminado correctamente</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        Para recuperar tu cuenta deberás comunicarte con los administradores de la web.
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
 		
 	</jsp:body>
 </t:layout>

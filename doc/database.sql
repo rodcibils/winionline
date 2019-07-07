@@ -1,15 +1,15 @@
-CREATE DATABASE  IF NOT EXISTS `winionline` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE  IF NOT EXISTS `winionline` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `winionline`;
--- MySQL dump 10.13  Distrib 5.7.26, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.16, for Linux (x86_64)
 --
 -- Host: localhost    Database: winionline
 -- ------------------------------------------------------
--- Server version	5.7.26-0ubuntu0.18.04.1
+-- Server version	8.0.16
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+ SET NAMES utf8 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -23,7 +23,7 @@ USE `winionline`;
 
 DROP TABLE IF EXISTS `apelaciones`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `apelaciones` (
   `id_disputa` int(11) NOT NULL,
   `fecha` datetime DEFAULT NULL,
@@ -48,7 +48,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `disputas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `disputas` (
   `id` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
@@ -76,7 +76,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `estados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `estados` (
   `id` int(11) NOT NULL,
   `descripcion` varchar(45) NOT NULL,
@@ -92,6 +92,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
+INSERT INTO `estados` VALUES (1,'Activo'),(2,'Eliminado');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -101,7 +102,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `ligas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `ligas` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
@@ -128,7 +129,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `paises`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `paises` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) NOT NULL,
@@ -154,7 +155,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `parametros`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `parametros` (
   `parametroid` int(11) NOT NULL AUTO_INCREMENT,
   `pathavatar` varchar(100) DEFAULT NULL,
@@ -170,7 +171,7 @@ CREATE TABLE `parametros` (
 
 LOCK TABLES `parametros` WRITE;
 /*!40000 ALTER TABLE `parametros` DISABLE KEYS */;
-INSERT INTO `parametros` VALUES (1,'/media/datos/eclipse-java/winionline/avatars/','1751993782');
+INSERT INTO `parametros` VALUES (1,'/media/datos/eclipse-java/winionline/avatars/','1407661933');
 /*!40000 ALTER TABLE `parametros` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -180,7 +181,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `partido_estado`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `partido_estado` (
   `id_partido` int(11) NOT NULL,
   `id_estado` int(11) NOT NULL,
@@ -207,7 +208,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `partidos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `partidos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_uno` int(11) NOT NULL,
@@ -237,7 +238,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `resultados`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `resultados` (
   `id_jugador` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
@@ -264,14 +265,14 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `roles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(45) DEFAULT NULL,
-  `descripcion` varchar(45) DEFAULT NULL,
+  `nombre` varchar(45) NOT NULL,
+  `descripcion` varchar(126) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -280,7 +281,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Admin','Administrador'),(2,'Jugador','Usuario jugador comun');
+INSERT INTO `roles` VALUES (1,'Admin','Con permisos de administrador'),(2,'Jugador','Sin permisos de administrador');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -290,7 +291,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `solicitud_estado`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `solicitud_estado` (
   `id_solicitud` int(11) NOT NULL,
   `id_estado` int(11) NOT NULL,
@@ -317,7 +318,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `solicitudes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `solicitudes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_partido` int(11) DEFAULT NULL,
@@ -344,7 +345,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `usuario_apelacion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `usuario_apelacion` (
   `id_usuario` int(11) NOT NULL,
   `id_apelacion` int(11) NOT NULL,
@@ -372,7 +373,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `usuario_disputa`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `usuario_disputa` (
   `id_usuario` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
@@ -402,7 +403,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `usuarios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `usuarios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(20) NOT NULL,
@@ -416,14 +417,17 @@ CREATE TABLE `usuarios` (
   `avatar` varchar(200) DEFAULT NULL,
   `pais` int(11) NOT NULL,
   `rol` int(11) NOT NULL,
+  `estado` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `nombre_UNIQUE` (`nombre`),
   KEY `fk_usuarios_pais_idx` (`pais`),
   KEY `fk_usuarios_rol_idx` (`rol`),
+  KEY `fk_usuarios_estado_idx` (`estado`),
+  CONSTRAINT `fk_usuarios_estado` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`),
   CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`),
   CONSTRAINT `fk_usuarios_rol` FOREIGN KEY (`rol`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -444,4 +448,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-04 22:29:46
+-- Dump completed on 2019-07-06 23:43:32
