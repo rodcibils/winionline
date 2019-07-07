@@ -157,7 +157,7 @@ public class EditarUsuarioServlet extends HttpServlet {
 				}
 				dUsuario.update(usuario);
 				request.getSession().setAttribute("usuario", usuario);
-				response.sendRedirect("index.jsp");
+				response.sendRedirect("index.jsp?update_success=true");
 			} catch(Exception e) {
 				System.out.print(e.getMessage());
 			}

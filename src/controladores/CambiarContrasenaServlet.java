@@ -67,7 +67,7 @@ public class CambiarContrasenaServlet extends HttpServlet {
 			datos.Usuario dUsuario = datos.Usuario.getInstance();
 			try {
 				dUsuario.updatePassword(usuario);
-				response.sendRedirect("index.jsp");
+				response.sendRedirect("index.jsp?password_changed=true");
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
 			}
