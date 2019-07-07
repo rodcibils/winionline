@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Usuario {
@@ -26,6 +25,61 @@ public class Usuario {
 		}
 		
 		return instance;
+	}
+	
+	public boolean checkPassword(String password, negocio.Usuario usuario) throws SQLException, Exception
+	{
+		String key = getParametroKey();
+		if (key == null) {
+			key = setParametroKey();
+		}
+		String contrasenaEnc = EncPassword(key, password);
+		
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+
+        String query = "SELECT * FROM usuarios WHERE nombre=? and password=?";
+        stmt = conn.prepareStatement(query);
+        stmt.setString(1, usuario.getNombre());
+        stmt.setString(2, contrasenaEnc);
+        
+        ResultSet rs = stmt.executeQuery();
+        
+        boolean result = false;
+        
+        while(rs.next()) {
+        	result = true;
+        }
+        
+        rs.close();
+        stmt.close();
+        manager.closeConnection();
+        
+        return result;
+	}
+	
+	public void updatePassword(negocio.Usuario usuario) throws Exception
+	{
+		String key = getParametroKey();
+		if (key == null) {
+			key = setParametroKey();
+		}
+		String contrasenaEnc = EncPassword(key, usuario.getPassword());
+		
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "UPDATE usuarios SET password=? WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setString(1, contrasenaEnc);
+		stmt.setInt(2, usuario.getId());
+		
+		stmt.execute();
+		stmt.close();
+		manager.closeConnection();
 	}
 	
 	public void insert(negocio.Usuario usuario) throws Exception 
@@ -69,18 +123,40 @@ public class Usuario {
 		manager.closeConnection();
 	}
 	
-	
-	public void updateUsuarioRol(int rol, int id) throws SQLException, ClassNotFoundException
+	public void update(negocio.Usuario usuario) throws SQLException, ClassNotFoundException
 	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "update usuarios set rol = ? where id = ?";
+		String query = "UPDATE usuarios SET fechanac=?, apodo=?, skype=?, ip=?, avatar=?, pais=?"
+				+ " WHERE id=?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, rol);
-		stmt.setInt(2, id);
+		stmt.setDate(1, usuario.getFechanac());
+		stmt.setString(2, usuario.getApodo());
+		stmt.setString(3, usuario.getSkype());
+		stmt.setString(4, usuario.getIp());
+		stmt.setString(5, usuario.getAvatar());
+		stmt.setInt(6, usuario.getPais().getId());
+		stmt.setInt(7, usuario.getId());
+		
+		stmt.execute();
+		stmt.close();
+		manager.closeConnection();
+	}
+	
+	public void updateUltimaConexion(negocio.Usuario usuario) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "UPDATE usuarios SET ultima_conexion=? WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setTimestamp(1, usuario.getUltimaConexion());
+		stmt.setInt(2, usuario.getId());
 		
 		stmt.execute();
 		stmt.close();
@@ -108,7 +184,8 @@ public class Usuario {
 		manager.closeConnection();
 		return result;
 	}
-	public negocio.Usuario autenticate(String usermail, String password)throws SQLException, Exception  {
+	
+	public negocio.Usuario login(String username, String password)throws SQLException, Exception  {
 		// encripto contraseña 
 		String key = getParametroKey();
 		String contrasenaEnc = EncPassword(key, password);
@@ -120,10 +197,11 @@ public class Usuario {
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
+		
 		// busco el usuario con el email y contraseña
-        String query = "SELECT * FROM usuarios WHERE email=? and password=?";
+        String query = "SELECT * FROM usuarios WHERE nombre=? and password=?";
         stmt = conn.prepareStatement(query);
-        stmt.setString(1, usermail);
+        stmt.setString(1, username);
         stmt.setString(2, contrasenaEnc);
         
         ResultSet rs = stmt.executeQuery();
@@ -148,7 +226,8 @@ public class Usuario {
 		manager.closeConnection();
 		usuario.setRol(Rol.getInstance().getOne(idRol));
     	usuario.setPais(Pais.getInstance().getOne(idPais));
-        return usuario;
+        
+    	return usuario;
     }
 	
 	public String getParametroKey()throws SQLException, Exception {

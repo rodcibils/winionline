@@ -6,12 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -25,20 +24,20 @@ import javax.servlet.http.Part;
 import utils.Utils;
 
 /**
- * Servlet implementation class RegistrarUsuarioServlet
+ * Servlet implementation class EditarUsuarioServlet
  */
-@WebServlet("/register")
+@WebServlet("/editUser")
 @MultipartConfig
-public class RegistrarUsuarioServlet extends HttpServlet {
+public class EditarUsuarioServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ArrayList<negocio.Pais> paises = null;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RegistrarUsuarioServlet() {
+    public EditarUsuarioServlet() {
         super();
-        
+        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -48,9 +47,14 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 		try {
 			paises = datos.Pais.getInstance().getAll();
 			request.setAttribute("paises", paises);
-			request.getRequestDispatcher("register.jsp").forward(request, response);
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
+			negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+			String sDate = new SimpleDateFormat("dd/MM/yyyy").format(usuario.getFechanac());
+			request.setAttribute("old_date", sDate);
+			if(usuario.getAvatar() != null && !usuario.getAvatar().isEmpty()) {
+				request.setAttribute("has_avatar", "true");
+			}
+			request.getRequestDispatcher("editUser.jsp").forward(request, response);
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -59,10 +63,6 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		String nombre = request.getParameter("username");
-		String password = request.getParameter("password");
-		String repeatedPassword = request.getParameter("repeatedPassword");
 		String birthdate = request.getParameter("birthdate");
 		String email = request.getParameter("email");
 		String apodo = request.getParameter("apodo");
@@ -71,30 +71,6 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 		String ip = request.getParameter("ip");
 		
 		boolean isValid = true;
-		
-		if(nombre == null || nombre.isEmpty()){
-			request.setAttribute("err_nombre", "Campo obligatorio");
-			isValid = false;
-		}
-		
-		if(password == null || password.isEmpty()) {
-			request.setAttribute("err_pass", "Campo obligatorio");
-			isValid = false;
-		}
-		else if(password.length() < 8 || password.length() > 20) {
-			request.setAttribute("err_pass", "La contraseña debe tener entre 8 y 20 caracteres");
-			isValid = false;
-		}
-		
-		if(repeatedPassword == null || repeatedPassword.isEmpty()) {
-			request.setAttribute("err_rpass", "Campo obligatorio");
-			isValid = false;
-		}
-		else if(!password.equals(repeatedPassword)) {
-			request.setAttribute("err_rpass", "Las contraseñas no coinciden");
-			isValid = false;
-		}
-		
 		Part filePart = request.getPart("avatar");
 		String fileName = Paths.get(filePart.getSubmittedFileName()).toString();
 		if(fileName != null && !fileName.isEmpty()) {
@@ -138,20 +114,19 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 		}
 		
 		if(!isValid) {
-			request.setAttribute("old_nombre", nombre);
-			request.setAttribute("old_pass", password);
-			request.setAttribute("old_rpass", repeatedPassword);
 			request.setAttribute("old_birthdate", birthdate);
 			request.setAttribute("old_email", email);
 			request.setAttribute("old_apodo", apodo);
 			request.setAttribute("old_skype", skype);
 			request.setAttribute("old_ip", ip);
 			request.setAttribute("paises", paises);
-			request.getRequestDispatcher("register.jsp").forward(request, response);
+			negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+			if(usuario.getAvatar() != null && !usuario.getAvatar().isEmpty()) {
+				request.setAttribute("has_avatar", "true");
+			}
+			request.getRequestDispatcher("editUser.jsp").forward(request, response);
 		} else {
-			negocio.Usuario usuario = new negocio.Usuario();
-			usuario.setNombre(nombre);
-			usuario.setPassword(password);
+			negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 			usuario.setApodo(apodo);
 			usuario.setFechanac(fechanac);
 			usuario.setEmail(email);
@@ -163,39 +138,30 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 					break;
 				}
 			}
-			
 			datos.Usuario dUsuario = datos.Usuario.getInstance();
 			try {
-				if(!dUsuario.checkIfUserExists(usuario.getNombre())) {
-					if(fileName != null && !fileName.isEmpty()) {
-						String fileExt = Utils.getFileExtension(fileName);
-						File file = new File(dUsuario.getParametroPath(), 
-								usuario.getNombre() + "." + fileExt);
-						try(InputStream stream = filePart.getInputStream()){
-							Files.copy(stream, file.toPath());
-							usuario.setAvatar(file.toPath().toString());
-						} catch(Exception e) {
-							System.out.println(e.getMessage());
-						}
+				if(fileName != null && !fileName.isEmpty()) {
+					String fileExt = Utils.getFileExtension(fileName);
+					if(usuario.getAvatar() != null && !usuario.getAvatar().isEmpty()) {
+						File old_file = new File(usuario.getAvatar());
+						old_file.delete();
 					}
-					dUsuario.insert(usuario);
-					response.sendRedirect("login.jsp?success=true");
-				} else {
-					request.setAttribute("err_nombre", "Ya existe un usuario con ese nombre");
-					request.setAttribute("old_nombre", nombre);
-					request.setAttribute("old_pass", password);
-					request.setAttribute("old_rpass", repeatedPassword);
-					request.setAttribute("old_birthdate", birthdate);
-					request.setAttribute("old_email", email);
-					request.setAttribute("old_apodo", apodo);
-					request.setAttribute("old_skype", skype);
-					request.setAttribute("old_ip", ip);
-					request.setAttribute("paises", paises);
-					request.getRequestDispatcher("register.jsp").forward(request, response);
+					File file = new File(dUsuario.getParametroPath(),
+							usuario.getNombre() + "." + fileExt);
+					try(InputStream stream = filePart.getInputStream()){
+						Files.copy(stream, file.toPath());
+						usuario.setAvatar(file.toPath().toString());
+					} catch(Exception e) {
+						System.out.println(e.getMessage());
+					}
 				}
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				dUsuario.update(usuario);
+				request.getSession().setAttribute("usuario", usuario);
+				response.sendRedirect("index.jsp?update_success=true");
+			} catch(Exception e) {
+				System.out.print(e.getMessage());
 			}
 		}
 	}
+
 }
