@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Rol {
+	
+	public static int ADMINISTRADOR = 1;
+	public static int JUGADOR = 2;
+	
 	private static Rol instance = null;
 	
 	public static Rol getInstance() {

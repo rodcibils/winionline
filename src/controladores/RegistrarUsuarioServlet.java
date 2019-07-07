@@ -127,7 +127,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 				fechanac = df.parse(birthdate);
 				request.setAttribute("old_date", birthdate);
 			} catch(ParseException e) {
-				request.setAttribute("err_date", "La fecha debe tener formato dd/MMMM/yyyy");
+				request.setAttribute("err_date", "La fecha debe tener formato dd/MM/yyyy");
 				isValid = false;
 			}
 		}
