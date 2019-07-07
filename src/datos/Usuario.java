@@ -14,10 +14,12 @@ import java.util.Random;
 public class Usuario {
 	
 	private static Usuario instance = null;
-	private static final int ROL_JUGADOR = 2;
+
 	private static final int ID_PARAMETRO = 1;
+	
 	private static final int ESTADO_ACTIVO = 1;
 	private static final int ESTADO_ELIMINADO = 2;
+	
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	
 	public static Usuario getInstance()
@@ -117,7 +119,7 @@ public class Usuario {
 		stmt.setString(9, usuario.getAvatar());
 		stmt.setInt(10, usuario.getPais().getId());
 		// seteo como predeterminado el rol como jugador
-		stmt.setInt(11, ROL_JUGADOR);
+		stmt.setInt(11, datos.Rol.JUGADOR);
 		stmt.setInt(12, ESTADO_ACTIVO);
 		
 		

@@ -17,6 +17,10 @@ public class Usuario {
 	private String avatar;
 	private Rol rol;
 	
+	public boolean isAdmin() {
+		return rol.getId() == datos.Rol.ADMINISTRADOR;
+	}
+	
 	public int getId() {
 		return id;
 	}
