@@ -27,9 +27,7 @@
 	  		<div class="form-group col-5 mx-auto">
 			    <label for="birthdate" class="text-light">Fecha de nacimiento</label>
 		    	<input type="text" class="form-control" id="birthdate" name="birthdate" value="${old_birthdate}" placeholder="ej: 12/12/2012">
-		    	<c:forEach items="${err_date}" var="error">
-			    	<small class="form-text" style="color:red">${error}</small>
-			    </c:forEach>
+		    	<small class="form-text" style="color:red">${err_date}</small>
 	  		</div>
 	  		<div class="form-group col-5 mx-auto">
 			    <label for="email" class="text-light">Email</label>
