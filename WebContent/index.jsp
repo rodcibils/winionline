@@ -19,14 +19,22 @@
 						<p class="card-text"><b>Apodo:</b> ${sessionScope.usuario.getApodo()}</p>
 						<p class="card-text"><b>IP:</b> ${sessionScope.usuario.getIp()}</p>
 						<p class="card-text"><b>Skype:</b> ${sessionScope.usuario.getSkype()}</p>
-						<p class="card-text"><b>EMail:</b> ${sessionScope.usuario.getEmail()}</p>
+						<p class="card-text"><b>Email:</b> ${sessionScope.usuario.getEmail()}</p>
 						<p class="card-text"><b>Fecha Nacimiento:</b> <fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${sessionScope.usuario.getFechanac()}"/></p>
 					</div>
 				</div>
 				<div class="card bg-light">
-					<div class="card-header">Amistosos</div>
+					<div class="card-header">Solicitudes de Amistosos Recibidas</div>
 					<div class="card-body">
-						<p class="card-text">No tiene amistosos pendientes</p>
+						<c:choose>
+						<c:when test="${sol_am_rec_pend.size() == 0}">
+						<p class="card-text">No tiene solicitudes de amistoso pendientes de rta.</p>
+						</c:when>
+						<c:when test="${sol_am_rec_pend.size() > 0}">
+						<p class="card-text">Tiene ${sol_am_rec_pend.size()} solicitudes de amistoso pendientes de rta.</p>
+						<a href="#" class="btn btn-primary">Verificar</a>
+						</c:when>
+						</c:choose>
 					</div>
 				</div>
 				<div class="card bg-light">
