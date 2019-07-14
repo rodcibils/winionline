@@ -123,7 +123,6 @@ CREATE TABLE `ligas` (
 
 LOCK TABLES `ligas` WRITE;
 /*!40000 ALTER TABLE `ligas` DISABLE KEYS */;
-INSERT INTO `ligas` VALUES (1,'liga1',1,'2019-07-11 00:00:00','2019-07-15 00:00:00',4);
 /*!40000 ALTER TABLE `ligas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -180,33 +179,6 @@ INSERT INTO `parametros` VALUES (1,'/home/fane/eclipse-workspace/winionline/avat
 UNLOCK TABLES;
 
 --
--- Table structure for table `partido_estado`
---
-
-DROP TABLE IF EXISTS `partido_estado`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `partido_estado` (
-  `id_partido` int(11) NOT NULL,
-  `id_estado` int(11) NOT NULL,
-  PRIMARY KEY (`id_partido`,`id_estado`),
-  KEY `fk_partido_estado_partido_idx` (`id_partido`),
-  KEY `fk_partido_estado_estado_idx` (`id_estado`),
-  CONSTRAINT `fk_partido_estado_estado` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id`),
-  CONSTRAINT `fk_partido_estado_partido` FOREIGN KEY (`id_partido`) REFERENCES `partidos` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `partido_estado`
---
-
-LOCK TABLES `partido_estado` WRITE;
-/*!40000 ALTER TABLE `partido_estado` DISABLE KEYS */;
-/*!40000 ALTER TABLE `partido_estado` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `partidos`
 --
 
@@ -215,15 +187,13 @@ DROP TABLE IF EXISTS `partidos`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `partidos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_uno` int(11) NOT NULL,
-  `id_dos` int(11) NOT NULL,
   `fecha` datetime DEFAULT NULL,
+  `estado` int(11) NOT NULL,
+  `solicitud` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_partidos_uno_idx` (`id_uno`),
-  KEY `fk_partidos_dos_idx` (`id_dos`),
-  CONSTRAINT `fk_partidos_dos` FOREIGN KEY (`id_dos`) REFERENCES `usuarios` (`id`),
-  CONSTRAINT `fk_partidos_uno` FOREIGN KEY (`id_uno`) REFERENCES `usuarios` (`id`)
+  KEY `fk_partidos_solicitudes_idx` (`solicitud`),
+  CONSTRAINT `fk_partidos_solicitudes` FOREIGN KEY (`solicitud`) REFERENCES `solicitudes` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -290,33 +260,6 @@ INSERT INTO `roles` VALUES (1,'Admin','Con permisos de administrador'),(2,'Jugad
 UNLOCK TABLES;
 
 --
--- Table structure for table `solicitud_estado`
---
-
-DROP TABLE IF EXISTS `solicitud_estado`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
- SET character_set_client = utf8mb4 ;
-CREATE TABLE `solicitud_estado` (
-  `id_solicitud` int(11) NOT NULL,
-  `id_estado` int(11) NOT NULL,
-  PRIMARY KEY (`id_solicitud`,`id_estado`),
-  KEY `fk_solicitud_estado_solicitud_idx` (`id_solicitud`),
-  KEY `fk_solicitud_estado_estado_idx` (`id_estado`),
-  CONSTRAINT `fk_solicitud_estado_estado` FOREIGN KEY (`id_estado`) REFERENCES `estados` (`id`),
-  CONSTRAINT `fk_solicitud_estado_solicitud` FOREIGN KEY (`id_solicitud`) REFERENCES `solicitudes` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `solicitud_estado`
---
-
-LOCK TABLES `solicitud_estado` WRITE;
-/*!40000 ALTER TABLE `solicitud_estado` DISABLE KEYS */;
-/*!40000 ALTER TABLE `solicitud_estado` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `solicitudes`
 --
 
@@ -325,12 +268,18 @@ DROP TABLE IF EXISTS `solicitudes`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `solicitudes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_partido` int(11) DEFAULT NULL,
   `fecha` datetime NOT NULL,
+  `estado` int(11) NOT NULL,
+  `jugador_uno` int(11) NOT NULL,
+  `jugador_dos` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `fk_solicitudes_partido_idx` (`id_partido`),
-  CONSTRAINT `fk_solicitudes_partido` FOREIGN KEY (`id_partido`) REFERENCES `partidos` (`id`)
+  KEY `fk_solicitudes_estados_idx` (`estado`),
+  KEY `fk_solicitudes_jugador_uno_idx` (`jugador_uno`),
+  KEY `fk_solicitudes_jugador_dos_idx` (`jugador_dos`),
+  CONSTRAINT `fk_solicitudes_estados` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`),
+  CONSTRAINT `fk_solicitudes_jugador_dos` FOREIGN KEY (`jugador_dos`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `fk_solicitudes_jugador_uno` FOREIGN KEY (`jugador_uno`) REFERENCES `usuarios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -399,6 +348,32 @@ CREATE TABLE `usuario_disputa` (
 LOCK TABLES `usuario_disputa` WRITE;
 /*!40000 ALTER TABLE `usuario_disputa` DISABLE KEYS */;
 /*!40000 ALTER TABLE `usuario_disputa` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `usuario_liga`
+--
+
+DROP TABLE IF EXISTS `usuario_liga`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `usuario_liga` (
+  `id_usuario` int(11) NOT NULL,
+  `id_liga` int(11) NOT NULL,
+  PRIMARY KEY (`id_usuario`,`id_liga`),
+  KEY `fk_usuario_liga_liga_idx` (`id_liga`),
+  CONSTRAINT `fk_usuario_liga_liga` FOREIGN KEY (`id_liga`) REFERENCES `ligas` (`id`),
+  CONSTRAINT `fk_usuario_liga_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario_liga`
+--
+
+LOCK TABLES `usuario_liga` WRITE;
+/*!40000 ALTER TABLE `usuario_liga` DISABLE KEYS */;
+/*!40000 ALTER TABLE `usuario_liga` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -476,6 +451,10 @@ END */ ;;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;;
 DELIMITER ;
 /*!50106 SET TIME_ZONE= @save_time_zone */ ;
+
+--
+-- Dumping routines for database 'winionline'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -486,4 +465,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-12 18:24:21
+-- Dump completed on 2019-07-14  1:41:43

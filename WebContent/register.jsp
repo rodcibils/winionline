@@ -8,6 +8,7 @@
 <t:layout>
 	<jsp:body>
 		<form action="register" method="post" enctype="multipart/form-data" style="margin-top:50px">
+			<h2 class="text-center" style="color:white; margin-bottom:30px;">Registro de Nuevo Usuario</h2>
 			<div class="form-group col-5 mx-auto">
 			    <label for="username" class="text-light">Nombre de Usuario</label>
 			    <input type="text" maxlength="20" size="20" class="form-control" id="username" name="username" value="${old_nombre}"  placeholder="Ingrese su nombre de usuario aquí">		    	
@@ -59,8 +60,8 @@
 		    	<input type="file" id="userAvatar" name="avatar"/>
 		    	<small class="form-text" style="color:red">${err_avatar}</small>
 	  		</div>
-	  		<ul class="pagination justify-content-center">
-	  			<li class="page-item"><button type="submit" class="btn btn-primary">Registrarse</button></li>
+	  		<ul class="pagination justify-content-center" style="margin-top:30px">
+	  			<li class="page-item"><button type="submit" class="btn btn-primary">Aceptar</button></li>
 	  		</ul>
 		</form>
 	</jsp:body>
