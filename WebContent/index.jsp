@@ -2,10 +2,41 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 
 <c:choose>
 	<c:when test="${sessionScope.usuario != null}">
 		<t:layout>
+			<div class="card-columns" style="margin-top:20px; margin-left:20px">
+				<div class="card text-white bg-info text-center">
+					<div class="card-header" style="font-weight:bold">Datos Personales</div>
+					<div>
+						<img src="showAvatar" class="card-img-top img-fluid" alt="user_avatar" width="200px" height="200px">
+					</div>
+					<div class="card-body">
+						<h5 class="card-title" style="font-weight:bold">${sessionScope.usuario.getNombre()}</h5>
+						<p class="card-text"><b>Apodo:</b> ${sessionScope.usuario.getApodo()}</p>
+						<p class="card-text"><b>IP:</b> ${sessionScope.usuario.getIp()}</p>
+						<p class="card-text"><b>Skype:</b> ${sessionScope.usuario.getSkype()}</p>
+						<p class="card-text"><b>EMail:</b> ${sessionScope.usuario.getEmail()}</p>
+						<p class="card-text"><b>Fecha Nacimiento:</b> <fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${sessionScope.usuario.getFechanac()}"/></p>
+					</div>
+				</div>
+				<div class="card bg-light">
+					<div class="card-header">Amistosos</div>
+					<div class="card-body">
+						<p class="card-text">No tiene amistosos pendientes</p>
+					</div>
+				</div>
+				<div class="card bg-light">
+					<div class="card-header">Ligas</div>
+					<div class="card-body">
+						<p class="card-text">No esta participando en ninguna liga</p>
+					</div>
+				</div>
+			</div>
+			
 			<c:if test="${param.update_success == true}">
 				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
 				    <div class="toast-header">
