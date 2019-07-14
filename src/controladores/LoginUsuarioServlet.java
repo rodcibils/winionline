@@ -74,7 +74,7 @@ public class LoginUsuarioServlet extends HttpServlet {
 					user.setUltimaConexion(timestamp);
 					dUsuario.updateUltimaConexion(user);
 	                sesion.setAttribute("usuario", user);
-	                response.sendRedirect("index.jsp");
+	                response.sendRedirect("index");
 	                return;
 	            }
 				else {

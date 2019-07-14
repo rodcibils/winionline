@@ -16,6 +16,7 @@ public class Usuario {
 	private String ip;
 	private String avatar;
 	private Rol rol;
+	private Estado estado;
 	
 	public boolean isAdmin() {
 		return rol.getId() == datos.Rol.ADMINISTRADOR;
@@ -120,6 +121,14 @@ public class Usuario {
 
 	public void setRol(Rol rol) {
 		this.rol = rol;
+	}
+
+	public Estado getEstado() {
+		return estado;
+	}
+
+	public void setEstado(Estado estado) {
+		this.estado = estado;
 	}
 	
 }

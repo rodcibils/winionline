@@ -30,6 +30,42 @@ public class Usuario {
 		return instance;
 	}
 	
+	public negocio.Usuario getOne(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM usuarios WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		
+		ResultSet rs = stmt.executeQuery();
+		negocio.Usuario usuario = null;
+		if(rs.next()) {
+			usuario = new negocio.Usuario();
+			usuario.setId(rs.getInt(1));
+			usuario.setNombre(rs.getString(2));
+			usuario.setPassword(rs.getString(3));
+			usuario.setFechanac(rs.getDate(4));
+			usuario.setEmail(rs.getString(5));
+			usuario.setApodo(rs.getString(6));
+			usuario.setUltimaConexion(rs.getTimestamp(7));
+			usuario.setSkype(rs.getString(8));
+			usuario.setIp(rs.getString(9));
+			usuario.setAvatar(rs.getString(10));
+			usuario.setPais(datos.Pais.getInstance().getOne(rs.getInt(11)));
+			usuario.setRol(datos.Rol.getInstance().getOne(rs.getInt(12)));
+			usuario.setEstado(datos.Estado.getInstance().getOne(rs.getInt(13)));
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return usuario;
+	}
+	
 	public boolean checkPassword(String password, negocio.Usuario usuario) throws SQLException, Exception
 	{
 		String key = getParametroKey();
@@ -247,6 +283,7 @@ public class Usuario {
     		manager.closeConnection();
             return null;
         }
+        rs.close();
         stmt.close();
 		manager.closeConnection();
 		usuario.setRol(Rol.getInstance().getOne(idRol));
