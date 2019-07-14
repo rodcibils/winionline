@@ -38,6 +38,20 @@
 					</div>
 				</div>
 				<div class="card bg-light">
+					<div class="card-header">Solicitudes de Amistosos Enviadas</div>
+					<div class="card-body">
+						<c:choose>
+						<c:when test="${sol_am_env_pend.size() == 0}">
+						<p class="card-text">No tiene solicitudes de amistoso pendientes de rta.</p>
+						</c:when>
+						<c:when test="${sol_am_env_pend.size() > 0}">
+						<p class="card-text">Tiene ${sol_am_env_pend.size()} solicitudes de amistoso pendientes de rta.</p>
+						<a href="#" class="btn btn-primary">Verificar</a>
+						</c:when>
+						</c:choose>
+					</div>
+				</div>
+				<div class="card bg-light">
 					<div class="card-header">Ligas</div>
 					<div class="card-body">
 						<p class="card-text">No esta participando en ninguna liga</p>
