@@ -247,6 +247,7 @@ public class Usuario {
     		manager.closeConnection();
             return null;
         }
+        rs.close();
         stmt.close();
 		manager.closeConnection();
 		usuario.setRol(Rol.getInstance().getOne(idRol));

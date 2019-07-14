@@ -37,7 +37,6 @@ public class Pais {
 		
 		stmt.close();
 		rs.close();
-		conn.close();
 		manager.closeConnection();
 		
 		return paises;

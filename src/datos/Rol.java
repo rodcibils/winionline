@@ -42,7 +42,6 @@ public class Rol {
 		
 		stmt.close();
 		rs.close();
-		conn.close();
 		manager.closeConnection();
 		
 		return roles;
@@ -67,7 +66,6 @@ public class Rol {
 		
 		stmt.close();
 		rs.close();
-		conn.close();
 		manager.closeConnection();
 		
 		return rol;
