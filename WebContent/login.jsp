@@ -8,6 +8,7 @@
 <t:layout>
 	<jsp:body>
 		<form action="login" method="post" style="margin-top:50px">
+			<h2 class="text-center" style="color:white; margin-bottom:30px;">Bienvenido a Winionline</h2>
 			<div class="form-group col-5 mx-auto">
 			    <label for="username" class="text-light">Nombre de Usuario</label>
 			    <input type="text" class="form-control" id="username" name='username' maxlength="20" size="20" value='${old_username}' placeholder="Ingrese su nombre de usuario aquí">
