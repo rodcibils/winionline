@@ -68,14 +68,12 @@ public class Solicitud {
 		ResultSet rs = stmt.executeQuery();
 		ArrayList<negocio.Solicitud> solicitudes = new ArrayList<>();
 		while(rs.next()) {
-			int idEstado = rs.getInt(3);
 			negocio.Usuario jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(4));
-			if(idEstado == negocio.Estado.SOLICITUD_PENDIENTE
-				&& jugadorUno.getEstado().getId() != negocio.Estado.USUARIO_ELIMINADO) {
+			if(jugadorUno.getEstado().getId() != negocio.Estado.USUARIO_ELIMINADO) {
 				negocio.Solicitud solicitud = new negocio.Solicitud();
 				solicitud.setId(rs.getInt(1));
 				solicitud.setFecha(rs.getDate(2));
-				solicitud.setEstado(datos.Estado.getInstance().getOne(idEstado));
+				solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
 				solicitud.setJugadorUno(jugadorUno);
 				solicitud.setJugadorDos(jugadorDos);
 				solicitudes.add(solicitud);
