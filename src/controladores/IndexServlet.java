@@ -33,6 +33,10 @@ public class IndexServlet extends HttpServlet {
 			ArrayList<negocio.Solicitud> solicitudesAmistososRecibidasPendientes = 
 					datos.Solicitud.getInstance().getSolicitudesRecibidasAmistososPendientes(usuario);
 			request.setAttribute("sol_am_rec_pend", solicitudesAmistososRecibidasPendientes);
+			
+			ArrayList<negocio.Solicitud> solicitudesAmistososEnviadasPendientes =
+					datos.Solicitud.getInstance().getSolicitudesEnviadasAmistososPendientes(usuario);
+			request.setAttribute("sol_am_env_pend", solicitudesAmistososEnviadasPendientes);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
