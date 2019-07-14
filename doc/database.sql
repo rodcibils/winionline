@@ -123,6 +123,7 @@ CREATE TABLE `ligas` (
 
 LOCK TABLES `ligas` WRITE;
 /*!40000 ALTER TABLE `ligas` DISABLE KEYS */;
+INSERT INTO `ligas` VALUES (1,'liga1',1,'2019-07-11 00:00:00','2019-07-15 00:00:00',4);
 /*!40000 ALTER TABLE `ligas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +175,7 @@ CREATE TABLE `parametros` (
 
 LOCK TABLES `parametros` WRITE;
 /*!40000 ALTER TABLE `parametros` DISABLE KEYS */;
-INSERT INTO `parametros` VALUES (1,'/media/datos/eclipse-java/winionline/avatars/','1407661933');
+INSERT INTO `parametros` VALUES (1,'/home/fane/eclipse-workspace/winionline/avatars/','1407661933');
 /*!40000 ALTER TABLE `parametros` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -430,7 +431,7 @@ CREATE TABLE `usuarios` (
   CONSTRAINT `fk_usuarios_estado` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`),
   CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`),
   CONSTRAINT `fk_usuarios_rol` FOREIGN KEY (`rol`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -439,8 +440,42 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` VALUES (44,'admin','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','admin','2019-07-11 22:43:39.347960','admin','admin','/home/fane/eclipse-workspace/winionline/avatars/admin.png',1,1,1);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping events for database 'winionline'
+--
+/*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
+/*!50106 DROP EVENT IF EXISTS `cambiarEstadoLiga` */;
+DELIMITER ;;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;;
+/*!50003 SET character_set_client  = utf8mb4 */ ;;
+/*!50003 SET character_set_results = utf8mb4 */ ;;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;;
+/*!50003 SET @saved_time_zone      = @@time_zone */ ;;
+/*!50003 SET time_zone             = 'SYSTEM' */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `cambiarEstadoLiga` ON SCHEDULE EVERY 1 MINUTE STARTS '2019-07-12 00:00:00' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+     
+   UPDATE ligas SET estado = 4 /*cambiar a estado iniciada*/
+   WHERE fecha_inicio <= (select CURRENT_DATE) AND (select CURRENT_DATE) < fecha_fin;
+   
+   UPDATE ligas SET estado = 5 /*cambiar a estado terminada*/
+   WHERE fecha_fin <= (select CURRENT_DATE);
+   
+END */ ;;
+/*!50003 SET time_zone             = @saved_time_zone */ ;;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;;
+/*!50003 SET character_set_results = @saved_cs_results */ ;;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;;
+DELIMITER ;
+/*!50106 SET TIME_ZONE= @save_time_zone */ ;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -451,4 +486,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-07 19:33:30
+-- Dump completed on 2019-07-12 18:24:21
