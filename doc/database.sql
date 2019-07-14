@@ -92,7 +92,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-INSERT INTO `estados` VALUES (4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
+INSERT INTO `estados` VALUES (4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(8,'Solicitud Rechazada'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -272,15 +272,18 @@ CREATE TABLE `solicitudes` (
   `estado` int(11) NOT NULL,
   `jugador_uno` int(11) NOT NULL,
   `jugador_dos` int(11) NOT NULL,
+  `liga` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_solicitudes_estados_idx` (`estado`),
   KEY `fk_solicitudes_jugador_uno_idx` (`jugador_uno`),
   KEY `fk_solicitudes_jugador_dos_idx` (`jugador_dos`),
+  KEY `fk_solicitudes_liga_idx` (`liga`),
   CONSTRAINT `fk_solicitudes_estados` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`),
   CONSTRAINT `fk_solicitudes_jugador_dos` FOREIGN KEY (`jugador_dos`) REFERENCES `usuarios` (`id`),
-  CONSTRAINT `fk_solicitudes_jugador_uno` FOREIGN KEY (`jugador_uno`) REFERENCES `usuarios` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_solicitudes_jugador_uno` FOREIGN KEY (`jugador_uno`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `fk_solicitudes_liga` FOREIGN KEY (`liga`) REFERENCES `ligas` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -465,4 +468,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-14  1:41:43
+-- Dump completed on 2019-07-14 19:11:30
