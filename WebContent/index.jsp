@@ -27,11 +27,11 @@
 					<div class="card-header">Solicitudes de Amistosos Recibidas</div>
 					<div class="card-body">
 						<c:choose>
-						<c:when test="${sol_am_rec_pend.size() == 0}">
+						<c:when test="${sol_am_rec_pend == 0}">
 						<p class="card-text">No tiene solicitudes de amistoso pendientes de rta.</p>
 						</c:when>
-						<c:when test="${sol_am_rec_pend.size() > 0}">
-						<p class="card-text">Tiene ${sol_am_rec_pend.size()} solicitudes de amistoso pendientes de rta.</p>
+						<c:when test="${sol_am_rec_pend > 0}">
+						<p class="card-text">Tiene ${sol_am_rec_pend} solicitudes de amistoso pendientes de rta.</p>
 						<a href="#" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
@@ -41,12 +41,12 @@
 					<div class="card-header">Solicitudes de Amistosos Enviadas</div>
 					<div class="card-body">
 						<c:choose>
-						<c:when test="${sol_am_env_pend.size() == 0}">
+						<c:when test="${sol_am_env_pend == 0}">
 						<p class="card-text">No tiene solicitudes de amistoso pendientes de rta.</p>
 						</c:when>
-						<c:when test="${sol_am_env_pend.size() > 0}">
-						<p class="card-text">Tiene ${sol_am_env_pend.size()} solicitudes de amistoso pendientes de rta.</p>
-						<a href="#" class="btn btn-primary">Verificar</a>
+						<c:when test="${sol_am_env_pend > 0}">
+						<p class="card-text">Tiene ${sol_am_env_pend} solicitudes de amistoso pendientes de rta.</p>
+						<a href="sentFriendRequest" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
 					</div>
