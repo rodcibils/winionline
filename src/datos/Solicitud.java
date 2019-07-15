@@ -16,6 +16,21 @@ public class Solicitud {
 		return instance;
 	}
 	
+	public void delete(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "DELETE FROM solicitudes WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		
+		stmt.execute();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public ArrayList<negocio.Solicitud> getSolicitudesEnviadasAmistososPendientes
 		(negocio.Usuario jugadorUno) throws ClassNotFoundException, SQLException
 	{
@@ -41,6 +56,8 @@ public class Solicitud {
 				solicitud.setJugadorUno(jugadorUno);
 				solicitud.setJugadorDos(jugadorDos);
 				solicitudes.add(solicitud);
+			} else {
+				delete(rs.getInt(1));
 			}
 		}
 		
@@ -77,6 +94,8 @@ public class Solicitud {
 				solicitud.setJugadorUno(jugadorUno);
 				solicitud.setJugadorDos(jugadorDos);
 				solicitudes.add(solicitud);
+			} else {
+				delete(rs.getInt(1));
 			}
 		}
 		
