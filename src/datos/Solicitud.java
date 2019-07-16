@@ -32,33 +32,32 @@ public class Solicitud {
 	}
 	
 	public ArrayList<negocio.Solicitud> getSolicitudesEnviadasAmistososPendientes
-		(negocio.Usuario jugadorUno) throws ClassNotFoundException, SQLException
+		(negocio.Usuario jugadorUno, int skip, int limit) throws ClassNotFoundException, 
+		SQLException
 	{
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
 		String query = "SELECT * from solicitudes WHERE estado=? AND jugador_uno=? "
-				+ "AND liga IS NULL";
+				+ "AND liga IS NULL LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, negocio.Estado.SOLICITUD_PENDIENTE);
 		stmt.setInt(2, jugadorUno.getId());
+		stmt.setInt(3, skip);
+		stmt.setInt(4, limit);
 		
 		ResultSet rs = stmt.executeQuery();
 		ArrayList<negocio.Solicitud> solicitudes = new ArrayList<>();
 		while(rs.next()) {
 			negocio.Usuario jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(5));
-			if(jugadorDos.getEstado().getId() != negocio.Estado.USUARIO_ELIMINADO) {
-				negocio.Solicitud solicitud = new negocio.Solicitud();
-				solicitud.setId(rs.getInt(1));
-				solicitud.setFecha(rs.getDate(2));
-				solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
-				solicitud.setJugadorUno(jugadorUno);
-				solicitud.setJugadorDos(jugadorDos);
-				solicitudes.add(solicitud);
-			} else {
-				delete(rs.getInt(1));
-			}
+			negocio.Solicitud solicitud = new negocio.Solicitud();
+			solicitud.setId(rs.getInt(1));
+			solicitud.setFecha(rs.getDate(2));
+			solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
+			solicitud.setJugadorUno(jugadorUno);
+			solicitud.setJugadorDos(jugadorDos);
+			solicitudes.add(solicitud);
 		}
 		
 		rs.close();
