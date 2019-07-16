@@ -1,7 +1,6 @@
 package controladores;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,13 +29,17 @@ public class IndexServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		try {
-			ArrayList<negocio.Solicitud> solicitudesAmistososRecibidasPendientes = 
-					datos.Solicitud.getInstance().getSolicitudesRecibidasAmistososPendientes(usuario);
-			request.setAttribute("sol_am_rec_pend", solicitudesAmistososRecibidasPendientes);
+			// hacemos un cleanup de las solicitudes que incluyan usuarios borrados
+			datos.Solicitud.getInstance().cleanupSolicitudesEnviadasAmistososPendientes(usuario);
+			datos.Solicitud.getInstance().cleanupSolicitudesRecibidasAmistososPendientes(usuario);
 			
-			ArrayList<negocio.Solicitud> solicitudesAmistososEnviadasPendientes =
-					datos.Solicitud.getInstance().getSolicitudesEnviadasAmistososPendientes(usuario);
-			request.setAttribute("sol_am_env_pend", solicitudesAmistososEnviadasPendientes);
+			int cantSolAmRecPend = datos.Solicitud.getInstance()
+					.getCountSolicitudesRecibidasAmistososPendientes(usuario);
+			request.setAttribute("sol_am_rec_pend", cantSolAmRecPend);
+			
+			int cantSolAmEnvPend = datos.Solicitud.getInstance()
+					.getCountSolicitudesEnviadasAmistososPendientes(usuario);
+			request.setAttribute("sol_am_env_pend", cantSolAmEnvPend);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
