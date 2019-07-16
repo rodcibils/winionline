@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class SentFriendRequestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int LIMIT = 10;
+	private int skip = 0;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -30,7 +31,22 @@ public class SentFriendRequestServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
-		int skip = Integer.parseInt(request.getParameter("skip"));
+		
+		String sSkip = request.getParameter("skip");
+		if(sSkip != null) {
+			skip = Integer.parseInt(sSkip);
+		}
+		
+		String sDelete = request.getParameter("delete");
+		if(sDelete != null) {
+			try {
+				datos.Solicitud.getInstance().delete(Integer.parseInt(sDelete));
+				request.setAttribute("friendly_sol_deleted", true);
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		try {
 			datos.Solicitud.getInstance().cleanupSolicitudesEnviadasAmistososPendientes(usuario);
 			int count = datos.Solicitud.getInstance().getCountSolicitudesEnviadasAmistososPendientes(usuario);

@@ -24,7 +24,7 @@
 				<td>
 					<p class="text-center">
 					<a class="btn btn-primary">Ver Perfil</a>
-					<a class="btn btn-danger" style="margin-left:20px">Eliminar</a>
+					<a class="btn btn-danger" style="margin-left:20px" href="sentFriendRequest?delete=${solicitud.getId()}">Eliminar</a>
 					</p>
 				</td>
 				</tr>
@@ -73,5 +73,21 @@
 			</c:if>
 			</ul>
 		</nav>
+		<c:if test="${friendly_sol_deleted == true}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Solicitud Eliminada</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        La solicitud ha sido eliminada correctamente.
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
 	</jsp:body>
 </t:layout>
