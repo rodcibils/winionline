@@ -74,6 +74,7 @@ public class SentFriendRequestServlet extends HttpServlet {
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
 				request.setAttribute("max_pages", maxPages);
+				request.setAttribute("count", count);
 			} else {
 				int count = datos.Solicitud.getInstance()
 						.getCountSolicitudesEnviadasAmistososPendientesFiltered(usuario, toSearch);
@@ -90,6 +91,7 @@ public class SentFriendRequestServlet extends HttpServlet {
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
 				request.setAttribute("max_pages", maxPages);
+				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
