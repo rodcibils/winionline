@@ -156,6 +156,10 @@ public class Solicitud {
 			}
 		}
 		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
 		return count;
 	}
 	
