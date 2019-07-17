@@ -33,7 +33,9 @@ public class AvatarServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		response.setContentType("image");
-		File file = new File(usuario.getAvatar());
+		String avatarPath = usuario.getAvatar();
+		if(avatarPath == null) avatarPath = this.getServletContext().getRealPath("Resources/avatar/default_avatar.jpeg");
+		File file = new File(avatarPath);
 		response.setContentLength((int)file.length());
 		FileInputStream in = new FileInputStream(file);
 		OutputStream out = response.getOutputStream();

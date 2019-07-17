@@ -28,7 +28,9 @@ public class EliminarUsuarioServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		try {
+			datos.Solicitud.getInstance().cleanupSolicitudes(usuario.getId());
 			datos.Usuario.getInstance().delete(usuario);
+			request.getSession().setAttribute("usuario", null);
 			response.sendRedirect("login.jsp?delete_success=true");
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
