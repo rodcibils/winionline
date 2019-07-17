@@ -60,7 +60,6 @@ public class SentFriendRequestServlet extends HttpServlet {
 		}
 		
 		try {
-			datos.Solicitud.getInstance().cleanupSolicitudesEnviadasAmistososPendientes(usuario);
 			if(toSearch == null || toSearch.contentEquals("")) {
 				count = datos.Solicitud.getInstance()
 						.getCountSolicitudesEnviadasAmistososPendientes(usuario);

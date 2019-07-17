@@ -16,6 +16,22 @@ public class Solicitud {
 		return instance;
 	}
 	
+	public void cleanupSolicitudes(int idJugador) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "DELETE FROM solicitudes WHERE jugador_uno=? OR jugador_dos=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idJugador);
+		stmt.setInt(2, idJugador);
+		
+		stmt.execute();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public void delete(int id) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;
@@ -167,60 +183,6 @@ public class Solicitud {
 		ConnectionManager.getInstance().closeConnection();
 		
 		return rowsCount;
-	}
-	
-	public void cleanupSolicitudesRecibidasAmistososPendientes(negocio.Usuario jugadorDos) 
-			throws ClassNotFoundException, SQLException
-	{
-		PreparedStatement stmt;
-		Connection conn = ConnectionManager.getInstance().getConnection();
-		
-		String query = "SELECT id, jugador_uno FROM solicitudes WHERE estado=? AND jugador_dos=? "
-				+ "AND liga IS NULL";
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, negocio.Estado.SOLICITUD_PENDIENTE);
-		stmt.setInt(2, jugadorDos.getId());
-		
-		ResultSet rs = stmt.executeQuery();
-		while(rs.next()) {
-			negocio.Usuario jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(2));
-			if(jugadorUno.getEstado().getId() == negocio.Estado.USUARIO_ELIMINADO)
-			{
-				delete(rs.getInt(1));
-			}
-		}
-		
-		rs.close();
-		stmt.close();
-		ConnectionManager.getInstance().closeConnection();
-	}
-	
-	public void cleanupSolicitudesEnviadasAmistososPendientes(negocio.Usuario jugadorUno) 
-			throws ClassNotFoundException, SQLException
-	{
-		PreparedStatement stmt;
-		Connection conn = ConnectionManager.getInstance().getConnection();
-		
-		String query = "SELECT id, jugador_dos FROM solicitudes WHERE estado=? AND jugador_uno=? "
-				+ "AND liga IS NULL";
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, negocio.Estado.SOLICITUD_PENDIENTE);
-		stmt.setInt(2, jugadorUno.getId());
-		
-		ResultSet rs = stmt.executeQuery();
-		while(rs.next()) {
-			negocio.Usuario jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(2));
-			if(jugadorDos.getEstado().getId() == negocio.Estado.USUARIO_ELIMINADO)
-			{
-				delete(rs.getInt(1));
-			}
-		}
-		
-		rs.close();
-		stmt.close();
-		ConnectionManager.getInstance().closeConnection();
 	}
 	
 	public int getCountSolicitudesRecibidasAmistososPendientes(negocio.Usuario jugadorDos) 

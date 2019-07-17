@@ -28,11 +28,7 @@ public class IndexServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
-		try {
-			// hacemos un cleanup de las solicitudes que incluyan usuarios borrados
-			datos.Solicitud.getInstance().cleanupSolicitudesEnviadasAmistososPendientes(usuario);
-			datos.Solicitud.getInstance().cleanupSolicitudesRecibidasAmistososPendientes(usuario);
-			
+		try {	
 			int cantSolAmRecPend = datos.Solicitud.getInstance()
 					.getCountSolicitudesRecibidasAmistososPendientes(usuario);
 			request.setAttribute("sol_am_rec_pend", cantSolAmRecPend);
