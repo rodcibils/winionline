@@ -17,6 +17,7 @@ public class SentFriendRequestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int LIMIT = 10;
 	private int skip = 0;
+	private int count = 0;
 	private String lastSearch = "";
        
     /**
@@ -51,6 +52,8 @@ public class SentFriendRequestServlet extends HttpServlet {
 			try {
 				datos.Solicitud.getInstance().delete(Integer.parseInt(sDelete));
 				request.setAttribute("friendly_sol_deleted", true);
+				if((count-1) % LIMIT == 0 && skip != 0)
+					skip -= 10;
 			}catch(Exception e) {
 				System.out.println(e.getMessage());
 			}
@@ -59,7 +62,7 @@ public class SentFriendRequestServlet extends HttpServlet {
 		try {
 			datos.Solicitud.getInstance().cleanupSolicitudesEnviadasAmistososPendientes(usuario);
 			if(toSearch == null || toSearch.contentEquals("")) {
-				int count = datos.Solicitud.getInstance()
+				count = datos.Solicitud.getInstance()
 						.getCountSolicitudesEnviadasAmistososPendientes(usuario);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
@@ -76,7 +79,7 @@ public class SentFriendRequestServlet extends HttpServlet {
 				request.setAttribute("max_pages", maxPages);
 				request.setAttribute("count", count);
 			} else {
-				int count = datos.Solicitud.getInstance()
+				count = datos.Solicitud.getInstance()
 						.getCountSolicitudesEnviadasAmistososPendientesFiltered(usuario, toSearch);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
