@@ -8,6 +8,18 @@
 </head>
 <t:layout>
 	<jsp:body>
+		<script>
+			function search(){
+				var toSearch = document.getElementById('txtSearch').value;
+				window.location.href = "sentFriendRequest?search=" + toSearch;
+			}
+		</script>
+		<div class="input-group col-6 float-right" style="margin-top:20px;margin-bottom:20px;margin-right:20px">
+		  	<input type="text" id="txtSearch" class="form-control" value="${search}" placeholder="Buscar por nombre o apodo de usuario...">
+		  	<div class="input-group-append">
+		    	<button type="button" class="btn btn-primary" onclick="search()">Buscar</button>
+		  	</div>
+		</div>
 		<table class="table table-hover table-dark">
 		<thead>
 			<tr>
@@ -24,7 +36,7 @@
 				<td>
 					<p class="text-center">
 					<a class="btn btn-primary">Ver Perfil</a>
-					<a class="btn btn-danger" style="margin-left:20px" href="sentFriendRequest?delete=${solicitud.getId()}">Eliminar</a>
+					<a class="btn btn-danger" style="margin-left:20px" href="sentFriendRequest?delete=${solicitud.getId()}&search=${search}">Eliminar</a>
 					</p>
 				</td>
 				</tr>
@@ -42,7 +54,7 @@
 			</c:if>
 			<c:if test="${skip > 0}">
 				<li class="page-item">
-				<a class="page-link" href="sentFriendRequest?skip=${skip-10}" aria-label="Anterior">
+				<a class="page-link" href="sentFriendRequest?skip=${skip-10}&search=${search}" aria-label="Anterior">
 					<span aria-hidden="true">&laquo;</span>
 				</a>
 				</li>
@@ -54,7 +66,7 @@
 				</li>
 			</c:if>
 			<c:if test="${current_page != index}">
-				<li class="page-item"><a class="page-link" href="sentFriendRequest?skip=${index*10}">${index + 1}</a></li>
+				<li class="page-item"><a class="page-link" href="sentFriendRequest?skip=${index*10}&search=${search}">${index + 1}</a></li>
 			</c:if>	
 			</c:forEach>
 			<c:if test="${current_page == max_pages-1}">
@@ -66,7 +78,7 @@
 			</c:if>
 			<c:if test="${current_page < max_pages-1}">
 			<li class="page-item">
-				<a class="page-link" href="sentFriendRequest?skip=${skip+10}" aria-label="Siguiente">
+				<a class="page-link" href="sentFriendRequest?skip=${skip+10}&search=${search}" aria-label="Siguiente">
 					<span aria-hidden="true">&raquo;</span>
 				</a>
 			</li>

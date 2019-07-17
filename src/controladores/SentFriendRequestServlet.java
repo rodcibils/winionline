@@ -17,6 +17,7 @@ public class SentFriendRequestServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int LIMIT = 10;
 	private int skip = 0;
+	private String lastSearch = "";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -29,8 +30,16 @@ public class SentFriendRequestServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+		throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+		
+		String toSearch = request.getParameter("search");
+		if(toSearch!=null && !toSearch.contentEquals(lastSearch)){
+			lastSearch = toSearch;
+			skip = 0;
+		}
+		request.setAttribute("search", lastSearch);
 		
 		String sSkip = request.getParameter("skip");
 		if(sSkip != null) {
@@ -49,20 +58,39 @@ public class SentFriendRequestServlet extends HttpServlet {
 		
 		try {
 			datos.Solicitud.getInstance().cleanupSolicitudesEnviadasAmistososPendientes(usuario);
-			int count = datos.Solicitud.getInstance().getCountSolicitudesEnviadasAmistososPendientes(usuario);
-			int maxPages = count / LIMIT;
-			if(count % LIMIT != 0) {
-				++maxPages;
+			if(toSearch == null || toSearch.contentEquals("")) {
+				int count = datos.Solicitud.getInstance()
+						.getCountSolicitudesEnviadasAmistososPendientes(usuario);
+				int maxPages = count / LIMIT;
+				if(count % LIMIT != 0) {
+					++maxPages;
+				}
+				
+				int currentPage = skip / LIMIT;
+				
+				ArrayList<negocio.Solicitud> solicitudes = datos.Solicitud.getInstance()
+						.getSolicitudesEnviadasAmistososPendientes(usuario, skip, LIMIT);
+				request.setAttribute("solicitudes", solicitudes);
+				request.setAttribute("skip", skip);
+				request.setAttribute("current_page", currentPage);
+				request.setAttribute("max_pages", maxPages);
+			} else {
+				int count = datos.Solicitud.getInstance()
+						.getCountSolicitudesEnviadasAmistososPendientesFiltered(usuario, toSearch);
+				int maxPages = count / LIMIT;
+				if(count % LIMIT != 0) {
+					++maxPages;
+				}
+				
+				int currentPage = skip / LIMIT;
+				
+				ArrayList<negocio.Solicitud> solicitudes = datos.Solicitud.getInstance()
+						.getSolicitudesEnviadasAmistososPendientes(usuario, skip, LIMIT, toSearch);
+				request.setAttribute("solicitudes", solicitudes);
+				request.setAttribute("skip", skip);
+				request.setAttribute("current_page", currentPage);
+				request.setAttribute("max_pages", maxPages);
 			}
-			
-			int currentPage = skip / LIMIT;
-			
-			ArrayList<negocio.Solicitud> solicitudes = datos.Solicitud.getInstance()
-					.getSolicitudesEnviadasAmistososPendientes(usuario, skip, LIMIT);
-			request.setAttribute("solicitudes", solicitudes);
-			request.setAttribute("skip", skip);
-			request.setAttribute("current_page", currentPage);
-			request.setAttribute("max_pages", maxPages);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
