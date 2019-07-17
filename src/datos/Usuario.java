@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Random;
 
 import negocio.Estado;
@@ -64,6 +65,46 @@ public class Usuario {
 		ConnectionManager.getInstance().closeConnection();
 		
 		return usuario;
+	}
+	
+	public ArrayList<negocio.Usuario> getAll() throws SQLException, ClassNotFoundException{
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "SELECT * from usuarios";
+		
+		stmt = conn.prepareStatement(query);
+		ResultSet rs = stmt.executeQuery();
+		
+		ArrayList<negocio.Usuario> usuarios = new ArrayList<negocio.Usuario>();
+		while(rs.next()) {
+			negocio.Usuario usuario = new negocio.Usuario();
+			negocio.Pais pais = datos.Pais.getInstance().getOne(rs.getInt(11));
+			negocio.Rol rol = datos.Rol.getInstance().getOne(rs.getInt(12));
+			negocio.Estado estado = datos.Estado.getInstance().getOne(rs.getInt(13)); 
+			usuario.setId(rs.getInt(1));
+			usuario.setNombre(rs.getString(2));
+			usuario.setPassword(rs.getString(3));
+			usuario.setFechanac(rs.getDate(4));
+			usuario.setEmail(rs.getString(5));
+			usuario.setApodo(rs.getString(6));
+			usuario.setUltimaConexion(rs.getTimestamp(7));
+			usuario.setSkype(rs.getString(8));
+			usuario.setIp(rs.getString(9));
+			usuario.setAvatar(rs.getString(10));			
+			usuario.setPais(pais);
+			usuario.setRol(rol);
+			usuario.setEstado(estado);
+			
+			usuarios.add(usuario);
+		}
+		
+		stmt.close();
+		rs.close();
+		manager.closeConnection();
+		
+		return usuarios;
 	}
 	
 	public boolean checkPassword(String password, negocio.Usuario usuario) throws SQLException, Exception
