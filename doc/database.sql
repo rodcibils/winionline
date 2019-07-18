@@ -92,7 +92,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-INSERT INTO `estados` VALUES (4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(8,'Solicitud Rechazada'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
+INSERT INTO `estados` VALUES (4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -174,7 +174,7 @@ CREATE TABLE `parametros` (
 
 LOCK TABLES `parametros` WRITE;
 /*!40000 ALTER TABLE `parametros` DISABLE KEYS */;
-INSERT INTO `parametros` VALUES (1,'/home/fane/eclipse-workspace/winionline/avatars/','1407661933');
+INSERT INTO `parametros` VALUES (1,'/media/datos/eclipse-java/winionline/avatars/','1407661933');
 /*!40000 ALTER TABLE `parametros` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -283,7 +283,7 @@ CREATE TABLE `solicitudes` (
   CONSTRAINT `fk_solicitudes_jugador_dos` FOREIGN KEY (`jugador_dos`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_solicitudes_jugador_uno` FOREIGN KEY (`jugador_uno`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_solicitudes_liga` FOREIGN KEY (`liga`) REFERENCES `ligas` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -409,7 +409,7 @@ CREATE TABLE `usuarios` (
   CONSTRAINT `fk_usuarios_estado` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`),
   CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`),
   CONSTRAINT `fk_usuarios_rol` FOREIGN KEY (`rol`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -418,7 +418,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (44,'admin','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','admin','2019-07-11 22:43:39.347960','admin','admin','/home/fane/eclipse-workspace/winionline/avatars/admin.png',1,1,1);
+INSERT INTO `usuarios` VALUES (45,'admin','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1993-03-17 00:00:00','admin@admin.com','admin','2019-07-18 22:56:05.621083','admin','admin','/media/datos/eclipse-java/winionline/avatars/admin.png',1,1,1),(46,'prueba','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','prueba','2019-07-15 00:39:22.838214','prueba','prueba',NULL,1,2,2),(47,'dummy_uno','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','dummy_uno','2019-07-14 23:14:23.129225','dummy_uno','dummy_uno',NULL,1,2,1),(48,'rodrigo','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','pepe','2019-07-17 02:20:35.578461','dummy_dos','dummy_dos',NULL,1,2,1);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -468,4 +468,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-14 19:11:30
+-- Dump completed on 2019-07-18 20:08:37
