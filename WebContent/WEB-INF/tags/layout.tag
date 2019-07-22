@@ -52,9 +52,17 @@
 	  				<li class="nav-item dropdown">
 	  					<a class="nav-link dropdown-toggle" href="#" id="dropUsuario" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Usuario</a>
 	  					<div class="dropdown-menu" aria-labelledby="dropUsuario">
+	  						<a class="dropdown-item" href="usuarios">Ver Usuarios</a>
 	  						<a class="dropdown-item" href="editUser">Editar Datos Personales</a>
 	  						<a class="dropdown-item" href="editPassword.jsp">Cambiar Contraseña</a>
 	  						<a class="dropdown-item" data-toggle="modal" data-target="#userDeleteModal">Eliminar Usuario</a>
+	  					</div>
+	  				</li>
+	  				<li class="nav-item dropdown">
+	  					<a class="nav-link dropdown-toggle" href="#" id="dropAmistosos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Amistosos</a>
+	  					<div class="dropdown-menu" aria-labelledby="dropAmistosos">
+	  						<a class="dropdown-item" href="sentFriendRequest?skip=0">Solicitudes Enviadas</a>
+	  						<a class="dropdown-item" href="receivedFriendRequest?skip=0">Solicitudes Recibidas</a>
 	  					</div>
 	  				</li>
 	  				<li class="nav-item">

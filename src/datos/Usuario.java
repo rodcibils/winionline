@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Random;
 
 import negocio.Estado;
@@ -65,6 +66,210 @@ public class Usuario {
 		
 		return usuario;
 	}
+	
+	public ArrayList<negocio.Usuario> getAll(negocio.Usuario usuarioActual) throws SQLException, ClassNotFoundException{
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "SELECT * from usuarios WHERE estado= ? AND id != ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+		stmt.setInt(2, usuarioActual.getId());
+		ResultSet rs = stmt.executeQuery();
+		
+		ArrayList<negocio.Usuario> usuarios = new ArrayList<negocio.Usuario>();
+		while(rs.next()) {
+			negocio.Usuario usuario = new negocio.Usuario();
+			negocio.Pais pais = datos.Pais.getInstance().getOne(rs.getInt(11));
+			negocio.Rol rol = datos.Rol.getInstance().getOne(rs.getInt(12));
+			negocio.Estado estado = datos.Estado.getInstance().getOne(rs.getInt(13)); 
+			usuario.setId(rs.getInt(1));
+			usuario.setNombre(rs.getString(2));
+			usuario.setPassword(rs.getString(3));
+			usuario.setFechanac(rs.getDate(4));
+			usuario.setEmail(rs.getString(5));
+			usuario.setApodo(rs.getString(6));
+			usuario.setUltimaConexion(rs.getTimestamp(7));
+			usuario.setSkype(rs.getString(8));
+			usuario.setIp(rs.getString(9));
+			usuario.setAvatar(rs.getString(10));			
+			usuario.setPais(pais);
+			usuario.setRol(rol);
+			usuario.setEstado(estado);
+			
+			usuarios.add(usuario);
+		}
+		
+		stmt.close();
+		rs.close();
+		manager.closeConnection();
+		
+		return usuarios;
+	}
+	
+	public int getAllCount(negocio.Usuario usuarioActual) 
+			throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) from usuarios WHERE estado = ? AND id != ?";
+		
+		stmt = conn.prepareStatement(query);		
+		stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+		stmt.setInt(2, usuarioActual.getId());		
+		
+		ResultSet rs = stmt.executeQuery();
+		int rowsCount = 0;
+		while(rs.next()) {
+			rowsCount = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return rowsCount;
+	}
+	
+	public ArrayList<negocio.Usuario> getUsuariosPagination
+	(int skip, int limit, negocio.Usuario usuarioActual) throws ClassNotFoundException, SQLException
+{
+	PreparedStatement stmt;
+	Connection conn = ConnectionManager.getInstance().getConnection();
+	
+	String query = "SELECT * from usuarios WHERE estado = ? AND id != ? LIMIT ?,?";
+	
+	stmt = conn.prepareStatement(query);
+	stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+	stmt.setInt(2, usuarioActual.getId());	
+	stmt.setInt(3, skip);
+	stmt.setInt(4, limit);
+	
+	ResultSet rs = stmt.executeQuery();
+	ArrayList<negocio.Usuario> usuarios = new ArrayList<>();
+	while(rs.next()) {
+		negocio.Usuario usuario = new negocio.Usuario();
+		negocio.Pais pais = datos.Pais.getInstance().getOne(rs.getInt(11));
+		negocio.Rol rol = datos.Rol.getInstance().getOne(rs.getInt(12));
+		negocio.Estado estado = datos.Estado.getInstance().getOne(rs.getInt(13)); 
+		usuario.setId(rs.getInt(1));
+		usuario.setNombre(rs.getString(2));
+		usuario.setPassword(rs.getString(3));
+		usuario.setFechanac(rs.getDate(4));
+		usuario.setEmail(rs.getString(5));
+		usuario.setApodo(rs.getString(6));
+		usuario.setUltimaConexion(rs.getTimestamp(7));
+		usuario.setSkype(rs.getString(8));
+		usuario.setIp(rs.getString(9));
+		usuario.setAvatar(rs.getString(10));			
+		usuario.setPais(pais);
+		usuario.setRol(rol);
+		usuario.setEstado(estado);
+		
+		usuarios.add(usuario);
+	}
+	
+	rs.close();
+	stmt.close();
+	ConnectionManager.getInstance().closeConnection();
+	
+	return usuarios;
+}
+	
+	public int getCountUsuariosFiltered
+	(String toSearch, negocio.Usuario usuarioActual) throws ClassNotFoundException, SQLException
+{
+	PreparedStatement stmt;
+	Connection conn = ConnectionManager.getInstance().getConnection();
+	
+	String query = "SELECT * from usuarios WHERE estado = ? AND id != ?";
+	
+	stmt = conn.prepareStatement(query);
+	stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+	stmt.setInt(2, usuarioActual.getId());
+	
+	
+	ResultSet rs = stmt.executeQuery();
+	int count = 0;
+	while(rs.next()) {
+		negocio.Usuario usuario = datos.Usuario.getInstance().getOne(rs.getInt(1));
+		if(usuario.getNombre().contains(toSearch) || usuario.getApodo().contains(toSearch))
+		{
+			++count;
+		}
+	}
+	
+	rs.close();
+	stmt.close();
+	ConnectionManager.getInstance().closeConnection();
+	
+	return count;
+}
+	
+	public ArrayList<negocio.Usuario> getUsuariosPagination
+	(int skip, int limit, String toSearch, negocio.Usuario usuarioActual) 
+	throws ClassNotFoundException, SQLException
+{
+	PreparedStatement stmt;
+	Connection conn = ConnectionManager.getInstance().getConnection();
+	
+	String query = "SELECT * from usuarios WHERE estado = ? AND id != ?";
+	
+	stmt = conn.prepareStatement(query);
+	stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+	stmt.setInt(2, usuarioActual.getId());
+	
+	ResultSet rs = stmt.executeQuery();
+	ArrayList<negocio.Usuario> usuarios = new ArrayList<>();
+	while(rs.next()) {
+		negocio.Usuario usu = datos.Usuario.getInstance().getOne(rs.getInt(1));
+		if(usu.getNombre().contains(toSearch) || usu.getApodo().contains(toSearch))
+		{
+			negocio.Usuario usuario = new negocio.Usuario();
+			negocio.Pais pais = datos.Pais.getInstance().getOne(rs.getInt(11));
+			negocio.Rol rol = datos.Rol.getInstance().getOne(rs.getInt(12));
+			negocio.Estado estado = datos.Estado.getInstance().getOne(rs.getInt(13)); 
+			usuario.setId(rs.getInt(1));
+			usuario.setNombre(rs.getString(2));
+			usuario.setPassword(rs.getString(3));
+			usuario.setFechanac(rs.getDate(4));
+			usuario.setEmail(rs.getString(5));
+			usuario.setApodo(rs.getString(6));
+			usuario.setUltimaConexion(rs.getTimestamp(7));
+			usuario.setSkype(rs.getString(8));
+			usuario.setIp(rs.getString(9));
+			usuario.setAvatar(rs.getString(10));			
+			usuario.setPais(pais);
+			usuario.setRol(rol);
+			usuario.setEstado(estado);
+			
+			usuarios.add(usuario);
+		}
+	}
+	
+	ArrayList<negocio.Usuario> filteredUsuarios = new ArrayList<>();
+	
+	if(skip+limit < usuarios.size()) { 
+		for(int i=skip; i<skip+limit; ++i)
+		{
+			filteredUsuarios.add(usuarios.get(i));
+		}
+	} else {
+		for(int i=skip; i<usuarios.size(); ++i) {
+			filteredUsuarios.add(usuarios.get(i));
+		}
+	}
+	
+	rs.close();
+	stmt.close();
+	ConnectionManager.getInstance().closeConnection();
+	
+	return filteredUsuarios;
+}
+	
 	
 	public boolean checkPassword(String password, negocio.Usuario usuario) throws SQLException, Exception
 	{

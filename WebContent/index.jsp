@@ -32,7 +32,7 @@
 						</c:when>
 						<c:when test="${sol_am_rec_pend > 0}">
 						<p class="card-text">Tiene ${sol_am_rec_pend} solicitudes de amistoso pendientes de rta.</p>
-						<a href="#" class="btn btn-primary">Verificar</a>
+						<a href="receivedFriendRequest?skip=0" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
 					</div>

@@ -11,8 +11,6 @@ public class Estado {
 	public static final int LIGA_FINALIZADA = 5;
 	public static final int SOLICITUD_PENDIENTE = 6;
 	public static final int SOLICITUD_ACEPTADA = 7;
-	public static final int SOLICITUD_RECHAZADA = 8;
-	public static final int LIGA_ELIMINADA = 9;
 	
 	public int getId() {
 		return id;

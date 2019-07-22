@@ -4,14 +4,14 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <head>
-	<title>Winionline | Solicitudes de Amistosos Enviadas</title>
+	<title>Winionline | Solicitudes de Amistosos Recibidas</title>
 </head>
 <t:layout>
 	<jsp:body>
 		<script>
 			function search(){
 				var toSearch = document.getElementById('txtSearch').value;
-				window.location.href = "sentFriendRequest?search=" + toSearch;
+				window.location.href = "receivedFriendRequest?search=" + toSearch;
 			}
 		</script>
 		<div class="input-group col-6 float-right" style="margin-top:20px;margin-bottom:20px;margin-right:20px">
@@ -32,12 +32,13 @@
 			<tbody>
 				<c:forEach items="${solicitudes}" var="solicitud">
 					<tr>
-					<td><p>${solicitud.getJugadorDos().getNombre()} - ${solicitud.getJugadorDos().getApodo()}</p></td>
+					<td><p>${solicitud.getJugadorUno().getNombre()} - ${solicitud.getJugadorUno().getApodo()}</p></td>
 					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${solicitud.getFecha()}"/></p></td>
 					<td>
 						<p class="text-center">
 						<a class="btn btn-primary">Ver Perfil</a>
-						<a class="btn btn-danger" style="margin-left:20px" href="sentFriendRequest?delete=${solicitud.getId()}&search=${search}">Eliminar</a>
+						<a class="btn btn-danger" style="margin-left:20px" href="receivedFriendRequest?delete=${solicitud.getId()}&search=${search}">Rechazar</a>
+						<a class="btn btn-success" style="margin-left:20px" href="#">Aceptar</a>
 						</p>
 					</td>
 					</tr>
@@ -55,7 +56,7 @@
 				</c:if>
 				<c:if test="${skip > 0}">
 					<li class="page-item">
-					<a class="page-link" href="sentFriendRequest?skip=${skip-10}&search=${search}" aria-label="Anterior">
+					<a class="page-link" href="receivedFriendRequest?skip=${skip-10}&search=${search}" aria-label="Anterior">
 						<span aria-hidden="true">&laquo;</span>
 					</a>
 					</li>
@@ -67,7 +68,7 @@
 					</li>
 				</c:if>
 				<c:if test="${current_page != index}">
-					<li class="page-item"><a class="page-link" href="sentFriendRequest?skip=${index*10}&search=${search}">${index + 1}</a></li>
+					<li class="page-item"><a class="page-link" href="receivedFriendRequest?skip=${index*10}&search=${search}">${index + 1}</a></li>
 				</c:if>	
 				</c:forEach>
 				<c:if test="${current_page == max_pages-1}">
@@ -79,7 +80,7 @@
 				</c:if>
 				<c:if test="${current_page < max_pages-1}">
 				<li class="page-item">
-					<a class="page-link" href="sentFriendRequest?skip=${skip+10}&search=${search}" aria-label="Siguiente">
+					<a class="page-link" href="receivedFriendRequest?skip=${skip+10}&search=${search}" aria-label="Siguiente">
 						<span aria-hidden="true">&raquo;</span>
 					</a>
 				</li>
@@ -89,11 +90,11 @@
 			<c:if test="${friendly_sol_deleted == true}">
 				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
 				    <div class="toast-header">
-				        <strong class="mr-auto"><i class="fa fa-grav"></i>Solicitud Eliminada</strong>
+				        <strong class="mr-auto"><i class="fa fa-grav"></i>Solicitud Rechazada</strong>
 				        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
 				    </div>
 				    <div class="toast-body">
-				        La solicitud ha sido eliminada correctamente.
+				        La solicitud ha sido rechazada correctamente.
 				    </div>
 				</div>
 				<script>
