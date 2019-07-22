@@ -72,9 +72,10 @@ public class Usuario {
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from usuarios";
+		String query = "SELECT * from usuarios WHERE estado= ?";
 		
 		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
 		ResultSet rs = stmt.executeQuery();
 		
 		ArrayList<negocio.Usuario> usuarios = new ArrayList<negocio.Usuario>();
@@ -113,9 +114,10 @@ public class Usuario {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT COUNT(*) from usuarios";
+		String query = "SELECT COUNT(*) from usuarios WHERE estado = ?";
 		
 		stmt = conn.prepareStatement(query);		
+		stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
 		
 		ResultSet rs = stmt.executeQuery();
 		int rowsCount = 0;
@@ -136,11 +138,12 @@ public class Usuario {
 	PreparedStatement stmt;
 	Connection conn = ConnectionManager.getInstance().getConnection();
 	
-	String query = "SELECT * from usuarios LIMIT ?,?";
+	String query = "SELECT * from usuarios WHERE estado = ? LIMIT ?,?";
 	
-	stmt = conn.prepareStatement(query);	
-	stmt.setInt(1, skip);
-	stmt.setInt(2, limit);
+	stmt = conn.prepareStatement(query);
+	stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+	stmt.setInt(2, skip);
+	stmt.setInt(3, limit);
 	
 	ResultSet rs = stmt.executeQuery();
 	ArrayList<negocio.Usuario> usuarios = new ArrayList<>();

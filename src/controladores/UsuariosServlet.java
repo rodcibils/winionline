@@ -54,11 +54,11 @@ public class UsuariosServlet extends HttpServlet {
 				skip = Integer.parseInt(sSkip);
 			}
 			
-//			int usuarioADesafiar;
-//			String desafiar = request.getParameter("desafiar");
-//			if(desafiar != null) {
-//				usuarioADesafiar = Integer.parseInt(desafiar);
-//			}
+			int usuarioADesafiar;
+			String desafiar = request.getParameter("desafiar");
+			if(desafiar != null) {
+				usuarioADesafiar = Integer.parseInt(desafiar);
+			}
 					
 		
 		try {

@@ -26,6 +26,7 @@
 			<thead>
 				<tr>
 				<th scope="col">ID</th>
+				<th scope="col">Nombre</th>
 				<th scope="col">Apodo</th>
 				<th scope="col">Email</th>
 				<th scope="col">Pais</th>
@@ -35,13 +36,14 @@
 				<c:forEach items="${usuarios}" var="usuario">
 					<tr>
 					<td><p><c:out value="${usuario.id}" /></p></td>
+					<td><c:out value="${usuario.nombre}" /></td>
 					<td><c:out value="${usuario.apodo}" /></td>
 					<td><c:out value="${usuario.email}" /></td>
 					<td><c:out value="${usuario.getPais().getNombre()}" /></td>
 					<td>
 						<p class="text-center">
 						<a class="btn btn-primary">Ver Perfil</a>
-<%-- 						<a class="btn btn-warning" style="margin-left:20px" href="usuarios?desafiar=${usuario.getId()}">Desafiar</a> --%>
+ 						<a class="btn btn-danger" style="margin-left:20px" href="usuarios?desafiar=${usuario.getId()}">Desafiar</a>
 						</p>
 					</td>
 					</tr>
