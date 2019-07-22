@@ -21,6 +21,10 @@
 		</script>
 		<form action="newLeague" method="post" style="margin-top:50px">
 			<div class="form-group col-5 mx-auto">
+				<input readonly type="text" class="form-congrol" id="mode" name="mode" value="${old_mode}" style="display:none">
+				<input readonly type="text" class="form-congrol" id="id" name="id" value="${old_id}" style="display:none">
+			</div>
+			<div class="form-group col-5 mx-auto">
 			    <label for="name" class="text-light">Nombre</label>
 			    <input type="text" maxlength="45" size="45" class="form-control" id="name" name="name" value="${old_nombre}"  placeholder="Ingrese nombre de la liga aquí">		    	
 		    	<small class="form-text" style="color:red">${err_nombre}</small>
@@ -40,7 +44,14 @@
 			    <small class="form-text" style="color:red">${err_eday}</small>		    	
 		  	</div>
 	  		<ul class="pagination justify-content-center">
-	  			<li class="page-item"><button type="submit" class="btn btn-primary" style="margin-top:20px">Crear Liga</button></li>
+	  			<c:choose>
+	  				<c:when test="${old_mode == 'update'}">
+	  					<li class="page-item"><button type="submit" class="btn btn-primary" style="margin-top:20px">Editar Liga</button></li>
+	  				</c:when>
+	  				<c:otherwise>
+	  					<li class="page-item"><button type="submit" class="btn btn-primary" style="margin-top:20px">Crear Liga</button></li>
+	  				</c:otherwise>
+	  			</c:choose>
 	  		</ul>
 		</form>
 	</jsp:body>
