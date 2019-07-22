@@ -21,7 +21,6 @@
 		  	</div>
 		</div>
 		<c:if test="${count > 0}">
-<!-- 	<div style="margin-top:50px; margin-left:50px; margin-right:50px"> -->
 		<table class="table table-hover table-dark">
 			<thead>
 				<tr>
@@ -92,7 +91,9 @@
 				</c:if>
 				</ul>
 			</nav>
-<!-- 	</div> -->
 	</c:if>
+	<c:if test="${count==0}">
+			<p class="h3 text-center" style="color:white; margin-left:20px; margin-top:20px">No hay usuarios que mostrar</p>
+		</c:if>
 	</jsp:body>
 </t:layout>
