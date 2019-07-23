@@ -20,6 +20,22 @@
 		    	<button type="button" class="btn btn-primary" onclick="search()">Buscar</button>
 		  	</div>
 		</div>
+		<c:if test="${friendly_sol_deleted == true}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Solicitud Eliminada</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        La solicitud ha sido eliminada correctamente.
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
 		<c:if test="${count > 0}">
 			<table class="table table-hover table-dark">
 			<thead>
@@ -88,22 +104,6 @@
 				</c:if>
 				</ul>
 			</nav>
-			<c:if test="${friendly_sol_deleted == true}">
-				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
-				    <div class="toast-header">
-				        <strong class="mr-auto"><i class="fa fa-grav"></i>Solicitud Eliminada</strong>
-				        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
-				    </div>
-				    <div class="toast-body">
-				        La solicitud ha sido eliminada correctamente.
-				    </div>
-				</div>
-				<script>
-					$(document).ready(function(){
-						$("#myToast").toast('show');
-					});
-				</script>
-			</c:if>
 		</c:if>
 		<c:if test="${count==0}">
 			<p class="h3 text-center" style="color:white; margin-left:20px; margin-top:20px">No hay solicitudes que mostrar</p>
