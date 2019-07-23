@@ -72,5 +72,8 @@ public class Solicitud {
 		this.vencimiento = vencimiento;
 	}
 	
-	
+	public void setVencimiento(java.util.Date vencimiento) {
+		Date sqlDate = new Date(vencimiento.getTime());
+		this.vencimiento = sqlDate;
+	}
 }
