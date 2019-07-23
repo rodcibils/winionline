@@ -66,11 +66,12 @@ public class Solicitud {
 		ResultSet rs = stmt.executeQuery();
 		ArrayList<negocio.Solicitud> solicitudes = new ArrayList<>();
 		while(rs.next()) {
-			negocio.Usuario jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(4));
+			negocio.Usuario jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(5));
 			negocio.Solicitud solicitud = new negocio.Solicitud();
 			solicitud.setId(rs.getInt(1));
 			solicitud.setFecha(rs.getDate(2));
-			solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
+			solicitud.setVencimiento(rs.getDate(3));
+			solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(4)));
 			solicitud.setJugadorUno(jugadorUno);
 			solicitud.setJugadorDos(jugadorDos);
 			solicitudes.add(solicitud);
@@ -100,13 +101,14 @@ public class Solicitud {
 		ResultSet rs = stmt.executeQuery();
 		ArrayList<negocio.Solicitud> solicitudes = new ArrayList<>();
 		while(rs.next()) {
-			negocio.Usuario jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(4));
+			negocio.Usuario jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(5));
 			if(jugadorUno.getNombre().contains(toSearch) || jugadorUno.getApodo().contains(toSearch))
 			{
 				negocio.Solicitud solicitud = new negocio.Solicitud();
 				solicitud.setId(rs.getInt(1));
 				solicitud.setFecha(rs.getDate(2));
-				solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
+				solicitud.setVencimiento(rs.getDate(3));
+				solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(4)));
 				solicitud.setJugadorUno(jugadorUno);
 				solicitud.setJugadorDos(jugadorDos);
 				solicitudes.add(solicitud);
@@ -151,11 +153,12 @@ public class Solicitud {
 		ResultSet rs = stmt.executeQuery();
 		ArrayList<negocio.Solicitud> solicitudes = new ArrayList<>();
 		while(rs.next()) {
-			negocio.Usuario jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(5));
+			negocio.Usuario jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(6));
 			negocio.Solicitud solicitud = new negocio.Solicitud();
 			solicitud.setId(rs.getInt(1));
 			solicitud.setFecha(rs.getDate(2));
-			solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
+			solicitud.setVencimiento(rs.getDate(3));
+			solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(4)));
 			solicitud.setJugadorUno(jugadorUno);
 			solicitud.setJugadorDos(jugadorDos);
 			solicitudes.add(solicitud);
@@ -185,13 +188,14 @@ public class Solicitud {
 		ResultSet rs = stmt.executeQuery();
 		ArrayList<negocio.Solicitud> solicitudes = new ArrayList<>();
 		while(rs.next()) {
-			negocio.Usuario jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(5));
+			negocio.Usuario jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(6));
 			if(jugadorDos.getNombre().contains(toSearch) || jugadorDos.getApodo().contains(toSearch))
 			{
 				negocio.Solicitud solicitud = new negocio.Solicitud();
 				solicitud.setId(rs.getInt(1));
 				solicitud.setFecha(rs.getDate(2));
-				solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
+				solicitud.setVencimiento(rs.getDate(3));
+				solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(4)));
 				solicitud.setJugadorUno(jugadorUno);
 				solicitud.setJugadorDos(jugadorDos);
 				solicitudes.add(solicitud);
@@ -234,7 +238,7 @@ public class Solicitud {
 		ResultSet rs = stmt.executeQuery();
 		int count = 0;
 		while(rs.next()) {
-			negocio.Usuario jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(5));
+			negocio.Usuario jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(6));
 			if(jugadorDos.getNombre().contains(toSearch) || jugadorDos.getApodo().contains(toSearch))
 			{
 				++count;
@@ -264,7 +268,7 @@ public class Solicitud {
 		ResultSet rs = stmt.executeQuery();
 		int count = 0;
 		while(rs.next()) {
-			negocio.Usuario jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(4));
+			negocio.Usuario jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(5));
 			if(jugadorUno.getNombre().contains(toSearch) || jugadorUno.getApodo().contains(toSearch))
 			{
 				++count;

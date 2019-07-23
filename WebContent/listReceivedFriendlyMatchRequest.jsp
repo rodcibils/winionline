@@ -25,7 +25,8 @@
 			<thead>
 				<tr>
 				<th scope="col">Jugador Rival</th>
-				<th scope="col">Fecha</th>
+				<th scope="col">Fecha Recepcion</th>
+				<th scope="col">Fecha Vencimiento</th>
 				<th scope="col"></th>
 				</tr>
 			</thead>
@@ -34,6 +35,7 @@
 					<tr>
 					<td><p>${solicitud.getJugadorUno().getNombre()} - ${solicitud.getJugadorUno().getApodo()}</p></td>
 					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${solicitud.getFecha()}"/></p></td>
+					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${solicitud.getVencimiento()}"/></p></td>
 					<td>
 						<p class="text-center">
 						<a class="btn btn-primary">Ver Perfil</a>
