@@ -24,7 +24,6 @@
 		<table class="table table-hover table-dark">
 			<thead>
 				<tr>
-				<th scope="col">ID</th>
 				<th scope="col">Nombre</th>
 				<th scope="col">Apodo</th>
 				<th scope="col">Email</th>
@@ -34,7 +33,6 @@
 			<tbody>
 				<c:forEach items="${usuarios}" var="usuario">
 					<tr>
-					<td><p><c:out value="${usuario.id}" /></p></td>
 					<td><c:out value="${usuario.nombre}" /></td>
 					<td><c:out value="${usuario.apodo}" /></td>
 					<td><c:out value="${usuario.email}" /></td>

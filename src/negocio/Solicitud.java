@@ -5,6 +5,7 @@ import java.sql.Date;
 public class Solicitud {
 	private int id;
 	private Date fecha;
+	private Date vencimiento;
 	private negocio.Estado estado;
 	private negocio.Usuario jugador_uno;
 	private negocio.Usuario jugador_dos;
@@ -61,6 +62,14 @@ public class Solicitud {
 
 	public void setLiga(Liga liga) {
 		this.liga = liga;
+	}
+
+	public Date getVencimiento() {
+		return vencimiento;
+	}
+
+	public void setVencimiento(Date vencimiento) {
+		this.vencimiento = vencimiento;
 	}
 	
 	
