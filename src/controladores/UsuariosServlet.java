@@ -97,7 +97,7 @@ public class UsuariosServlet extends HttpServlet {
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-		request.getRequestDispatcher("usuarios.jsp").forward(request, response);
+		request.getRequestDispatcher("listUsuarios.jsp").forward(request, response);
 	}
 
 	/**
