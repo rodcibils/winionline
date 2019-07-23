@@ -67,14 +67,16 @@ public class Usuario {
 		return usuario;
 	}
 	
-	public ArrayList<negocio.Usuario> getAll() throws SQLException, ClassNotFoundException{
+	public ArrayList<negocio.Usuario> getAll(negocio.Usuario usuarioActual) throws SQLException, ClassNotFoundException{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from usuarios";
+		String query = "SELECT * from usuarios WHERE estado= ? AND id != ?";
 		
 		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+		stmt.setInt(2, usuarioActual.getId());
 		ResultSet rs = stmt.executeQuery();
 		
 		ArrayList<negocio.Usuario> usuarios = new ArrayList<negocio.Usuario>();
@@ -107,15 +109,17 @@ public class Usuario {
 		return usuarios;
 	}
 	
-	public int getAllCount() 
+	public int getAllCount(negocio.Usuario usuarioActual) 
 			throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT COUNT(*) from usuarios";
+		String query = "SELECT COUNT(*) from usuarios WHERE estado = ? AND id != ?";
 		
 		stmt = conn.prepareStatement(query);		
+		stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+		stmt.setInt(2, usuarioActual.getId());		
 		
 		ResultSet rs = stmt.executeQuery();
 		int rowsCount = 0;
@@ -131,16 +135,18 @@ public class Usuario {
 	}
 	
 	public ArrayList<negocio.Usuario> getUsuariosPagination
-	(int skip, int limit) throws ClassNotFoundException, SQLException
+	(int skip, int limit, negocio.Usuario usuarioActual) throws ClassNotFoundException, SQLException
 {
 	PreparedStatement stmt;
 	Connection conn = ConnectionManager.getInstance().getConnection();
 	
-	String query = "SELECT * from usuarios LIMIT ?,?";
+	String query = "SELECT * from usuarios WHERE estado = ? AND id != ? LIMIT ?,?";
 	
-	stmt = conn.prepareStatement(query);	
-	stmt.setInt(1, skip);
-	stmt.setInt(2, limit);
+	stmt = conn.prepareStatement(query);
+	stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+	stmt.setInt(2, usuarioActual.getId());	
+	stmt.setInt(3, skip);
+	stmt.setInt(4, limit);
 	
 	ResultSet rs = stmt.executeQuery();
 	ArrayList<negocio.Usuario> usuarios = new ArrayList<>();
@@ -174,14 +180,16 @@ public class Usuario {
 }
 	
 	public int getCountUsuariosFiltered
-	(String toSearch) throws ClassNotFoundException, SQLException
+	(String toSearch, negocio.Usuario usuarioActual) throws ClassNotFoundException, SQLException
 {
 	PreparedStatement stmt;
 	Connection conn = ConnectionManager.getInstance().getConnection();
 	
-	String query = "SELECT * from usuarios";
+	String query = "SELECT * from usuarios WHERE estado = ? AND id != ?";
 	
 	stmt = conn.prepareStatement(query);
+	stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+	stmt.setInt(2, usuarioActual.getId());
 	
 	
 	ResultSet rs = stmt.executeQuery();
@@ -202,15 +210,17 @@ public class Usuario {
 }
 	
 	public ArrayList<negocio.Usuario> getUsuariosPagination
-	(int skip, int limit, String toSearch) 
+	(int skip, int limit, String toSearch, negocio.Usuario usuarioActual) 
 	throws ClassNotFoundException, SQLException
 {
 	PreparedStatement stmt;
 	Connection conn = ConnectionManager.getInstance().getConnection();
 	
-	String query = "SELECT * from usuarios";
+	String query = "SELECT * from usuarios WHERE estado = ? AND id != ?";
 	
 	stmt = conn.prepareStatement(query);
+	stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
+	stmt.setInt(2, usuarioActual.getId());
 	
 	ResultSet rs = stmt.executeQuery();
 	ArrayList<negocio.Usuario> usuarios = new ArrayList<>();

@@ -35,8 +35,9 @@ public class UsuariosServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-			try {
-				usuarios = datos.Usuario.getInstance().getAll();
+			negocio.Usuario usuarioActual = (negocio.Usuario)request.getSession().getAttribute("usuario");
+			try {				
+				usuarios = datos.Usuario.getInstance().getAll(usuarioActual);
 			} catch (ClassNotFoundException | SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -54,17 +55,17 @@ public class UsuariosServlet extends HttpServlet {
 				skip = Integer.parseInt(sSkip);
 			}
 			
-//			int usuarioADesafiar;
-//			String desafiar = request.getParameter("desafiar");
-//			if(desafiar != null) {
-//				usuarioADesafiar = Integer.parseInt(desafiar);
-//			}
+			int usuarioADesafiar;
+			String desafiar = request.getParameter("desafiar");
+			if(desafiar != null) {
+				usuarioADesafiar = Integer.parseInt(desafiar);
+			}
 					
 		
 		try {
 			if(toSearch == null || toSearch.contentEquals("")) {
 				count = datos.Usuario.getInstance()
-						.getAllCount();
+						.getAllCount(usuarioActual);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
 					++maxPages;
@@ -73,7 +74,7 @@ public class UsuariosServlet extends HttpServlet {
 				int currentPage = skip / LIMIT;
 				
 				ArrayList<negocio.Usuario> usuarios = datos.Usuario.getInstance()
-						.getUsuariosPagination(skip, LIMIT);
+						.getUsuariosPagination(skip, LIMIT, usuarioActual);
 				request.setAttribute("usuarios", usuarios);
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
@@ -82,7 +83,7 @@ public class UsuariosServlet extends HttpServlet {
 			} 
 			else {
 				count = datos.Usuario.getInstance()
-						.getCountUsuariosFiltered(toSearch);
+						.getCountUsuariosFiltered(toSearch, usuarioActual);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
 					++maxPages;
@@ -91,7 +92,7 @@ public class UsuariosServlet extends HttpServlet {
 				int currentPage = skip / LIMIT;
 				
 				ArrayList<negocio.Usuario> usuarios = datos.Usuario.getInstance()
-						.getUsuariosPagination(skip, LIMIT, toSearch);
+						.getUsuariosPagination(skip, LIMIT, toSearch, usuarioActual);
 				request.setAttribute("usuarios", usuarios);
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
