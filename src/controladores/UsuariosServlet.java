@@ -9,8 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import utils.Utils;
 /**
  * Servlet implementation class UsuariosServlet
  */
@@ -33,37 +31,33 @@ public class UsuariosServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+		throws ServletException, IOException {
+		negocio.Usuario usuarioActual = (negocio.Usuario)request.getSession().getAttribute("usuario");
+		try {				
+			usuarios = datos.Usuario.getInstance().getAll(usuarioActual);
+		} catch (ClassNotFoundException | SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-			negocio.Usuario usuarioActual = (negocio.Usuario)request.getSession().getAttribute("usuario");
-			try {				
-				usuarios = datos.Usuario.getInstance().getAll(usuarioActual);
-			} catch (ClassNotFoundException | SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			request.setAttribute("usuarios", usuarios);
-			String toSearch = request.getParameter("search");
-			if(toSearch!=null && !toSearch.contentEquals(lastSearch)){
-				lastSearch = toSearch;
-				skip = 0;
-			}
-			request.setAttribute("search", lastSearch);
-			
-			String sSkip = request.getParameter("skip");
-			if(sSkip != null) {
-				skip = Integer.parseInt(sSkip);
-			}
-			
-			int usuarioADesafiar;
-			String desafiar = request.getParameter("desafiar");
-			if(desafiar != null) {
-				usuarioADesafiar = Integer.parseInt(desafiar);
-			}
-					
+		request.setAttribute("usuarios", usuarios);
+		String toSearch = request.getParameter("search");
 		
+		if(toSearch!=null && !toSearch.contentEquals(lastSearch)){
+			lastSearch = toSearch;
+			skip = 0;
+		}
+		request.setAttribute("search", lastSearch);
+		
+		String sSkip = request.getParameter("skip");
+		if(sSkip != null) {
+			skip = Integer.parseInt(sSkip);
+		}
+	
 		try {
-			if(toSearch == null || toSearch.contentEquals("")) {
+			if(toSearch == null || toSearch.contentEquals("")) 
+			{
 				count = datos.Usuario.getInstance()
 						.getAllCount(usuarioActual);
 				int maxPages = count / LIMIT;
@@ -81,7 +75,8 @@ public class UsuariosServlet extends HttpServlet {
 				request.setAttribute("max_pages", maxPages);
 				request.setAttribute("count", count);
 			} 
-			else {
+			else 
+			{
 				count = datos.Usuario.getInstance()
 						.getCountUsuariosFiltered(toSearch, usuarioActual);
 				int maxPages = count / LIMIT;
