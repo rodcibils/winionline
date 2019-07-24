@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Solicitud {
 	private static Solicitud instance = null;
@@ -14,6 +16,77 @@ public class Solicitud {
 			instance = new Solicitud();
 		
 		return instance;
+	}
+	
+	public void aceptarSolicitud(int idSolicitud) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "UPDATE solicitudes SET estado=? WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.SOLICITUD_ACEPTADA);
+		stmt.setInt(2, idSolicitud);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
+	public boolean checkIfExists(int jugadorUno, int jugadorDos) 
+			throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM solicitudes WHERE jugador_uno=? "
+				+ "AND jugador_dos=? AND estado=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, jugadorUno);
+		stmt.setInt(2, jugadorDos);
+		stmt.setInt(3, negocio.Estado.SOLICITUD_PENDIENTE);
+		
+		ResultSet rs = stmt.executeQuery();
+		boolean flag = rs.next();
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return flag;
+	}
+	
+	public void createSolicitudAmistoso(int jugadorUno, int jugadorDos) 
+			throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "INSERT INTO solicitudes(fecha, vencimiento, estado, jugador_uno, "
+				+ "jugador_dos) VALUES (?,?,?,?,?)";
+		
+		Date fecha = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(fecha);
+		c.add(Calendar.DATE, 10);
+		Date vencimiento = c.getTime();
+		
+		java.sql.Date sqlFecha = new java.sql.Date(fecha.getTime());
+		java.sql.Date sqlVencimiento = new java.sql.Date(vencimiento.getTime());
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setDate(1, sqlFecha);
+		stmt.setDate(2, sqlVencimiento);
+		stmt.setInt(3, negocio.Estado.SOLICITUD_PENDIENTE);
+		stmt.setInt(4, jugadorUno);
+		stmt.setInt(5, jugadorDos);
+		
+		stmt.execute();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
 	}
 	
 	public void cleanupSolicitudes(int idJugador) throws ClassNotFoundException, SQLException

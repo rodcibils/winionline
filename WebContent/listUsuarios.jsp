@@ -20,6 +20,38 @@
 		    	<button type="button" class="btn btn-primary" onclick="search()">Buscar</button>
 		  	</div>
 		</div>
+		<c:if test="${challenge_success == true}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Solicitud de Amistoso Enviada</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        Recuerde que la solicitud caducará en 10 días si no hay respuesta del rival
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+		<c:if test="${challenge_success == false}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>No se pudo enviar solicitud</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        Ya tiene solicitudes de amistoso pendientes a ese usuario
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
 		<c:if test="${count > 0}">
 		<table class="table table-hover table-dark">
 			<thead>

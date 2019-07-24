@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 /**
  * Servlet implementation class UsuariosServlet
  */
@@ -34,6 +35,23 @@ public class UsuariosServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
 		throws ServletException, IOException {
 		negocio.Usuario usuarioActual = (negocio.Usuario)request.getSession().getAttribute("usuario");
+		
+		String idRival = request.getParameter("desafiar");
+		if(idRival != null && !idRival.isEmpty()) {	
+			try {
+				if(!datos.Solicitud.getInstance().checkIfExists(usuarioActual.getId(), 
+						Integer.parseInt(idRival))) {
+					datos.Solicitud.getInstance().createSolicitudAmistoso(usuarioActual.getId(),
+							Integer.parseInt(idRival));
+					request.setAttribute("challenge_success", true);
+				} else {
+					request.setAttribute("challenge_success", false);
+				}
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		try {				
 			usuarios = datos.Usuario.getInstance().getAll(usuarioActual);
 		} catch (ClassNotFoundException | SQLException e1) {
@@ -97,7 +115,7 @@ public class UsuariosServlet extends HttpServlet {
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-		request.getRequestDispatcher("usuarios.jsp").forward(request, response);
+		request.getRequestDispatcher("listUsuarios.jsp").forward(request, response);
 	}
 
 	/**
