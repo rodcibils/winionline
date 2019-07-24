@@ -45,7 +45,7 @@
 		  				<li class="nav-item dropdown">
 		  					<a class="nav-link dropdown-toggle" href="#" id="dropAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administrador</a>
 		  					<div class="dropdown-menu" aria-labelledby="dropAdmin">
-		  						<a class="dropdown-item" href="newLeague">Crear Liga</a>
+		  						<a class="dropdown-item" href="wwligas">Ligas</a>
 		  					</div>
 		  				</li>
 	  				</c:if>

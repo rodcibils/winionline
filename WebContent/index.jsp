@@ -91,22 +91,6 @@
 					});
 				</script>
 			</c:if>
-			<c:if test="${param.new_league_success == true}">
-				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
-				    <div class="toast-header">
-				        <strong class="mr-auto"><i class="fa fa-grav"></i>Liga Creada Exitosamente</strong>
-				        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
-				    </div>
-				    <div class="toast-body">
-				        Los jugadores ya pueden inscribirse para participar de la nueva liga.
-				    </div>
-				</div>
-				<script>
-					$(document).ready(function(){
-						$("#myToast").toast('show');
-					});
-				</script>
-			</c:if>
 		</t:layout>
 	</c:when>
 	<c:when test="${sessionScope.usuario == null}">

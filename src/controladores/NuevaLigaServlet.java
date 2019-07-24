@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,13 +36,52 @@ public class NuevaLigaServlet extends HttpServlet {
 		String currentYear = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
 		request.setAttribute("cur_season", currentYear);
 		request.setAttribute("has_datepicker", "true");
+		String mode = request.getParameter("mode");
+		try {
+			switch (mode)
+			{
+				case "insert":
+					agregar(request, response);
+					break;
+				case "update":
+					editar(request, response);
+					break;
+			}
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		request.getRequestDispatcher("newLeague.jsp").forward(request, response);
+	}
+	
+	private void agregar(HttpServletRequest request, HttpServletResponse response){
+		int id = Integer.parseInt(request.getParameter("id"));
+		request.setAttribute("old_mode", "insert");
+		request.setAttribute("old_id", id);
+	}
+
+	private void editar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException, SQLException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		int id = Integer.parseInt(request.getParameter("id"));
+		negocio.Liga nliga;
+		datos.Liga liga = new datos.Liga();
+		nliga = liga.getOne(id);
+		request.setAttribute("old_mode", "update");
+		request.setAttribute("old_id", id);
+		request.setAttribute("old_nombre", nliga.getNombre());
+		request.setAttribute("cur_season", nliga.getTemporada());
+		request.setAttribute("old_sday", dateFormat.format(nliga.getInicio()));
+		request.setAttribute("old_eday", dateFormat.format(nliga.getFin()));
+		request.setAttribute("has_datepicker", "true");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String mode = request.getParameter("mode");
+		String sid = request.getParameter("id");
 		String name = request.getParameter("name");
 		String season = request.getParameter("season");
 		String startDay = request.getParameter("start-day");
@@ -106,6 +146,8 @@ public class NuevaLigaServlet extends HttpServlet {
 		}
 		
 		if(!isValid) {
+			request.setAttribute("old_mode", mode);
+			request.setAttribute("old_id", sid);
 			request.setAttribute("old_nombre", name);
 			request.setAttribute("cur_season", season);
 			request.setAttribute("old_sday", startDay);
@@ -119,19 +161,35 @@ public class NuevaLigaServlet extends HttpServlet {
 			liga.setInicio(start);
 			liga.setFin(end);
 			datos.Liga dLiga = datos.Liga.getInstance();
-			try {
-				if(!dLiga.checkIfLigaExists(liga)) {
-					dLiga.insert(liga);
-					response.sendRedirect("index.jsp?new_league_success=true");
-				} else {
-					request.setAttribute("err_nombre", "Ya existe una liga con ese nombre en esta temporada");
-					request.setAttribute("old_nombre", name);
-					request.setAttribute("cur_season", season);
-					request.setAttribute("old_sday", startDay);
-					request.setAttribute("old_eday", endDay);
-					request.setAttribute("has_datepicker", "true");
-					request.getRequestDispatcher("newLeague.jsp").forward(request, response);
+			try 
+			{
+				switch(mode)
+				{
+				case "update":
+					int id = Integer.parseInt(sid);
+					liga.setId(id);
+					dLiga.update(liga);		
+					break;
+				case "insert":
+					if(!dLiga.checkIfLigaExists(liga))
+					{
+						dLiga.insert(liga);
+					}
+					else 
+					{
+						request.setAttribute("old_mode", mode);
+						request.setAttribute("old_id", request.getParameter("id"));
+						request.setAttribute("err_nombre", "Ya existe una liga con ese nombre en esta temporada");
+						request.setAttribute("old_nombre", name);
+						request.setAttribute("cur_season", season);
+						request.setAttribute("old_sday", startDay);
+						request.setAttribute("old_eday", endDay);
+						request.setAttribute("has_datepicker", "true");
+						request.getRequestDispatcher("newLeague.jsp").forward(request, response);
+					}
+					break;
 				}
+					response.sendRedirect("wwligas?new_league_success=true");
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
 			}

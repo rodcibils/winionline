@@ -8,7 +8,7 @@
 </head>
 <t:layout>
 	<jsp:body>
-			<script>
+		<script>
 			function search(){
 				var toSearch = document.getElementById('txtSearch').value;
 				window.location.href = "usuarios?search=" + toSearch;
