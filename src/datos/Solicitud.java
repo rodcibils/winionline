@@ -18,6 +18,23 @@ public class Solicitud {
 		return instance;
 	}
 	
+	public void aceptarSolicitud(int idSolicitud) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "UPDATE solicitudes SET estado=? WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.SOLICITUD_ACEPTADA);
+		stmt.setInt(2, idSolicitud);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public boolean checkIfExists(int jugadorUno, int jugadorDos) 
 			throws ClassNotFoundException, SQLException
 	{

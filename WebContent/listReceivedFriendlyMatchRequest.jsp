@@ -27,7 +27,23 @@
 			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
 			    </div>
 			    <div class="toast-body">
-			        La solicitud ha sido rechazada correctamente.
+			        Se registro el rechazo de la solicitud
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+		<c:if test="${accept_success == true}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Solicitud Aceptada</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        Se ha creado el partido amistoso entre los jugadores
 			    </div>
 			</div>
 			<script>
@@ -56,7 +72,7 @@
 						<p class="text-center">
 						<a class="btn btn-primary">Ver Perfil</a>
 						<a class="btn btn-danger" style="margin-left:20px" href="receivedFriendRequest?delete=${solicitud.getId()}&search=${search}">Rechazar</a>
-						<a class="btn btn-success" style="margin-left:20px" href="#">Aceptar</a>
+						<a class="btn btn-success" style="margin-left:20px" href="acceptFriendlyMatch?solicitud=${solicitud.getId()}">Aceptar</a>
 						</p>
 					</td>
 					</tr>
