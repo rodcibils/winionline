@@ -48,6 +48,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 		try {
 			paises = datos.Pais.getInstance().getAll();
 			request.setAttribute("paises", paises);
+			request.setAttribute("has_datepicker", true);
 			request.getRequestDispatcher("register.jsp").forward(request, response);
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block

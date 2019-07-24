@@ -7,6 +7,13 @@
 </head>
 <t:layout>
 	<jsp:body>
+		<script>
+			$(function() {
+			    $( "#birthdate" ).datepicker({
+			    	dateFormat: 'dd/mm/yy'
+			    });
+			});
+		</script>
 		<form action="register" method="post" enctype="multipart/form-data" style="margin-top:50px">
 			<h2 class="text-center" style="color:white; margin-bottom:30px;">Registro de Nuevo Usuario</h2>
 			<div class="form-group col-5 mx-auto">
@@ -27,7 +34,7 @@
 	  		</div>
 	  		<div class="form-group col-5 mx-auto">
 			    <label for="birthdate" class="text-light">Fecha de nacimiento</label>
-		    	<input type="text" class="form-control" id="birthdate" name="birthdate" value="${old_birthdate}" placeholder="ej: 12/12/2012">
+		    	<input type="text" class="form-control" id="birthdate" name="birthdate" value="${old_birthdate}" placeholder="ej: 12/12/2012" readonly>
 		    	<small class="form-text" style="color:red">${err_date}</small>
 	  		</div>
 	  		<div class="form-group col-5 mx-auto">
