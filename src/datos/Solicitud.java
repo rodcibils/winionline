@@ -41,11 +41,13 @@ public class Solicitud {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT * FROM solicitudes WHERE jugador_uno=? AND jugador_dos=?";
+		String query = "SELECT * FROM solicitudes WHERE jugador_uno=? "
+				+ "AND jugador_dos=? AND estado=?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, jugadorUno);
 		stmt.setInt(2, jugadorDos);
+		stmt.setInt(3, negocio.Estado.SOLICITUD_PENDIENTE);
 		
 		ResultSet rs = stmt.executeQuery();
 		boolean flag = rs.next();
