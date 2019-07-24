@@ -62,6 +62,7 @@ public class NuevaLigaServlet extends HttpServlet {
 	}
 
 	private void editar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException, SQLException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		int id = Integer.parseInt(request.getParameter("id"));
 		negocio.Liga nliga;
 		datos.Liga liga = new datos.Liga();
@@ -70,8 +71,8 @@ public class NuevaLigaServlet extends HttpServlet {
 		request.setAttribute("old_id", id);
 		request.setAttribute("old_nombre", nliga.getNombre());
 		request.setAttribute("cur_season", nliga.getTemporada());
-		request.setAttribute("old_sday", nliga.getInicio());
-		request.setAttribute("old_eday", nliga.getFin());
+		request.setAttribute("old_sday", dateFormat.format(nliga.getInicio()));
+		request.setAttribute("old_eday", dateFormat.format(nliga.getFin()));
 		request.setAttribute("has_datepicker", "true");
 	}
 

@@ -19,6 +19,7 @@ public class WWLigasServlet extends HttpServlet {
 	private ArrayList<negocio.Liga> ligas = null;
 	private static final int LIMIT = 10;
 	private int skip = 0;
+	private String lastSearch = "";
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -40,21 +41,37 @@ public class WWLigasServlet extends HttpServlet {
 				eliminar(request, response);
 			}
 			
+			String toSearch = request.getParameter("search");
+			
+			if(toSearch!=null && !toSearch.contentEquals(lastSearch)){
+				lastSearch = toSearch;
+				skip = 0;
+			}
+			
+			int count = 0;
 			String sSkip = request.getParameter("skip");
 			if(sSkip != null) {
 				skip = Integer.parseInt(sSkip);
 			}
-			
-			ligas = datos.Liga.getInstance().getAllPaginado(skip, LIMIT);
+			if(toSearch == null || toSearch.contentEquals("")) 
+			{
+				ligas = datos.Liga.getInstance().getAllPaginado(skip, LIMIT);
+				count = datos.Liga.getInstance().getCountLigas();
+			}
+			else
+			{
+				ligas = datos.Liga.getInstance().getAllPaginado(toSearch, skip, LIMIT);
+				count = datos.Liga.getInstance().getCountLigasFiltered(toSearch);
+			}
 			request.setAttribute("ligas", ligas);
 			request.setAttribute("skip", skip);
-			int count = datos.Liga.getInstance().getCountLigas();
 			int maxPages = count / LIMIT;
 			if(count % LIMIT != 0) {
 				++maxPages;
 			}
 			
 			int currentPage = skip / LIMIT;
+			request.setAttribute("search", lastSearch);
 			request.setAttribute("current_page", currentPage);
 			request.setAttribute("max_pages", maxPages);
 			request.setAttribute("count", count);

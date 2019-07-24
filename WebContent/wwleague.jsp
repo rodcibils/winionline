@@ -11,39 +11,41 @@
 	<jsp:body>
 		<jsp:useBean id="now" class="java.util.Date" />
 		<fmt:formatDate var="dateNow" value="${now}" pattern="yyyy-MM-dd" />
-		<c:if test="${sessionScope.usuario.isAdmin()}">
-			<a href="newLeague?mode=insert&id=0" class="btn btn-primary" style="margin:20px">Agregar</a>
-		</c:if>
+		<a href="newLeague?mode=insert&id=0" class="btn btn-primary" style="margin:20px">Agregar</a>
+		<script>
+			function search(){
+				var toSearch = document.getElementById('txtSearch').value;
+				window.location.href = "wwligas?search=" + toSearch;
+			}
+		</script>
+		<div class="input-group col-6 float-right" style="margin-top:20px;margin-bottom:20px;margin-right:20px">
+		  	<input type="text" id="txtSearch" class="form-control" value="${search}" placeholder="Buscar por nombre...">
+		  	<div class="input-group-append">
+		    	<button type="button" class="btn btn-primary" onclick="search()">Buscar</button>
+		  	</div>
+		</div>
 		<c:if test="${count > 0}">
-			<table class="table table-light table-striped">
+			<table class="table table-hover table-dark">
 				<thead>
 					<tr>
-						<th scope="col">#</th>
 						<th scope="col">Nombre</th>
 						<th scope="col">Temporada</th>
 						<th scope="col">Inicio</th>
 						<th scope="col">Fin</th>
-						<th scope="col">Inscribirse</th>
-						<c:if test="${sessionScope.usuario.isAdmin()}">
-							<th scope="col">Editar</th>
-							<th scope="col">Eliminar</th>
-						</c:if>
+						<th scope="col"></th>
+						<th scope="col"></th>
 					</tr>
 				</thead>
 				<tbody>
 					<c:forEach items="${ligas}" var="liga">
 						<tr>
-							<th scope="row">${liga.getId()}</th>
 							<td>${liga.getNombre()}</td>
 							<td>${liga.getTemporada()}</td>
 							<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getInicio()}"/></td>
 							<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getFin()}"/></td>
 							<c:if test="${dateNow < liga.getInicio()}">
-								<td><a href="#">Inscribirse</a></td>
-							</c:if>
-							<c:if test="${sessionScope.usuario.isAdmin() && dateNow < liga.getInicio()}">
-								<td><a href="newLeague?mode=update&id=${liga.getId()}">Editar</a></td>
-								<td><button class="dropdown-item" data-toggle="modal" onclick="eliminarClicked(${liga.getId()})">Eliminar</button></td>
+								<td><a class="btn btn-primary" href="newLeague?mode=update&id=${liga.getId()}">Editar</a></td>
+								<td><a class="btn btn-danger" data-toggle="modal" onclick="eliminarClicked(${liga.getId()})">Eliminar</a></td>
 							</c:if>
 						</tr>
 		    		</c:forEach>

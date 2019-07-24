@@ -184,6 +184,51 @@ public class Liga {
 		
 		return ligas;
 	}
+	
+	public ArrayList<negocio.Liga> getAllPaginado(String toSearch, int skip, int limit) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "SELECT * from ligas ";
+		
+		stmt = conn.prepareStatement(query);
+		ResultSet rs = stmt.executeQuery();
+		
+		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
+		while(rs.next()) {
+			negocio.Liga lg = datos.Liga.getInstance().getOne(rs.getInt(1));
+			if(lg.getNombre().contains(toSearch))
+			{
+				negocio.Liga liga = new negocio.Liga();
+				liga.setId(rs.getInt(1));
+				liga.setNombre(rs.getString(2));
+				liga.setTemporada(rs.getInt(3));
+				liga.setInicio(rs.getDate(4));
+				liga.setFin(rs.getDate(5));
+				ligas.add(liga);
+			}
+		}
+		
+		ArrayList<negocio.Liga> filteredLigas = new ArrayList<>();
+		
+		if(skip+limit < ligas.size()) { 
+			for(int i=skip; i<skip+limit; ++i)
+			{
+				filteredLigas.add(ligas.get(i));
+			}
+		} else {
+			for(int i=skip; i<ligas.size(); ++i) {
+				filteredLigas.add(ligas.get(i));
+			}
+		}
+		
+		stmt.close();
+		rs.close();
+		manager.closeConnection();
+		
+		return ligas;
+	}
 
 	public int getCountLigas() throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt;
@@ -197,6 +242,31 @@ public class Liga {
 		int rowsCount = 0;
 		while(rs.next()) {
 			rowsCount = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return rowsCount;
+	}
+
+	public int getCountLigasFiltered(String toSearch) throws SQLException, ClassNotFoundException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * from ligas";
+		
+		stmt = conn.prepareStatement(query);
+		
+		ResultSet rs = stmt.executeQuery();
+		int rowsCount = 0;
+		while(rs.next()) {
+			negocio.Liga liga = datos.Liga.getInstance().getOne(rs.getInt(1));
+			if(liga.getNombre().contains(toSearch))
+			{
+				++rowsCount;
+			}
 		}
 		
 		rs.close();
