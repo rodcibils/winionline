@@ -22,11 +22,19 @@
 		<form action="newLeague" method="post" style="margin-top:50px">
 			<div class="form-group col-5 mx-auto">
 				<input readonly type="text" class="form-congrol" id="mode" name="mode" value="${old_mode}" style="display:none">
+				<input readonly type="text" class="form-congrol" id="estado" name="estado" value="${old_estado}" style="display:none">
 				<input readonly type="text" class="form-congrol" id="id" name="id" value="${old_id}" style="display:none">
 			</div>
 			<div class="form-group col-5 mx-auto">
 			    <label for="name" class="text-light">Nombre</label>
-			    <input type="text" maxlength="45" size="45" class="form-control" id="name" name="name" value="${old_nombre}"  placeholder="Ingrese nombre de la liga aquí">		    	
+			    <c:choose>
+			    	<c:when test="${old_estado == 4}">
+			    		<input type="text" readonly maxlength="45" size="45" class="form-control" id="name" name="name" value="${old_nombre}"  placeholder="Ingrese nombre de la liga aquí">
+			    	</c:when>
+			    	<c:otherwise>
+			    		<input type="text" maxlength="45" size="45" class="form-control" id="name" name="name" value="${old_nombre}"  placeholder="Ingrese nombre de la liga aquí">
+			    	</c:otherwise>
+			    </c:choose>		    	
 		    	<small class="form-text" style="color:red">${err_nombre}</small>
 		  	</div>
 		  	<div class="form-group col-5 mx-auto">
@@ -35,12 +43,19 @@
 		  	</div>
 		  	<div class="form-group col-5 mx-auto">
 			    <label for="datepicker-start" class="text-light">Fecha de Inicio</label>
-			    <input type="text" class="form-control" id="datepicker-start" name="start-day" value="${old_sday}" placeholder="Seleccione fecha de inicio"/>
+			    <c:choose>
+			    	<c:when test="${old_estado == 4}">
+			    		<input type="text" readonly class="form-control" id="noDatepicker" name="start-day" value="${old_sday}" placeholder="Seleccione fecha de inicio"/>
+			    	</c:when>
+			    	<c:otherwise>
+			    		<input type="text" readonly class="form-control" id="datepicker-start" name="start-day" value="${old_sday}" placeholder="Seleccione fecha de inicio"/>
+			    	</c:otherwise>
+			    </c:choose>
 			    <small class="form-text" style="color:red">${err_sday}</small>	    	
 		  	</div>
 		  	<div class="form-group col-5 mx-auto">
 			    <label for="datepicker-end" class="text-light">Fecha de Fin</label>
-			    <input type="text" class="form-control" id="datepicker-end" name="end-day" value="${old_eday}" placeholder="Seleccione fecha de fin"/>
+			    <input type="text" readonly class="form-control" id="datepicker-end" name="end-day" value="${old_eday}" placeholder="Seleccione fecha de fin"/>
 			    <small class="form-text" style="color:red">${err_eday}</small>		    	
 		  	</div>
 		  	<ul class="pagination justify-content-center">

@@ -59,15 +59,18 @@ public class NuevaLigaServlet extends HttpServlet {
 		int id = Integer.parseInt(request.getParameter("id"));
 		request.setAttribute("old_mode", "insert");
 		request.setAttribute("old_id", id);
+		request.setAttribute("old_estado", id);
 	}
 
 	private void editar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ClassNotFoundException, SQLException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		int id = Integer.parseInt(request.getParameter("id"));
+		int estado = Integer.parseInt(request.getParameter("estado"));
 		negocio.Liga nliga;
 		datos.Liga liga = new datos.Liga();
 		nliga = liga.getOne(id);
 		request.setAttribute("old_mode", "update");
+		request.setAttribute("old_estado", estado);
 		request.setAttribute("old_id", id);
 		request.setAttribute("old_nombre", nliga.getNombre());
 		request.setAttribute("cur_season", nliga.getTemporada());
@@ -82,6 +85,7 @@ public class NuevaLigaServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String mode = request.getParameter("mode");
 		String sid = request.getParameter("id");
+		String sestado = request.getParameter("estado");
 		String name = request.getParameter("name");
 		String season = request.getParameter("season");
 		String startDay = request.getParameter("start-day");
@@ -148,6 +152,7 @@ public class NuevaLigaServlet extends HttpServlet {
 		if(!isValid) {
 			request.setAttribute("old_mode", mode);
 			request.setAttribute("old_id", sid);
+			request.setAttribute("old_estado", sestado);
 			request.setAttribute("old_nombre", name);
 			request.setAttribute("cur_season", season);
 			request.setAttribute("old_sday", startDay);
@@ -178,7 +183,8 @@ public class NuevaLigaServlet extends HttpServlet {
 					else 
 					{
 						request.setAttribute("old_mode", mode);
-						request.setAttribute("old_id", request.getParameter("id"));
+						request.setAttribute("old_id", sid);
+						request.setAttribute("old_id", sestado);
 						request.setAttribute("err_nombre", "Ya existe una liga con ese nombre en esta temporada");
 						request.setAttribute("old_nombre", name);
 						request.setAttribute("cur_season", season);
