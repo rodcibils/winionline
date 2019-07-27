@@ -381,6 +381,41 @@ public class Solicitud {
 		return rowsCount;
 	}
 	
+	public ArrayList<negocio.Solicitud> getAllSolicitudesAmistosos(int jugador) 
+			throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM solicitudes WHERE (jugador_uno=? OR jugador_dos=?) "
+				+ "AND estado=? AND liga IS NULL";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, jugador);
+		stmt.setInt(2, jugador);
+		stmt.setInt(3, negocio.Estado.SOLICITUD_ACEPTADA);
+		
+		ResultSet rs = stmt.executeQuery();
+		
+		ArrayList<negocio.Solicitud> solicitudes = new ArrayList<negocio.Solicitud>();
+		while(rs.next()) {
+			negocio.Solicitud solicitud = new negocio.Solicitud();
+			solicitud.setId(rs.getInt(1));
+			solicitud.setFecha(rs.getDate(2));
+			negocio.Usuario jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(5));
+			negocio.Usuario jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(6));
+			solicitud.setJugadorUno(jugadorUno);
+			solicitud.setJugadorDos(jugadorDos);
+			solicitudes.add(solicitud);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return solicitudes;
+	}
+	
 	public int getCountSolicitudesRecibidasAmistososPendientes(negocio.Usuario jugadorDos) 
 			throws ClassNotFoundException, SQLException
 	{
