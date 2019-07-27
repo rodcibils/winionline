@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Partido {
 	private static Partido instance = null;
@@ -15,6 +16,27 @@ public class Partido {
 		}
 		
 		return instance;
+	}
+	
+	public void finalizarPartido(int id, int registro) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "UPDATE partidos SET fecha=?, estado=?, registro=? WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		Date fecha = new Date();
+		java.sql.Date sqlFecha = new java.sql.Date(fecha.getTime());
+		stmt.setDate(1, sqlFecha);
+		stmt.setInt(2, negocio.Estado.PARTIDO_FINALIZADO);
+		stmt.setInt(3, registro);
+		stmt.setInt(4, id);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
 	}
 	
 	public void createAmistoso(int idSolicitud) throws ClassNotFoundException, SQLException
@@ -221,5 +243,32 @@ public class Partido {
 		ConnectionManager.getInstance().closeConnection();
 		
 		return amistososPendientes;
+	}
+	
+	public negocio.Partido getOne(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM partidos WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		
+		ResultSet rs = stmt.executeQuery();
+		negocio.Partido partido = new negocio.Partido();
+		if(rs.next()) {
+			partido.setId(rs.getInt(1));
+			partido.setFecha(rs.getDate(2));
+			partido.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
+			partido.setSolicitud(datos.Solicitud.getInstance().getOne(rs.getInt(4)));
+			partido.setRegistro(datos.Usuario.getInstance().getOne(rs.getInt(5)));
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return partido;
 	}
 }
