@@ -36,6 +36,22 @@
 				});
 			</script>
 		</c:if>
+		<c:if test="${register_success == true}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Resultado Registrado</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        El resultado del amistoso se ha registrado correctamente.
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
 		<c:if test="${count > 0}">
 			<table class="table table-hover table-dark">
 			<thead>
@@ -58,7 +74,7 @@
 					<td>
 						<p class="text-center">
 						<a class="btn btn-primary">Ver Perfil</a>
-						<a class="btn btn-success" style="margin-left:20px">Registrar Resultado</a>
+						<a class="btn btn-success" style="margin-left:20px" href="pendingFriendlyMatch?register=${amistoso.getId()}">Registrar Resultado</a>
 						<a class="btn btn-danger" style="margin-left:20px" href="pendingFriendlyMatch?reject=${amistoso.getId()}&search=${search}">Rechazar</a>
 						</p>
 					</td>

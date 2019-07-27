@@ -34,6 +34,14 @@ public class AmistososPendientesServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
+		String sRegister = request.getParameter("register");
+		if(sRegister != null && !sRegister.isEmpty()){
+			request.setAttribute("id_partido", sRegister);
+			request.setAttribute("coming_from", "pendingFriendlyMatch?skip=0");
+			request.getRequestDispatcher("registerMatchResult").forward(request, response);
+			return;
+		}
+		
 		String toSearch = request.getParameter("search");
 		if(toSearch != null && !toSearch.contentEquals(lastSearch)) {
 			lastSearch = toSearch;
