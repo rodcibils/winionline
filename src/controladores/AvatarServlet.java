@@ -31,7 +31,18 @@ public class AvatarServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+		String idUsuario = request.getParameter("id_usuario");
+		negocio.Usuario usuario = null;
+		
+		if(idUsuario == null || idUsuario.isEmpty()) {
+			usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+		} else {
+			try {
+				usuario = datos.Usuario.getInstance().getOne(Integer.parseInt(idUsuario));
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
 		response.setContentType("image");
 		String avatarPath = usuario.getAvatar();
 		if(avatarPath == null) avatarPath = this.getServletContext().getRealPath("Resources/avatar/default_avatar.jpeg");
