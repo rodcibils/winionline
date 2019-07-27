@@ -175,6 +175,7 @@ public class Liga {
 			liga.setTemporada(rs.getInt(3));
 			liga.setInicio(rs.getDate(4));
 			liga.setFin(rs.getDate(5));
+			liga.setEstado(datos.Estado.getInstance().getOne(rs.getInt(6)));
 			ligas.add(liga);
 		}
 		
@@ -185,7 +186,7 @@ public class Liga {
 		return ligas;
 	}
 	
-	public ArrayList<negocio.Liga> getAllPaginado(String toSearch, int skip, int limit) throws ClassNotFoundException, SQLException {
+	public ArrayList<negocio.Liga> getAllPaginado(String toSearch, int yearSearch, int skip, int limit) throws ClassNotFoundException, SQLException {
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
@@ -200,13 +201,30 @@ public class Liga {
 			negocio.Liga lg = datos.Liga.getInstance().getOne(rs.getInt(1));
 			if(lg.getNombre().contains(toSearch))
 			{
-				negocio.Liga liga = new negocio.Liga();
-				liga.setId(rs.getInt(1));
-				liga.setNombre(rs.getString(2));
-				liga.setTemporada(rs.getInt(3));
-				liga.setInicio(rs.getDate(4));
-				liga.setFin(rs.getDate(5));
-				ligas.add(liga);
+				if (yearSearch == 0)
+				{
+					negocio.Liga liga = new negocio.Liga();
+					liga.setId(rs.getInt(1));
+					liga.setNombre(rs.getString(2));
+					liga.setTemporada(rs.getInt(3));
+					liga.setInicio(rs.getDate(4));
+					liga.setFin(rs.getDate(5));
+					liga.setEstado(datos.Estado.getInstance().getOne(rs.getInt(6)));
+					ligas.add(liga);
+				}else
+				{
+					if (yearSearch == lg.getTemporada())
+					{
+						negocio.Liga liga = new negocio.Liga();
+						liga.setId(rs.getInt(1));
+						liga.setNombre(rs.getString(2));
+						liga.setTemporada(rs.getInt(3));
+						liga.setInicio(rs.getDate(4));
+						liga.setFin(rs.getDate(5));
+						liga.setEstado(datos.Estado.getInstance().getOne(rs.getInt(6)));
+						ligas.add(liga);
+					}
+				}
 			}
 		}
 		
@@ -251,7 +269,7 @@ public class Liga {
 		return rowsCount;
 	}
 
-	public int getCountLigasFiltered(String toSearch) throws SQLException, ClassNotFoundException {
+	public int getCountLigasFiltered(String toSearch, int yearSearch) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
@@ -265,7 +283,16 @@ public class Liga {
 			negocio.Liga liga = datos.Liga.getInstance().getOne(rs.getInt(1));
 			if(liga.getNombre().contains(toSearch))
 			{
-				++rowsCount;
+				if (yearSearch == 0)
+				{
+					++rowsCount;
+				}else
+				{
+					if (yearSearch == liga.getTemporada())
+					{
+						++rowsCount;
+					}
+				}
 			}
 		}
 		

@@ -20,6 +20,7 @@ public class WWLigasServlet extends HttpServlet {
 	private static final int LIMIT = 10;
 	private int skip = 0;
 	private String lastSearch = "";
+	private int lastYearSearch = 0;
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -42,9 +43,18 @@ public class WWLigasServlet extends HttpServlet {
 			}
 			
 			String toSearch = request.getParameter("search");
+			int yearSearch;
+			if (request.getParameter("yearSearch") == null)
+				yearSearch = 0;
+			else
+				yearSearch = Integer.parseInt(request.getParameter("yearSearch"));
 			
 			if(toSearch!=null && !toSearch.contentEquals(lastSearch)){
 				lastSearch = toSearch;
+				skip = 0;
+			}
+			if(yearSearch != 0 && yearSearch == lastYearSearch){
+				lastYearSearch = yearSearch;
 				skip = 0;
 			}
 			
@@ -53,15 +63,15 @@ public class WWLigasServlet extends HttpServlet {
 			if(sSkip != null) {
 				skip = Integer.parseInt(sSkip);
 			}
-			if(toSearch == null || toSearch.contentEquals("")) 
+			if((toSearch == null || toSearch.contentEquals("")) && (yearSearch == 0))
 			{
 				ligas = datos.Liga.getInstance().getAllPaginado(skip, LIMIT);
 				count = datos.Liga.getInstance().getCountLigas();
 			}
 			else
 			{
-				ligas = datos.Liga.getInstance().getAllPaginado(toSearch, skip, LIMIT);
-				count = datos.Liga.getInstance().getCountLigasFiltered(toSearch);
+				ligas = datos.Liga.getInstance().getAllPaginado(toSearch, yearSearch, skip, LIMIT);
+				count = datos.Liga.getInstance().getCountLigasFiltered(toSearch, yearSearch);
 			}
 			request.setAttribute("ligas", ligas);
 			request.setAttribute("skip", skip);
@@ -72,6 +82,7 @@ public class WWLigasServlet extends HttpServlet {
 			
 			int currentPage = skip / LIMIT;
 			request.setAttribute("search", lastSearch);
+//			request.setAttribute("year", lastYearSearch);
 			request.setAttribute("current_page", currentPage);
 			request.setAttribute("max_pages", maxPages);
 			request.setAttribute("count", count);
