@@ -63,6 +63,7 @@
 	  					<div class="dropdown-menu" aria-labelledby="dropAmistosos">
 	  						<a class="dropdown-item" href="sentFriendRequest?skip=0">Solicitudes Enviadas</a>
 	  						<a class="dropdown-item" href="receivedFriendRequest?skip=0">Solicitudes Recibidas</a>
+	  						<a class="dropdown-item" href="pendingFriendlyMatch?skip=0">Amistosos Pendientes</a>
 	  					</div>
 	  				</li>
 	  				<li class="nav-item dropdown">

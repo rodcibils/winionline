@@ -190,9 +190,12 @@ CREATE TABLE `partidos` (
   `fecha` datetime DEFAULT NULL,
   `estado` int(11) NOT NULL,
   `solicitud` int(11) NOT NULL,
+  `registro` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_partidos_solicitudes_idx` (`solicitud`),
+  KEY `fk_partidos_registro_idx` (`registro`),
+  CONSTRAINT `fk_partidos_registro` FOREIGN KEY (`registro`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_partidos_solicitudes` FOREIGN KEY (`solicitud`) REFERENCES `solicitudes` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -217,6 +220,7 @@ CREATE TABLE `resultados` (
   `id_jugador` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
   `goles` int(11) NOT NULL,
+  PRIMARY KEY (`id_jugador`,`id_partido`,`goles`),
   KEY `fk_resultados_uno_idx` (`id_jugador`),
   KEY `fk_resultados_partido_idx` (`id_partido`),
   CONSTRAINT `fk_resultados_jugador` FOREIGN KEY (`id_jugador`) REFERENCES `usuarios` (`id`),
@@ -488,4 +492,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-23 23:07:39
+-- Dump completed on 2019-07-27 19:10:50

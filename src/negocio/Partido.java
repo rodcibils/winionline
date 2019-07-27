@@ -7,6 +7,7 @@ public class Partido {
 	private Date fecha;
 	private Estado estado;
 	private Solicitud solicitud;
+	private Usuario registro;
 	
 	public int getId() {
 		return id;
@@ -43,5 +44,13 @@ public class Partido {
 
 	public void setSolicitud(Solicitud solicitud) {
 		this.solicitud = solicitud;
+	}
+
+	public Usuario getRegistro() {
+		return registro;
+	}
+
+	public void setRegistro(Usuario registro) {
+		this.registro = registro;
 	}
 }
