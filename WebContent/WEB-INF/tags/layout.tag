@@ -66,6 +66,13 @@
 	  						<a class="dropdown-item" href="pendingFriendlyMatch?skip=0">Amistosos Pendientes</a>
 	  					</div>
 	  				</li>
+	  				<li class="nav-item dropdown">
+	  					<a class="nav-link dropdown-toggle" href="#" id="dropLigas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ligas</a>
+	  					<div class="dropdown-menu" aria-labelledby="dropLigas">
+	  						<a class="dropdown-item" href="misLigas?skip=0">Mis Ligas</a>
+	  						<a class="dropdown-item" href="ligas?skip=0">Inscribirme a Liga</a>
+	  					</div>
+	  				</li>
 	  				<li class="nav-item">
 	  					<a class="nav-link" href="login">Cerrar Sesión</a>
 	  				</li>	  				
