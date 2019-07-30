@@ -3,7 +3,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import="negocio.Estado" %>
+<%@page import="negocio.Estado" %>
 
 <head>
 	<title>Winionline | Ligas</title>
@@ -50,7 +50,6 @@
 						<th scope="col">Fin</th>
 						<th scope="col">Estado</th>
 						<th scope="col"></th>
-						<th scope="col"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -63,12 +62,21 @@
 							<td>${liga.getEstado().getDescripcion()}</td>
 							<c:choose>
 								<c:when test="${liga.getEstado().getId() == Estado.LIGA_FINALIZADA}">
-									<td><a class="btn btn-primary disabled" href="#">Editar</a></td>
-									<td><a class="btn btn-danger disabled" href="#">Eliminar</a></td>
+									<td>
+										<a class="btn btn-primary disabled" href="#">Editar</a>
+										<a class="btn btn-danger disabled" style="margin-left:20px" href="#">Eliminar</a>
+									</td>
 								</c:when>
 								<c:otherwise>
-									<td><a class="btn btn-primary" href="newLeague?mode=update&id=${liga.getId()}&estado=${liga.getEstado().getId()}">Editar</a></td>
-									<td><a class="btn btn-danger" href="#" data-toggle="modal" onclick="eliminarClicked(${liga.getId()})">Eliminar</a></td>
+									<td>
+										<a class="btn btn-primary" href="newLeague?mode=update&id=${liga.getId()}&estado=${liga.getEstado().getId()}">Editar</a>
+										<c:if test="${liga.getEstado().getId() != Estado.LIGA_INICIADA}">
+										<a class="btn btn-danger" href="#" style="margin-left:20px" data-toggle="modal" onclick="eliminarClicked(${liga.getId()})">Eliminar</a>
+										</c:if>
+										<c:if test="${liga.getEstado().getId() == Estado.LIGA_INICIADA}">
+										<a class="btn btn-danger disabled" href="#" style="margin-left:20px" data-toggle="modal" onclick="eliminarClicked(${liga.getId()})">Eliminar</a>
+										</c:if>
+									</td>
 								</c:otherwise>
 							</c:choose>
 						</tr>
