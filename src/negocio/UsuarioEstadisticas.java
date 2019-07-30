@@ -1,6 +1,7 @@
 package negocio;
 
 public class UsuarioEstadisticas {
+	private int idUsuario;
 	private int pos;
 	private String nombre;
 	private int puntos;
@@ -91,5 +92,13 @@ public class UsuarioEstadisticas {
 
 	public void setPartJugados(int partJugados) {
 		this.partJugados = partJugados;
+	}
+
+	public int getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(int id) {
+		this.idUsuario = id;
 	}
 }

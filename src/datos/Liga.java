@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import negocio.Estado;
+import negocio.ResultadoPartido;
+import negocio.Usuario;
 import negocio.UsuarioEstadisticas;
 
 public class Liga {
@@ -648,6 +650,7 @@ public class Liga {
 			negocio.UsuarioEstadisticas ue = new UsuarioEstadisticas();
 			ue = buscaSolicitudes(us.getId(), idLiga);
 			ue.setPos(0);
+			ue.setIdUsuario(us.getId());
 			ue.setNombre(us.getNombre());
 			usuariosEstadisticas.add(ue);
 		}
@@ -788,6 +791,53 @@ public class Liga {
 		manager.closeConnection();
 		
 		return goles;	
+	}
+
+	public ArrayList<ResultadoPartido> getAllPartidosLigaUsuario(int idLiga, int idUsuario) throws SQLException, ClassNotFoundException {
+		negocio.Usuario jugadorUno;
+		negocio.Usuario jugadorDos;
+		int idSolicitud;
+		ArrayList<negocio.ResultadoPartido> resultadosPartidos = new ArrayList<ResultadoPartido>();
+		
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "SELECT * from solicitudes WHERE (jugador_uno=? OR jugador_dos=?) AND estado=? AND liga=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, idUsuario);
+		stmt.setInt(3, Estado.SOLICITUD_ACEPTADA);
+		stmt.setInt(4, idLiga);
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			negocio.ResultadoPartido rp = new ResultadoPartido();
+			jugadorUno = new Usuario();
+			jugadorDos = new Usuario();
+			jugadorUno = datos.Usuario.getInstance().getOne(rs.getInt(5));
+			jugadorDos = datos.Usuario.getInstance().getOne(rs.getInt(6));
+			idSolicitud = rs.getInt(7);
+			
+			
+			int golesJugadorUno = buscaPartidoJugador(jugadorUno.getId(), idSolicitud);
+			int golesJugadorDos = buscaPartidoJugador(jugadorDos.getId(), idSolicitud);
+			
+			if (golesJugadorUno != 99 && golesJugadorDos != 99)
+			{
+				rp.setNombreJugadorUno(jugadorUno.getNombre());
+				rp.setNombreJugadorDos(jugadorDos.getNombre());
+				rp.setGolesJugadorUno(golesJugadorUno);
+				rp.setGolesJugadorDos(golesJugadorDos);
+				resultadosPartidos.add(rp);
+			}
+		}
+		
+		stmt.close();
+		rs.close();
+		manager.closeConnection();
+		return resultadosPartidos;
 	}
 	
 }

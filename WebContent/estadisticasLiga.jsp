@@ -4,7 +4,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <head>
-	<title>Winionline | Mis Ligas </title>
+	<title>Winionline | Estadisticas liga </title>
 </head>
 <t:layout>
 	<jsp:body>		
@@ -20,7 +20,8 @@
 				<th scope="col">P</th>
 				<th scope="col">GF</th>
 				<th scope="col">GC</th>				
-				<th scope="col">DG</th>				
+				<th scope="col">DG</th>
+				<th scope="col"></th>				
 				</tr>
 			</thead>
 			<tbody>
@@ -35,7 +36,15 @@
 					<td>${eu.getPartPerdidos()}</td>
 					<td>${eu.getGolesFavor()}</td>	
 					<td>${eu.getGolesContra()}</td>
-					<td>${eu.getGolesDiferencia()}</td>					
+					<td>${eu.getGolesDiferencia()}</td>
+					<c:choose>
+						<c:when test="${eu.getPartJugados() == 0}">
+							<td><a class="btn btn-primary disabled" href="#">Partidos</a></td>
+						</c:when>
+						<c:otherwise>
+							<td><a class="btn btn-primary" href="partidosusuarioliga?idliga=${idLiga}&idusuario=${eu.getIdUsuario()}">Partidos</a></td>
+						</c:otherwise>
+					</c:choose>					
 					</tr>
 				</c:forEach>
 			</tbody>
