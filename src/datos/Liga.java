@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import negocio.Estado;
+import negocio.UsuarioEstadisticas;
 
 public class Liga {
 	private static Liga instance = null;
@@ -603,6 +604,136 @@ public class Liga {
 		manager.closeConnection();
 		
 		return ligas;
+	}
+
+	public ArrayList<UsuarioEstadisticas> getAllStatsUsuarios(int idLiga) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "SELECT * from usuario_liga WHERE id_liga=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idLiga);
+		ResultSet rs = stmt.executeQuery();
+		
+		ArrayList<negocio.UsuarioEstadisticas> usuariosEstadisticas = new ArrayList<negocio.UsuarioEstadisticas>();
+		while(rs.next()) {
+			negocio.Usuario us = datos.Usuario.getInstance().getOne(rs.getInt(1));
+			negocio.UsuarioEstadisticas ue = new UsuarioEstadisticas();
+			ue = buscaSolicitudes(us.getId(), idLiga);
+			ue.setPos(0);
+			ue.setNombre(us.getNombre());
+			usuariosEstadisticas.add(ue);
+		}
+		
+		stmt.close();
+		rs.close();
+		manager.closeConnection();
+		
+		// FALTA ORDENAR POR (PUNTOS), (DIFFGOLES), (GOLESFAVOR), GOLESCONTRA con ese sort
+		// LUEGO SETEAR LA POSICION DE A 1 EN EL FOREACH
+		
+		return usuariosEstadisticas;
+	}
+
+	private UsuarioEstadisticas buscaSolicitudes(int idUsu, int idLiga) throws SQLException, ClassNotFoundException {
+		int jugadorUno;
+		int jugadorDos;
+		int idSolicitud;
+		int golesContra=0;
+		int golesFavor=0;
+		int partGanados=0;
+		int partPerdidos=0;
+		int partEmpatados=0;
+		negocio.UsuarioEstadisticas ue = new UsuarioEstadisticas();
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "SELECT * from solicitudes WHERE (jugador_uno=? OR jugador_dos=?) AND estado=? AND liga=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsu);
+		stmt.setInt(2, idUsu);
+		stmt.setInt(3, Estado.SOLICITUD_ACEPTADA);
+		stmt.setInt(4, idLiga);
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			jugadorUno = rs.getInt(5);
+			jugadorDos = rs.getInt(6);
+			idSolicitud = rs.getInt(7);
+
+			int golesJugadorUno = buscaGolesJugador(jugadorUno, idSolicitud);
+			int golesJugadorDos = buscaGolesJugador(jugadorDos, idSolicitud);
+			
+			if (golesJugadorUno != 99 && golesJugadorDos != 99)
+			{
+				if (idUsu == jugadorUno)
+				{
+					golesContra += golesJugadorDos;
+					golesFavor += golesJugadorUno;
+					if (golesJugadorUno > golesJugadorDos)
+						partGanados ++;
+					else 
+						if (golesJugadorDos > golesJugadorUno)
+							partPerdidos ++;
+						else
+							partEmpatados ++;						
+				}else
+				{
+					golesContra += golesJugadorUno;
+					golesFavor += golesJugadorDos;
+					if (golesJugadorDos > golesJugadorUno)
+						partGanados ++;
+					else 
+						if (golesJugadorUno > golesJugadorDos)
+							partPerdidos ++;
+						else
+							partEmpatados ++;
+				}
+			}
+		}
+		ue.setGolesContra(golesContra);
+		ue.setGolesFavor(golesFavor);
+		ue.setGolesDiferencia(golesFavor-golesContra);
+		ue.setPartEmpatados(partEmpatados);
+		ue.setPartGanados(partGanados);
+		ue.setPartGanados(partGanados);
+		ue.setPartJugados(partEmpatados+partGanados+partPerdidos);
+		ue.setPuntos((partGanados*3)+partEmpatados);
+		
+		stmt.close();
+		rs.close();
+		manager.closeConnection();
+		return ue;		
+	}
+
+	private int buscaGolesJugador(int jugador, int idSolicitud) throws SQLException, ClassNotFoundException {
+		int goles = 99;
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "SELECT * from partidos pa INNER JOIN resultados re ON pa.id=re.id_partido "+
+		"WHERE pa.solicitud=? AND pa.estado=? AND re.id_jugador=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idSolicitud);
+		stmt.setInt(2, Estado.PARTIDO_FINALIZADO);
+		stmt.setInt(3, jugador);
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			goles = rs.getInt(3);
+		}
+		
+		stmt.close();
+		rs.close();
+		manager.closeConnection();
+		
+		return goles;	
 	}
 	
 }
