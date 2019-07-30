@@ -103,6 +103,7 @@ public class Liga {
 		ResultSet rs = stmt.executeQuery();
 		
 		if(rs.next()) {
+			int cantidad = getCountUsuariosInscriptosPorLiga(rs.getInt(1));
 			negocio.Liga liga = new negocio.Liga();
 			liga.setId(rs.getInt(1));
 			liga.setNombre(rs.getString(2));
@@ -110,6 +111,7 @@ public class Liga {
 			liga.setInicio(rs.getDate(4));
 			liga.setFin(rs.getDate(5));
 			liga.setEstado(datos.Estado.getInstance().getOne(rs.getInt(6)));
+			liga.setCantidadInscriptos(cantidad);
 			ligas.add(liga);
 		}
 		
@@ -118,6 +120,28 @@ public class Liga {
 		manager.closeConnection();
 		
 		return ligas;
+	}
+	
+	public int getCountUsuariosInscriptosPorLiga(int idLiga) throws SQLException, ClassNotFoundException {
+		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		int count = 0;
+		String query = "SELECT COUNT(*) from usuario_liga where id_liga=?";
+		stmt = conn.prepareStatement(query);	
+		stmt.setInt(1, idLiga);
+		ResultSet rs = stmt.executeQuery();
+		
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		stmt.close();
+		rs.close();
+		manager.closeConnection();
+		return count;
+		
 	}
 	
 	
@@ -233,12 +257,14 @@ public class Liga {
 		
 		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
 		while(rs.next()) {
+			int cantidad = getCountUsuariosInscriptosPorLiga(rs.getInt(1));
 			negocio.Liga liga = new negocio.Liga();
 			liga.setId(rs.getInt(1));
 			liga.setNombre(rs.getString(2));
 			liga.setTemporada(rs.getInt(3));
 			liga.setInicio(rs.getDate(4));
 			liga.setFin(rs.getDate(5));
+			liga.setCantidadInscriptos(cantidad);
 			ligas.add(liga);
 		}
 		
@@ -329,6 +355,7 @@ public class Liga {
 			negocio.Liga lg = datos.Liga.getInstance().getOne(rs.getInt(1));
 			if(lg.getNombre().contains(toSearch))
 			{
+				int cantidad = getCountUsuariosInscriptosPorLiga(rs.getInt(1));
 				negocio.Liga liga = new negocio.Liga();
 				liga.setId(rs.getInt(1));
 				liga.setNombre(rs.getString(2));

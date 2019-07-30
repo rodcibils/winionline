@@ -26,8 +26,9 @@
 				<tr>
 				<th scope="col">Nombre</th>
 				<th scope="col">Temporada</th>
-				<th scope="col">FechaInicio</th>
-				<th scope="col">FechaFin</th>				
+				<th scope="col">Inicio</th>
+				<th scope="col">Fin</th>
+				<th scope="col">Inscriptos</th>
 				<th scope="col"></th>				
 				</tr>
 			</thead>
@@ -38,6 +39,7 @@
 					<td>${liga.getTemporada()}</td>
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getInicio()}"/></td>
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getFin()}"/></td>
+					<td>${liga.getCantidadInscriptos()}</td>
 					<td>
 						<p class="text-center">						
  						<a class="btn btn-danger" style="margin-left:20px" href="ligas?inscripcion=${liga.getId()}">Inscribirme</a>

@@ -95,7 +95,7 @@ public class InscripcionLigaServlet extends HttpServlet {
 				
 				ArrayList<negocio.Liga> ligas = datos.Liga.getInstance()
 						.getLigasPaginationByEstado(toSearch, skip, LIMIT, 3);
-				request.setAttribute("usuarios", ligas);
+				request.setAttribute("ligas", ligas);
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
 				request.setAttribute("max_pages", maxPages);
