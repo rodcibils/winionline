@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import negocio.Estado;
 import negocio.UsuarioEstadisticas;
@@ -676,7 +677,8 @@ public class Liga {
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from solicitudes WHERE (jugador_uno=? OR jugador_dos=?) AND estado=? AND liga=?";
+		String query = "SELECT * from solicitudes WHERE (jugador_uno=? OR jugador_dos=?) "
+				+ "AND estado=? AND liga=?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idUsu);
@@ -761,4 +763,21 @@ public class Liga {
 		return goles;	
 	}
 	
+	public List<Integer> getTemporadas() throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT temporada FROM ligas GROUP BY temporada ORDER BY temporada DESC";
+		
+		stmt = conn.prepareStatement(query);
+		
+		List<Integer> temporadas = new ArrayList<>();
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			temporadas.add(rs.getInt(1));
+		}
+		
+		return temporadas;
+	}
 }

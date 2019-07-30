@@ -3,6 +3,7 @@ package controladores;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -35,7 +36,11 @@ public class WWLigasServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		try {			
+		try 
+		{
+			List<Integer> temporadas = datos.Liga.getInstance().getTemporadas();
+			request.setAttribute("temporadas", temporadas);
+			
 			String action = request.getParameter("action");
 			if (action != null && action.equals("eliminar"))
 			{
@@ -43,6 +48,7 @@ public class WWLigasServlet extends HttpServlet {
 			}
 			
 			String toSearch = request.getParameter("search");
+			
 			int yearSearch;
 			if (request.getParameter("yearSearch") == null)
 				yearSearch = 0;
@@ -53,7 +59,8 @@ public class WWLigasServlet extends HttpServlet {
 				lastSearch = toSearch;
 				skip = 0;
 			}
-			if(yearSearch != 0 && yearSearch == lastYearSearch){
+			
+			if(yearSearch != lastYearSearch){
 				lastYearSearch = yearSearch;
 				skip = 0;
 			}
@@ -82,7 +89,7 @@ public class WWLigasServlet extends HttpServlet {
 			
 			int currentPage = skip / LIMIT;
 			request.setAttribute("search", lastSearch);
-//			request.setAttribute("year", lastYearSearch);
+			request.setAttribute("year", lastYearSearch);
 			request.setAttribute("current_page", currentPage);
 			request.setAttribute("max_pages", maxPages);
 			request.setAttribute("count", count);

@@ -10,9 +10,6 @@
 </head>
 <t:layout>
 	<jsp:body>
-		<jsp:useBean id="now" class="java.util.Date" />
-		<fmt:formatDate var="dateNow" value="${now}" pattern="yyyy-MM-dd" />
-		<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
 		<a href="newLeague?mode=insert&id=0&estado=0" class="btn btn-primary" style="margin:20px">Agregar</a>
 		<script>
 			function search(){
@@ -23,10 +20,19 @@
 		</script>
 		<div class="input-group col-6 float-right" style="margin-top:20px;margin-bottom:20px;margin-right:20px">
 			<select id="year" name="year" class="custom-select" style="max-width: 100px">
+				<c:if test="${year==0}">
+				<option value="0" selected>Todos</option>
+				</c:if>
+				<c:if test="${year!=0}">
 				<option value="0">Todos</option>
-	            <c:forEach begin="0" end="10" var="val">
-	                <c:set var="anio" value="${year - val}"/>
-	                <option value="${anio}">${anio}</option>
+				</c:if>
+	            <c:forEach items="${temporadas}" var="temporada">
+	            	<c:if test="${year == temporada}">
+	                <option value="${temporada}" selected>${temporada}</option>
+	                </c:if>
+	                <c:if test="${year != temporada}">
+	                <option value="${temporada}">${temporada}</option>
+	                </c:if>
 	            </c:forEach>
 			</select>
 		  	<input type="text" id="txtSearch" class="form-control" value="${search}" placeholder="Buscar por nombre...">
