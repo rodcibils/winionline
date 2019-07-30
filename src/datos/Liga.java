@@ -692,8 +692,8 @@ public class Liga {
 			jugadorDos = rs.getInt(6);
 			idSolicitud = rs.getInt(7);
 
-			int golesJugadorUno = buscaGolesJugador(jugadorUno, idSolicitud);
-			int golesJugadorDos = buscaGolesJugador(jugadorDos, idSolicitud);
+			int golesJugadorUno = buscaPartidoJugador(jugadorUno, idSolicitud);
+			int golesJugadorDos = buscaPartidoJugador(jugadorDos, idSolicitud);
 			
 			if (golesJugadorUno != 99 && golesJugadorDos != 99)
 			{
@@ -737,19 +737,48 @@ public class Liga {
 		return ue;		
 	}
 
-	private int buscaGolesJugador(int jugador, int idSolicitud) throws SQLException, ClassNotFoundException {
+	private int buscaPartidoJugador(int jugador, int idSolicitud) throws SQLException, ClassNotFoundException {
 		int goles = 99;
+		int idPartido = 0;
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from partidos pa INNER JOIN resultados re ON pa.id=re.id_partido "+
-		"WHERE pa.solicitud=? AND pa.estado=? AND re.id_jugador=?";
+		String query = "SELECT * from partidos "+
+		"WHERE solicitud=? AND pa.estado=?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idSolicitud);
 		stmt.setInt(2, Estado.PARTIDO_FINALIZADO);
-		stmt.setInt(3, jugador);
+
+		ResultSet rs = stmt.executeQuery();
+		
+		while(rs.next()) {
+			idPartido = rs.getInt(1);
+		}
+		
+		stmt.close();
+		rs.close();
+		manager.closeConnection();
+		
+		goles = buscaGolesJugador(idPartido, jugador);
+		
+		return goles;	
+	}
+	
+	private int buscaGolesJugador(int idPartido, int jugador) throws SQLException, ClassNotFoundException {
+		int goles = 0;
+		PreparedStatement stmt;
+		ConnectionManager manager = ConnectionManager.getInstance();
+		Connection conn = manager.getConnection();
+		
+		String query = "SELECT * from resultados "+
+		"WHERE id_partido=? AND id_jugador=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idPartido);
+		stmt.setInt(2, jugador);
+		
 		ResultSet rs = stmt.executeQuery();
 		
 		while(rs.next()) {
