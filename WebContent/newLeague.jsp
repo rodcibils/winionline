@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@page import="negocio.Estado" %>
 <head>
 	<title>Winionline | Crear Nueva Liga</title>
 </head>
@@ -28,7 +29,7 @@
 			<div class="form-group col-5 mx-auto">
 			    <label for="name" class="text-light">Nombre</label>
 			    <c:choose>
-			    	<c:when test="${old_estado == 4}">
+			    	<c:when test="${old_estado == Estado.LIGA_INICIADA}">
 			    		<input type="text" readonly maxlength="45" size="45" class="form-control" id="name" name="name" value="${old_nombre}"  placeholder="Ingrese nombre de la liga aquí">
 			    	</c:when>
 			    	<c:otherwise>
@@ -44,7 +45,7 @@
 		  	<div class="form-group col-5 mx-auto">
 			    <label for="datepicker-start" class="text-light">Fecha de Inicio</label>
 			    <c:choose>
-			    	<c:when test="${old_estado == 4}">
+			    	<c:when test="${old_estado == Estado.LIGA_INICIADA}">
 			    		<input type="text" readonly class="form-control" id="noDatepicker" name="start-day" value="${old_sday}" placeholder="Seleccione fecha de inicio"/>
 			    	</c:when>
 			    	<c:otherwise>

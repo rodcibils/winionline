@@ -3,16 +3,13 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page import="negocio.Estado" %>
+<%@page import="negocio.Estado" %>
 
 <head>
 	<title>Winionline | Ligas</title>
 </head>
 <t:layout>
 	<jsp:body>
-		<jsp:useBean id="now" class="java.util.Date" />
-		<fmt:formatDate var="dateNow" value="${now}" pattern="yyyy-MM-dd" />
-		<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
 		<a href="newLeague?mode=insert&id=0&estado=0" class="btn btn-primary" style="margin:20px">Agregar</a>
 		<script>
 			function search(){
@@ -23,10 +20,19 @@
 		</script>
 		<div class="input-group col-6 float-right" style="margin-top:20px;margin-bottom:20px;margin-right:20px">
 			<select id="year" name="year" class="custom-select" style="max-width: 100px">
+				<c:if test="${year==0}">
+				<option value="0" selected>Todos</option>
+				</c:if>
+				<c:if test="${year!=0}">
 				<option value="0">Todos</option>
-	            <c:forEach begin="0" end="10" var="val">
-	                <c:set var="anio" value="${year - val}"/>
-	                <option value="${anio}">${anio}</option>
+				</c:if>
+	            <c:forEach items="${temporadas}" var="temporada">
+	            	<c:if test="${year == temporada}">
+	                <option value="${temporada}" selected>${temporada}</option>
+	                </c:if>
+	                <c:if test="${year != temporada}">
+	                <option value="${temporada}">${temporada}</option>
+	                </c:if>
 	            </c:forEach>
 			</select>
 		  	<input type="text" id="txtSearch" class="form-control" value="${search}" placeholder="Buscar por nombre...">
@@ -44,7 +50,6 @@
 						<th scope="col">Fin</th>
 						<th scope="col">Estado</th>
 						<th scope="col"></th>
-						<th scope="col"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -57,12 +62,21 @@
 							<td>${liga.getEstado().getDescripcion()}</td>
 							<c:choose>
 								<c:when test="${liga.getEstado().getId() == Estado.LIGA_FINALIZADA}">
-									<td><a class="btn btn-primary disabled" href="#">Editar</a></td>
-									<td><a class="btn btn-danger disabled" href="#">Eliminar</a></td>
+									<td>
+										<a class="btn btn-primary disabled" href="#">Editar</a>
+										<a class="btn btn-danger disabled" style="margin-left:20px" href="#">Eliminar</a>
+									</td>
 								</c:when>
 								<c:otherwise>
-									<td><a class="btn btn-primary" href="newLeague?mode=update&id=${liga.getId()}&estado=${liga.getEstado().getId()}">Editar</a></td>
-									<td><a class="btn btn-danger" href="#" data-toggle="modal" onclick="eliminarClicked(${liga.getId()})">Eliminar</a></td>
+									<td>
+										<a class="btn btn-primary" href="newLeague?mode=update&id=${liga.getId()}&estado=${liga.getEstado().getId()}">Editar</a>
+										<c:if test="${liga.getEstado().getId() != Estado.LIGA_INICIADA}">
+										<a class="btn btn-danger" href="#" style="margin-left:20px" data-toggle="modal" onclick="eliminarClicked(${liga.getId()})">Eliminar</a>
+										</c:if>
+										<c:if test="${liga.getEstado().getId() == Estado.LIGA_INICIADA}">
+										<a class="btn btn-danger disabled" href="#" style="margin-left:20px" data-toggle="modal" onclick="eliminarClicked(${liga.getId()})">Eliminar</a>
+										</c:if>
+									</td>
 								</c:otherwise>
 							</c:choose>
 						</tr>
