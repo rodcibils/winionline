@@ -123,7 +123,6 @@ public class Liga {
 	}
 	
 	public int getCountUsuariosInscriptosPorLiga(int idLiga) throws SQLException, ClassNotFoundException {
-		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
@@ -355,7 +354,6 @@ public class Liga {
 			negocio.Liga lg = datos.Liga.getInstance().getOne(rs.getInt(1));
 			if(lg.getNombre().contains(toSearch))
 			{
-				int cantidad = getCountUsuariosInscriptosPorLiga(rs.getInt(1));
 				negocio.Liga liga = new negocio.Liga();
 				liga.setId(rs.getInt(1));
 				liga.setNombre(rs.getString(2));
