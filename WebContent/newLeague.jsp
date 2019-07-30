@@ -59,15 +59,15 @@
 			    <small class="form-text" style="color:red">${err_eday}</small>		    	
 		  	</div>
 		  	<ul class="pagination justify-content-center">
-  			<c:choose>
-  				<c:when test="${old_mode == 'update'}">
-  					<li class="page-item"><button type="submit" class="btn btn-primary" style="margin:20px 5px 0px 5px">Editar Liga</button></li>
-  				</c:when>
-  				<c:otherwise>
-  					<li class="page-item"><button type="submit" class="btn btn-primary" style="margin:20px 5px 0px 5px">Crear Liga</button></li>
-  				</c:otherwise>
-  			</c:choose>
-  			<li class="page-item"><button onclick="window.location='wwligas';return false;" class="btn btn-danger" style="margin:20px 5px 0px 5px">Cancelar</button></li>
+  				<c:choose>
+	  				<c:when test="${old_mode == 'update'}">
+	  					<li class="page-item"><button type="submit" class="btn btn-primary" style="margin:20px 5px 0px 5px">Editar Liga</button></li>
+	  				</c:when>
+	  				<c:otherwise>
+	  					<li class="page-item"><button type="submit" class="btn btn-primary" style="margin:20px 5px 0px 5px">Crear Liga</button></li>
+	  				</c:otherwise>
+  				</c:choose>
+  				<li class="page-item"><button onclick="window.location='wwligas';return false;" class="btn btn-danger" style="margin:20px 5px 0px 5px">Cancelar</button></li>
   			</ul>
 		</form>
 	</jsp:body>

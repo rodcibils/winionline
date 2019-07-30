@@ -28,7 +28,8 @@
 				<th scope="col">Temporada</th>
 				<th scope="col">FechaInicio</th>
 				<th scope="col">FechaFin</th>				
-				<th scope="col">Estado</th>				
+				<th scope="col">Estado</th>	
+				<th scope="col"></th>			
 				</tr>
 			</thead>
 			<tbody>
@@ -38,7 +39,8 @@
 					<td>${liga.getTemporada()}</td>
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getInicio()}"/></td>
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getFin()}"/></td>	
-					<td>${liga.getEstado().getDescripcion()}</td>				
+					<td>${liga.getEstado().getDescripcion()}</td>
+					<td><a class="btn btn-primary" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a></td>				
 					</tr>
 				</c:forEach>
 			</tbody>

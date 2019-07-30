@@ -9,6 +9,7 @@ public class Liga {
 	private Date inicio;
 	private Date fin;
 	private Estado estado;
+	private int CantidadInscriptos;
 	
 	public int getId() {
 		return id;
@@ -66,6 +67,14 @@ public class Liga {
 
 	public void setEstado(Estado estado) {
 		this.estado = estado;
+	}
+	
+	public int getCantidadInscriptos() {
+		return CantidadInscriptos;
+	}
+	
+	public void setCantidadInscriptos(int cantidadInscriptos) {
+		this.CantidadInscriptos = cantidadInscriptos;
 	}
 	
 }
