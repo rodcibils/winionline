@@ -64,6 +64,7 @@
 	  						<a class="dropdown-item" href="sentFriendRequest?skip=0">Solicitudes Enviadas</a>
 	  						<a class="dropdown-item" href="receivedFriendRequest?skip=0">Solicitudes Recibidas</a>
 	  						<a class="dropdown-item" href="pendingFriendlyMatch?skip=0">Amistosos Pendientes</a>
+	  						<a class="dropdown-item" href="listFriendlyMatches?skip=0">Historial de Amistosos</a>
 	  					</div>
 	  				</li>
 	  				<li class="nav-item dropdown">
