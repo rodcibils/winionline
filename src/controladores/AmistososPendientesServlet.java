@@ -69,27 +69,26 @@ public class AmistososPendientesServlet extends HttpServlet {
 		
 		try {
 			if(toSearch == null || toSearch.contentEquals("")) {
-				count = datos.Partido.getInstance().getCountAmistososPendientes(usuario.getId());
+				ArrayList<negocio.Partido> amistososPendientes = datos.Partido.getInstance()
+						.getAmistososPendientes(usuario.getId(), skip, LIMIT);
+				count = amistososPendientes.size();
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) ++maxPages;
 				int currentPage = skip / LIMIT;
 				
-				ArrayList<negocio.Partido> amistososPendientes = datos.Partido.getInstance()
-						.getAmistososPendientes(usuario.getId(), skip, LIMIT);
 				request.setAttribute("amistosos", amistososPendientes);
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
 				request.setAttribute("max_pages", maxPages);
 				request.setAttribute("count", count);
 			} else {
-				count = datos.Partido.getInstance()
-						.getCountAmistososPendientes(usuario.getId(), toSearch);
+				ArrayList<negocio.Partido> amistososPendientes = datos.Partido.getInstance()
+						.getAmistososPendientes(usuario.getId(), skip, LIMIT, toSearch);
+				count = amistososPendientes.size();
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) ++maxPages;
 				int currentPage = skip / LIMIT;
 				
-				ArrayList<negocio.Partido> amistososPendientes = datos.Partido.getInstance()
-						.getAmistososPendientes(usuario.getId(), skip, LIMIT, toSearch);
 				request.setAttribute("amistosos", amistososPendientes);
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
