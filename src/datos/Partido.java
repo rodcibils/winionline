@@ -108,76 +108,6 @@ public class Partido {
 		return count;
 	}
 	
-	public int getCountAmistosos(int jugador) 
-			throws ClassNotFoundException, SQLException 
-	{
-		PreparedStatement stmt;
-		Connection conn = ConnectionManager.getInstance().getConnection();
-		
-		ArrayList<negocio.Solicitud> solicitudes = 
-				datos.Solicitud.getInstance().getAllSolicitudesAmistosos(jugador);
-		
-		String query = "SELECT * FROM partidos WHERE estado=? AND solicitud=?";
-		
-		int count = 0;
-		for(negocio.Solicitud solicitud : solicitudes) {
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, negocio.Estado.PARTIDO_FINALIZADO);
-			stmt.setInt(2, solicitud.getId());
-			
-			ResultSet rs = stmt.executeQuery();
-			if(rs.next()) {
-				++count;
-			}
-			
-			rs.close();
-			stmt.close();
-		}
-		
-		ConnectionManager.getInstance().closeConnection();
-		
-		return count;
-	}
-	
-	public int getCountAmistosos(int jugador, String toSearch) 
-			throws ClassNotFoundException, SQLException
-	{
-		PreparedStatement stmt;
-		Connection conn = ConnectionManager.getInstance().getConnection();
-		
-		ArrayList<negocio.Solicitud> solicitudes =
-				datos.Solicitud.getInstance().getAllSolicitudesAmistosos(jugador);
-		
-		String query = "SELECT * FROM partidos WHERE estado=? AND solicitud=?";
-		
-		int count=0;
-		for(negocio.Solicitud solicitud : solicitudes) {
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, negocio.Estado.PARTIDO_FINALIZADO);
-			stmt.setInt(2, solicitud.getId());
-			
-			ResultSet rs = stmt.executeQuery();
-			if(rs.next()) {
-				if((solicitud.getJugadorDos().getId() != jugador 
-						&& (solicitud.getJugadorDos().getNombre().contains(toSearch)) ||
-						solicitud.getJugadorDos().getApodo().contains(toSearch)) ||
-						(solicitud.getJugadorUno().getId() != jugador 
-						&& (solicitud.getJugadorUno().getNombre().contains(toSearch)) ||
-						solicitud.getJugadorUno().getApodo().contains(toSearch)))
-				{
-					++count;
-				}
-			}
-			
-			rs.close();
-			stmt.close();
-		}
-		
-		ConnectionManager.getInstance().closeConnection();
-		
-		return count;
-	}
-	
 	public int getCountAmistososPendientes(int jugador, String toSearch) 
 			throws ClassNotFoundException, SQLException
 	{
@@ -315,50 +245,71 @@ public class Partido {
 		return amistososPendientes;
 	}
 	
-	public ArrayList<negocio.Partido> getAmistosos(int jugador, int skip,
-			int limit) throws ClassNotFoundException, SQLException
+	public ArrayList<negocio.Partido> getAmistosos(int jugador, int skip, 
+			int limit) throws ClassNotFoundException, SQLException 
 	{
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		ArrayList<negocio.Solicitud> solicitudes =
-				datos.Solicitud.getInstance().getAllSolicitudesAmistosos(jugador);
+		String query = "SELECT p.id, p.fecha, j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, "
+				+ "j_dos.nombre, j_dos.apodo, r_uno.goles, r_dos.goles, u_reg.id, "
+				+ "u_reg.nombre, u_reg.apodo FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN resultados AS r_uno ON r_uno.id_partido = p.id "
+				+ "INNER JOIN resultados AS r_dos ON r_dos.id_partido = p.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = r_uno.id_jugador "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = r_dos.id_jugador "
+				+ "INNER JOIN usuarios AS u_reg ON u_reg.id = p.registro "
+				+ "WHERE r_uno.id_jugador = ? AND r_dos.id_jugador != ? "
+				+ "AND p.estado = ? "
+				+ "AND s.liga IS NULL LIMIT ?,?";
 		
-		String query = "SELECT * FROM partidos WHERE estado=? AND solicitud=?";
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, jugador);
+		stmt.setInt(2, jugador);
+		stmt.setInt(3, negocio.Estado.PARTIDO_FINALIZADO);
+		stmt.setInt(4, skip);
+		stmt.setInt(5, limit);
 		
 		ArrayList<negocio.Partido> amistosos = new ArrayList<>();
-		int count = 0;
-		for(negocio.Solicitud solicitud : solicitudes) {
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, negocio.Estado.PARTIDO_FINALIZADO);
-			stmt.setInt(2, solicitud.getId());
+		
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Partido partido = new negocio.Partido();
+			partido.setId(rs.getInt(1));
+			partido.setFecha(rs.getDate(2));
 			
-			ResultSet rs = stmt.executeQuery();
-			if(rs.next()) {
-				if(count >= skip) {
-					if(amistosos.size() <= limit) {
-						negocio.Partido amistoso = new negocio.Partido();
-						amistoso.setId(rs.getInt(1));
-						amistoso.setSolicitud(solicitud);
-						amistoso.setFecha(rs.getDate(2));
-						amistoso.setResultadoUno(datos.Resultado.getInstance()
-								.getOne(solicitud.getJugadorUno(), amistoso));
-						amistoso.setResultadoDos(datos.Resultado.getInstance()
-								.getOne(solicitud.getJugadorDos(), amistoso));
-						amistoso.setRegistro(datos.Usuario.getInstance().getOne(rs.getInt(5)));
-						amistosos.add(amistoso);
-					} else {
-						rs.close();
-						stmt.close();
-						break;
-					}
-				}
-				++count;
-			}
-			rs.close();
-			stmt.close();
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setId(rs.getInt(3));
+			jugadorUno.setNombre(rs.getString(4));
+			jugadorUno.setApodo(rs.getString(5));
+			
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setId(rs.getInt(6));
+			jugadorDos.setNombre(rs.getString(7));
+			jugadorDos.setApodo(rs.getString(8));
+			
+			negocio.Resultado resultadoUno = new negocio.Resultado();
+			resultadoUno.setJugador(jugadorUno);
+			resultadoUno.setGoles(rs.getInt(9));
+			partido.setResultadoUno(resultadoUno);
+			
+			negocio.Resultado resultadoDos = new negocio.Resultado();
+			resultadoDos.setJugador(jugadorDos);
+			resultadoDos.setGoles(rs.getInt(10));
+			partido.setResultadoDos(resultadoDos);
+			
+			negocio.Usuario registro = new negocio.Usuario();
+			registro.setId(rs.getInt(11));
+			registro.setNombre(rs.getString(12));
+			registro.setApodo(rs.getString(13));
+			partido.setRegistro(registro);
+			
+			amistosos.add(partido);
 		}
 		
+		rs.close();
+		stmt.close();
 		ConnectionManager.getInstance().closeConnection();
 		
 		return amistosos;
@@ -370,54 +321,68 @@ public class Partido {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		ArrayList<negocio.Solicitud> solicitudes = 
-				datos.Solicitud.getInstance().getAllSolicitudesAmistosos(jugador);
+		String query = "SELECT p.id, p.fecha, j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, "
+				+ "j_dos.nombre, j_dos.apodo, r_uno.goles, r_dos.goles, u_reg.id, "
+				+ "u_reg.nombre, u_reg.apodo FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN resultados AS r_uno ON r_uno.id_partido = p.id "
+				+ "INNER JOIN resultados AS r_dos ON r_dos.id_partido = p.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = r_uno.id_jugador "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = r_dos.id_jugador "
+				+ "INNER JOIN usuarios AS u_reg ON u_reg.id = p.registro "
+				+ "WHERE r_uno.id_jugador = ? AND r_dos.id_jugador != ? "
+				+ "AND p.estado = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?) "
+				+ "AND s.liga IS NULL LIMIT ?,?";
 		
-		String query = "SELECT * FROM partidos WHERE estado=? AND solicitud=?";
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, jugador);
+		stmt.setInt(2, jugador);
+		stmt.setInt(3, negocio.Estado.PARTIDO_FINALIZADO);
+		toSearch = "%" + toSearch + "%";
+		stmt.setString(4, toSearch);
+		stmt.setString(5, toSearch);
+		stmt.setInt(6, skip);
+		stmt.setInt(7, limit);
 		
-		ArrayList<negocio.Partido> amistosos = new ArrayList<negocio.Partido>();
-		int count = 0;
-		for(negocio.Solicitud solicitud : solicitudes) {
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, negocio.Estado.PARTIDO_FINALIZADO);
-			stmt.setInt(2, solicitud.getId());
+		ArrayList<negocio.Partido> amistosos = new ArrayList<>();
+		
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Partido partido = new negocio.Partido();
+			partido.setId(rs.getInt(1));
+			partido.setFecha(rs.getDate(2));
 			
-			ResultSet rs = stmt.executeQuery();
-			if(rs.next()) {
-				if((solicitud.getJugadorDos().getId() != jugador 
-						&& (solicitud.getJugadorDos().getNombre().contains(toSearch)) ||
-						solicitud.getJugadorDos().getApodo().contains(toSearch)) ||
-						(solicitud.getJugadorUno().getId() != jugador 
-						&& (solicitud.getJugadorUno().getNombre().contains(toSearch)) ||
-						solicitud.getJugadorUno().getApodo().contains(toSearch)))
-				{
-					if(count >= skip) {
-						if(amistosos.size() <= limit) {
-							negocio.Partido amistoso = new negocio.Partido();
-							amistoso.setId(rs.getInt(1));
-							amistoso.setSolicitud(solicitud);
-							amistoso.setFecha(rs.getDate(2));
-							amistoso.setResultadoUno(datos.Resultado.getInstance()
-									.getOne(solicitud.getJugadorUno(), amistoso));
-							amistoso.setResultadoDos(datos.Resultado.getInstance()
-									.getOne(solicitud.getJugadorDos(), amistoso));
-							amistoso.setRegistro(datos.Usuario.getInstance().getOne(rs.getInt(5)));
-							amistosos.add(amistoso);
-						} else {
-							rs.close();
-							stmt.close();
-							break;
-						}
-					}
-					
-					++count;
-				}
-			}
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setId(rs.getInt(3));
+			jugadorUno.setNombre(rs.getString(4));
+			jugadorUno.setApodo(rs.getString(5));
 			
-			rs.close();
-			stmt.close();
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setId(rs.getInt(6));
+			jugadorDos.setNombre(rs.getString(7));
+			jugadorDos.setApodo(rs.getString(8));
+			
+			negocio.Resultado resultadoUno = new negocio.Resultado();
+			resultadoUno.setJugador(jugadorUno);
+			resultadoUno.setGoles(rs.getInt(9));
+			partido.setResultadoUno(resultadoUno);
+			
+			negocio.Resultado resultadoDos = new negocio.Resultado();
+			resultadoDos.setJugador(jugadorDos);
+			resultadoDos.setGoles(rs.getInt(10));
+			partido.setResultadoDos(resultadoDos);
+			
+			negocio.Usuario registro = new negocio.Usuario();
+			registro.setId(rs.getInt(11));
+			registro.setNombre(rs.getString(12));
+			registro.setNombre(rs.getString(13));
+			partido.setRegistro(registro);
+			
+			amistosos.add(partido);
 		}
 		
+		rs.close();
+		stmt.close();
 		ConnectionManager.getInstance().closeConnection();
 		
 		return amistosos;

@@ -34,19 +34,19 @@
 			<tbody>
 				<c:forEach items="${amistosos}" var="amistoso">
 					<tr>
-					<c:if test="${amistoso.getSolicitud().getJugadorUno().getId() != sessionScope.usuario.getId() }">
-					<td><p>${amistoso.getSolicitud().getJugadorUno().getNombre()} - ${amistoso.getSolicitud().getJugadorUno().getApodo()}</p></td>
-					</c:if>
-					<c:if test="${amistoso.getSolicitud().getJugadorDos().getId() != sessionScope.usuario.getId() }">
-					<td><p>${amistoso.getSolicitud().getJugadorDos().getNombre()} - ${amistoso.getSolicitud().getJugadorDos().getApodo()}</p></td>
-					</c:if>
+					<td><p>${amistoso.getResultadoDos().getJugador().getNombre()} - ${amistoso.getResultadoDos().getJugador().getApodo()}</p></td>
 					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${amistoso.getFecha()}"/></p></td>
-					<c:if test="${amistoso.getSolicitud().getJugadorUno().getId() != sessionScope.usuario.getId() }">
-					<td><p>${amistoso.getResultadoDos().getGoles()} - ${amistoso.getResultadoUno().getGoles()}</p></td>
-					</c:if>
-					<c:if test="${amistoso.getSolicitud().getJugadorDos().getId() != sessionScope.usuario.getId() }">
-					<td><p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()}</p></td>
-					</c:if>
+					<td> 
+						<c:if test="${amistoso.getResultadoUno().getGoles() > amistoso.getResultadoDos().getGoles()}">
+							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()}(V)</p>
+						</c:if>
+						<c:if test="${amistoso.getResultadoUno().getGoles() < amistoso.getResultadoDos().getGoles()}">
+							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (D)</p>
+						</c:if>
+						<c:if test="${amistoso.getResultadoUno().getGoles() == amistoso.getResultadoDos().getGoles()}">
+							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (E)</p>
+						</c:if>
+					</td>
 					<td>${amistoso.getRegistro().getNombre()} - ${amistoso.getRegistro().getApodo()}</td>
 					<td>
 						<a class="btn btn-primary">Ver Perfil</a>
