@@ -340,24 +340,41 @@ public class Partido {
 		return amistosos;
 	}
 	
-	public negocio.Partido getOne(int id) throws ClassNotFoundException, SQLException
+	public negocio.Partido getOne(int id) 
+			throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT * FROM partidos WHERE id=?";
+		String query = "SELECT p.id, j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, "
+				+ "j_dos.nombre, j_dos.apodo, s.liga FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "WHERE p.id = ?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
 		
-		ResultSet rs = stmt.executeQuery();
 		negocio.Partido partido = new negocio.Partido();
-		if(rs.next()) {
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()){
 			partido.setId(rs.getInt(1));
-			partido.setFecha(rs.getDate(2));
-			partido.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
-			partido.setSolicitud(datos.Solicitud.getInstance().getOne(rs.getInt(4)));
-			partido.setRegistro(datos.Usuario.getInstance().getOne(rs.getInt(5)));
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setId(rs.getInt(2));
+			jugadorUno.setNombre(rs.getString(3));
+			jugadorUno.setApodo(rs.getString(4));
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setId(rs.getInt(5));
+			jugadorDos.setNombre(rs.getString(6));
+			jugadorDos.setApodo(rs.getString(7));
+			negocio.Solicitud solicitud = new negocio.Solicitud();
+			solicitud.setJugadorUno(jugadorUno);
+			solicitud.setJugadorDos(jugadorDos);
+			//TODO: incorporar liga
+			solicitud.setLiga(null);
+			
+			partido.setSolicitud(solicitud);
 		}
 		
 		rs.close();
