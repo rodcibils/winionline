@@ -79,7 +79,7 @@ public class SentFriendRequestServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			} else {
 				count = datos.Solicitud.getInstance()
-						.getCountSolicitudesEnviadasAmistososPendientesFiltered(usuario, toSearch);
+						.getCountSolicitudesEnviadasAmistososPendientes(usuario, toSearch);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
 					++maxPages;
