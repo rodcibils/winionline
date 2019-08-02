@@ -197,6 +197,75 @@ public class Partido {
 		return amistosos;
 	}
 	
+	public int getCountAmistososPendientes(int jugador) 
+			throws ClassNotFoundException, SQLException 
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) "
+				+ "FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "WHERE (j_uno.id = ? OR j_dos.id = ?) AND p.estado = ? "
+				+ "AND s.liga IS NULL";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, jugador);
+		stmt.setInt(2, jugador);
+		stmt.setInt(3, negocio.Estado.PARTIDO_PENDIENTE);
+		
+		int count = 0;
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+	
+	public int getCountAmistososPendientes(int jugador, String toSearch) 
+			throws ClassNotFoundException, SQLException 
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) "
+				+ "FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "WHERE (j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?)) "
+				+ "AND (j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
+				+ "AND p.estado = ? "
+				+ "AND s.liga IS NULL";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, jugador);
+		toSearch = "%" + toSearch + "%";
+		stmt.setString(2, toSearch);
+		stmt.setString(3, toSearch);
+		stmt.setInt(4, jugador);
+		stmt.setString(5, toSearch);
+		stmt.setString(6, toSearch);
+		stmt.setInt(7, negocio.Estado.PARTIDO_PENDIENTE);
+		
+		int count = 0;
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+	
 	public ArrayList<negocio.Partido> getAmistosos(int jugador, int skip, 
 			int limit) throws ClassNotFoundException, SQLException 
 	{
@@ -338,6 +407,76 @@ public class Partido {
 		ConnectionManager.getInstance().closeConnection();
 		
 		return amistosos;
+	}
+	
+	public int getCountAmistosos(int jugador) 
+			throws ClassNotFoundException, SQLException 
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "WHERE (s.jugador_uno = ? OR s.jugador_dos = ?) "
+				+ "AND p.estado = ? "
+				+ "AND s.liga IS NULL";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, jugador);
+		stmt.setInt(2, jugador);
+		stmt.setInt(3, negocio.Estado.PARTIDO_FINALIZADO);
+		
+		int count = 0;
+		
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+	
+	public int getCountAmistosos(int jugador, String toSearch) 
+			throws ClassNotFoundException, SQLException 
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "WHERE (j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
+				+ "AND (j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?)) "
+				+ "AND p.estado = ? "
+				+ "AND s.liga IS NULL";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, jugador);
+		toSearch = "%" + toSearch + "%";
+		stmt.setString(2, toSearch);
+		stmt.setString(3, toSearch);
+		stmt.setInt(4, jugador);
+		stmt.setString(5, toSearch);
+		stmt.setString(6, toSearch);
+		stmt.setInt(7, negocio.Estado.PARTIDO_FINALIZADO);
+		
+		int count = 0;
+		
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
 	}
 	
 	public negocio.Partido getOne(int id) 

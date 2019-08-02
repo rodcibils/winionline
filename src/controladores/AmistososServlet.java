@@ -53,7 +53,7 @@ public class AmistososServlet extends HttpServlet {
 				ArrayList<negocio.Partido> amistosos = datos.Partido.getInstance()
 						.getAmistosos(usuario.getId(), skip, LIMIT);
 				
-				count = amistosos.size();
+				count = datos.Partido.getInstance().getCountAmistosos(usuario.getId());
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) ++maxPages;
 				int currentPage = skip / LIMIT;
@@ -66,7 +66,7 @@ public class AmistososServlet extends HttpServlet {
 			} else {
 				ArrayList<negocio.Partido> amistosos = datos.Partido.getInstance()
 						.getAmistosos(usuario.getId(), skip, LIMIT, toSearch);
-				count = amistosos.size();
+				count = datos.Partido.getInstance().getCountAmistosos(usuario.getId());
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) ++maxPages;
 				int currentPage = skip / LIMIT;

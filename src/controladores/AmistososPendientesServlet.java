@@ -71,7 +71,7 @@ public class AmistososPendientesServlet extends HttpServlet {
 			if(toSearch == null || toSearch.contentEquals("")) {
 				ArrayList<negocio.Partido> amistososPendientes = datos.Partido.getInstance()
 						.getAmistososPendientes(usuario.getId(), skip, LIMIT);
-				count = amistososPendientes.size();
+				count = datos.Partido.getInstance().getCountAmistososPendientes(usuario.getId());
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) ++maxPages;
 				int currentPage = skip / LIMIT;
@@ -84,7 +84,7 @@ public class AmistososPendientesServlet extends HttpServlet {
 			} else {
 				ArrayList<negocio.Partido> amistososPendientes = datos.Partido.getInstance()
 						.getAmistososPendientes(usuario.getId(), skip, LIMIT, toSearch);
-				count = amistososPendientes.size();
+				count = datos.Partido.getInstance().getCountAmistososPendientes(usuario.getId(), toSearch);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) ++maxPages;
 				int currentPage = skip / LIMIT;
