@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import negocio.Estado;
+import negocio.Solicitud;
+
 public class Partido {
 	private static Partido instance = null;
 	
@@ -254,6 +257,33 @@ public class Partido {
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
+		
+		ResultSet rs = stmt.executeQuery();
+		negocio.Partido partido = new negocio.Partido();
+		if(rs.next()) {
+			partido.setId(rs.getInt(1));
+			partido.setFecha(rs.getDate(2));
+			partido.setEstado(datos.Estado.getInstance().getOne(rs.getInt(3)));
+			partido.setSolicitud(datos.Solicitud.getInstance().getOne(rs.getInt(4)));
+			partido.setRegistro(datos.Usuario.getInstance().getOne(rs.getInt(5)));
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return partido;
+	}
+
+	public negocio.Partido getOnePartidoSolicitud(Solicitud sol) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM partidos WHERE solicitud=? and estado=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, sol.getId());
+		stmt.setInt(1, Estado.PARTIDO_FINALIZADO);
 		
 		ResultSet rs = stmt.executeQuery();
 		negocio.Partido partido = new negocio.Partido();
