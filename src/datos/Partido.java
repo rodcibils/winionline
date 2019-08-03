@@ -206,7 +206,7 @@ public class Partido {
 		String query = "SELECT COUNT(*) "
 				+ "FROM partidos AS p "
 				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
-				+ "WHERE (j_uno.id = ? OR j_dos.id = ?) AND p.estado = ? "
+				+ "WHERE (s.jugador_uno = ? OR s.jugador_dos = ?) AND p.estado = ? "
 				+ "AND s.liga IS NULL";
 		
 		stmt = conn.prepareStatement(query);
