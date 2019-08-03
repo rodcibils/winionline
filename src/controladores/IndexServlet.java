@@ -28,6 +28,7 @@ public class IndexServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+		request.setAttribute("data_getted", true);
 		try {	
 			int cantSolAmRecPend = datos.Solicitud.getInstance()
 					.getCountSolicitudesRecibidasAmistososPendientes(usuario);

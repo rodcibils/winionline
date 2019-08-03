@@ -7,6 +7,9 @@
 
 <c:choose>
 	<c:when test="${sessionScope.usuario != null}">
+	<c:if test="${data_getted == null || data_getted == false}">
+		<c:redirect url="index"/>
+	</c:if>
 		<t:layout>
 			<div class="card-columns" style="margin-top:20px; margin-left:20px">
 				<div class="card text-white bg-info text-center">
