@@ -55,6 +55,20 @@
 					</div>
 				</div>
 				<div class="card bg-light">
+					<div class="card-header">Amistosos Pendientes</div>
+					<div class="card-body">
+						<c:choose>
+						<c:when test="${am_pend == 0}">
+						<p class="card-text">No tiene amistosos pendientes.</p>
+						</c:when>
+						<c:when test="${am_pend > 0}">
+						<p class="card-text">Tiene ${am_pend} amistosos pendientes</p>
+						<a href="pendingFriendlyMatch?skip=0" class="btn btn-primary">Verificar</a>
+						</c:when>
+						</c:choose>
+					</div>
+				</div>
+				<div class="card bg-light">
 					<div class="card-header">Ligas</div>
 					<div class="card-body">
 						<p class="card-text">No esta participando en ninguna liga</p>
