@@ -35,7 +35,7 @@
   	
   	<c:if test="${sessionScope.usuario != null}">
 	  	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-	  		<a class="navbar-brand" href="#">Menú Principal</a>
+	  		<a class="navbar-brand" href="index">Menú Principal</a>
 	  		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 	    		<span class="navbar-toggler-icon"></span>
 	  		</button>
@@ -61,10 +61,10 @@
 	  				<li class="nav-item dropdown">
 	  					<a class="nav-link dropdown-toggle" href="#" id="dropAmistosos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Amistosos</a>
 	  					<div class="dropdown-menu" aria-labelledby="dropAmistosos">
-	  						<a class="dropdown-item" href="sentFriendRequest?skip=0">Solicitudes Enviadas</a>
-	  						<a class="dropdown-item" href="receivedFriendRequest?skip=0">Solicitudes Recibidas</a>
-	  						<a class="dropdown-item" href="pendingFriendlyMatch?skip=0">Amistosos Pendientes</a>
-	  						<a class="dropdown-item" href="listFriendlyMatches?skip=0">Historial de Amistosos</a>
+	  						<a class="dropdown-item" href="sentFriendRequest?skip=0&search=">Solicitudes Enviadas</a>
+	  						<a class="dropdown-item" href="receivedFriendRequest?skip=0&search=">Solicitudes Recibidas</a>
+	  						<a class="dropdown-item" href="pendingFriendlyMatch?skip=0&search=">Amistosos Pendientes</a>
+	  						<a class="dropdown-item" href="listFriendlyMatches?skip=0&search=">Historial de Amistosos</a>
 	  					</div>
 	  				</li>
 	  				<li class="nav-item dropdown">

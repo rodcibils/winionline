@@ -28,6 +28,7 @@ public class IndexServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+		request.setAttribute("data_getted", true);
 		try {	
 			int cantSolAmRecPend = datos.Solicitud.getInstance()
 					.getCountSolicitudesRecibidasAmistososPendientes(usuario);
@@ -36,6 +37,9 @@ public class IndexServlet extends HttpServlet {
 			int cantSolAmEnvPend = datos.Solicitud.getInstance()
 					.getCountSolicitudesEnviadasAmistososPendientes(usuario);
 			request.setAttribute("sol_am_env_pend", cantSolAmEnvPend);
+			
+			int amPend = datos.Partido.getInstance().getCountAmistososPendientes(usuario.getId());
+			request.setAttribute("am_pend", amPend);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}

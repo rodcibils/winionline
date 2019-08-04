@@ -69,11 +69,9 @@
 					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${solicitud.getFecha()}"/></p></td>
 					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${solicitud.getVencimiento()}"/></p></td>
 					<td>
-						<p class="text-center">
 						<a class="btn btn-primary">Ver Perfil</a>
 						<a class="btn btn-danger" style="margin-left:20px" href="receivedFriendRequest?delete=${solicitud.getId()}&search=${search}">Rechazar</a>
 						<a class="btn btn-success" style="margin-left:20px" href="acceptFriendlyMatch?solicitud=${solicitud.getId()}">Aceptar</a>
-						</p>
 					</td>
 					</tr>
 				</c:forEach>

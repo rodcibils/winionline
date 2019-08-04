@@ -7,6 +7,9 @@
 
 <c:choose>
 	<c:when test="${sessionScope.usuario != null}">
+	<c:if test="${data_getted == null || data_getted == false}">
+		<c:redirect url="index"/>
+	</c:if>
 		<t:layout>
 			<div class="card-columns" style="margin-top:20px; margin-left:20px">
 				<div class="card text-white bg-info text-center">
@@ -32,7 +35,7 @@
 						</c:when>
 						<c:when test="${sol_am_rec_pend > 0}">
 						<p class="card-text">Tiene ${sol_am_rec_pend} solicitudes de amistoso pendientes de rta.</p>
-						<a href="receivedFriendRequest?skip=0" class="btn btn-primary">Verificar</a>
+						<a href="receivedFriendRequest?skip=0&search=" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
 					</div>
@@ -46,7 +49,21 @@
 						</c:when>
 						<c:when test="${sol_am_env_pend > 0}">
 						<p class="card-text">Tiene ${sol_am_env_pend} solicitudes de amistoso pendientes de rta.</p>
-						<a href="sentFriendRequest?skip=0" class="btn btn-primary">Verificar</a>
+						<a href="sentFriendRequest?skip=0&search=" class="btn btn-primary">Verificar</a>
+						</c:when>
+						</c:choose>
+					</div>
+				</div>
+				<div class="card bg-light">
+					<div class="card-header">Amistosos Pendientes</div>
+					<div class="card-body">
+						<c:choose>
+						<c:when test="${am_pend == 0}">
+						<p class="card-text">No tiene amistosos pendientes.</p>
+						</c:when>
+						<c:when test="${am_pend > 0}">
+						<p class="card-text">Tiene ${am_pend} amistosos pendientes</p>
+						<a href="pendingFriendlyMatch?skip=0&search=" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
 					</div>

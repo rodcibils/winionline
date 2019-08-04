@@ -206,7 +206,7 @@ public class Partido {
 		String query = "SELECT COUNT(*) "
 				+ "FROM partidos AS p "
 				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
-				+ "WHERE (j_uno.id = ? OR j_dos.id = ?) AND p.estado = ? "
+				+ "WHERE (s.jugador_uno = ? OR s.jugador_dos = ?) AND p.estado = ? "
 				+ "AND s.liga IS NULL";
 		
 		stmt = conn.prepareStatement(query);
@@ -238,8 +238,8 @@ public class Partido {
 				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
 				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
 				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
-				+ "WHERE (j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?)) "
-				+ "AND (j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
+				+ "WHERE ((j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?)) "
+				+ "OR (j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?))) "
 				+ "AND p.estado = ? "
 				+ "AND s.liga IS NULL";
 		
@@ -450,8 +450,8 @@ public class Partido {
 				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
 				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
 				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
-				+ "WHERE (j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
-				+ "AND (j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?)) "
+				+ "WHERE ((j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
+				+ "OR (j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?))) "
 				+ "AND p.estado = ? "
 				+ "AND s.liga IS NULL";
 		
