@@ -36,8 +36,9 @@ public class AmistososPendientesServlet extends HttpServlet {
 		
 		String sRegister = request.getParameter("register");
 		if(sRegister != null && !sRegister.isEmpty()){
-			request.setAttribute("id_partido", sRegister);
+			request.setAttribute("id", sRegister);
 			request.setAttribute("coming_from", "pendingFriendlyMatch?skip=0");
+			request.setAttribute("mode", "new");
 			request.getRequestDispatcher("registerMatchResult").forward(request, response);
 			return;
 		}

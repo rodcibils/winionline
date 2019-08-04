@@ -8,6 +8,38 @@
 </head>
 <t:layout>
 	<jsp:body>
+		<c:if test="${err_edit != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>No puede editar el resultado de este amistoso</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${err_edit}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+		<c:if test="${register_success == true}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Resultado de Amistoso Editado</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        El resultado del partido amistoso se edito correctamente.
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
 		<script>
 			function search(){
 				var toSearch = document.getElementById('txtSearch').value;
@@ -51,7 +83,7 @@
 					<td>
 						<a class="btn btn-primary">Ver Perfil</a>
 						<c:if test="${sessionScope.usuario.getId() == amistoso.getRegistro().getId()}">
-						<a class="btn btn-success" style="margin-left:20px">Editar Resultado</a>
+						<a class="btn btn-success" style="margin-left:20px" href="listFriendlyMatches?edit=${amistoso.getId()}">Editar Resultado</a>
 						<a class="btn btn-danger disabled" style="margin-left:20px">Disputar Resultado</a>
 						</c:if>
 						<c:if test="${sessionScope.usuario.getId() != amistoso.getRegistro().getId()}">
