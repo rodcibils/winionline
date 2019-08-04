@@ -15,6 +15,7 @@ public class RegistroResultadoPartido extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private negocio.Partido partido = null;
 	private String comingFrom = null;
+	private String mode = null;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -28,17 +29,23 @@ public class RegistroResultadoPartido extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String idPartido = (String)request.getAttribute("id_partido");
+		mode = (String)request.getAttribute("mode");
+		String idPartido = (String)request.getAttribute("id");
 		comingFrom = (String)request.getAttribute("coming_from");
 		
 		try {
 			partido = datos.Partido.getInstance().getOne(Integer.parseInt(idPartido));
+			partido.setResultadoUno(datos.Resultado.getInstance().getOne(
+					partido.getSolicitud().getJugadorUno(), partido));
+			partido.setResultadoDos(datos.Resultado.getInstance().getOne(
+					partido.getSolicitud().getJugadorDos(), partido));
 			request.setAttribute("partido", partido);
+			request.setAttribute("old_guno", partido.getResultadoUno().getGoles());
+			request.setAttribute("old_gdos", partido.getResultadoDos().getGoles());
+			request.getRequestDispatcher("registerMatchResult.jsp").forward(request, response);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-		
-		request.getRequestDispatcher("registerMatchResult.jsp").forward(request, response);
 	}
 
 	/**
@@ -73,10 +80,15 @@ public class RegistroResultadoPartido extends HttpServlet {
 			resultadoDos.setGoles(golesDos);
 			
 			try {
-				datos.Resultado.getInstance().insert(resultadoUno);
-				datos.Resultado.getInstance().insert(resultadoDos);
-				negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
-				datos.Partido.getInstance().finalizarPartido(partido.getId(), usuario.getId());
+				if(mode.contentEquals("new")) {
+					datos.Resultado.getInstance().insert(resultadoUno);
+					datos.Resultado.getInstance().insert(resultadoDos);
+					negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+					datos.Partido.getInstance().finalizarPartido(partido.getId(), usuario.getId());
+				} else if(mode.contentEquals("edit")){
+					datos.Resultado.getInstance().update(resultadoUno);
+					datos.Resultado.getInstance().update(resultadoDos);
+				}
 				request.setAttribute("register_success", true);
 				request.getRequestDispatcher(comingFrom).forward(request, response);
 			} catch(Exception e) {

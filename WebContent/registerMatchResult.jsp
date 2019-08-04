@@ -10,7 +10,7 @@
 	<jsp:body>
 		<form action="registerMatchResult" method="post" style="margin-top:50px">
 			<c:if test="${partido.getSolicitud().getLiga() == null}">
-			<h2 class="text-center" style="color:white; margin-bottom:30px;">Partido Amistoso</h2>
+			<h2 class="text-center" style="color:white; margin-bottom:30px;">Resultado Partido Amistoso</h2>
 			</c:if>
 			<div class="card-group justify-content-center">
 				<div class="card mb-3 text-right" style="max-width: 540px;">

@@ -209,7 +209,7 @@ public class Partido {
 		String query = "SELECT COUNT(*) "
 				+ "FROM partidos AS p "
 				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
-				+ "WHERE (j_uno.id = ? OR j_dos.id = ?) AND p.estado = ? "
+				+ "WHERE (s.jugador_uno = ? OR s.jugador_dos = ?) AND p.estado = ? "
 				+ "AND s.liga IS NULL";
 		
 		stmt = conn.prepareStatement(query);
@@ -241,8 +241,8 @@ public class Partido {
 				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
 				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
 				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
-				+ "WHERE (j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?)) "
-				+ "AND (j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
+				+ "WHERE ((j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?)) "
+				+ "OR (j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?))) "
 				+ "AND p.estado = ? "
 				+ "AND s.liga IS NULL";
 		
@@ -453,8 +453,8 @@ public class Partido {
 				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
 				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
 				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
-				+ "WHERE (j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
-				+ "AND (j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?)) "
+				+ "WHERE ((j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
+				+ "OR (j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?))) "
 				+ "AND p.estado = ? "
 				+ "AND s.liga IS NULL";
 		
@@ -488,7 +488,7 @@ public class Partido {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT p.id, j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, "
+		String query = "SELECT p.id, p.fecha, j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, "
 				+ "j_dos.nombre, j_dos.apodo, s.liga FROM partidos AS p "
 				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
 				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
@@ -502,14 +502,15 @@ public class Partido {
 		ResultSet rs = stmt.executeQuery();
 		if(rs.next()){
 			partido.setId(rs.getInt(1));
+			partido.setFecha(rs.getDate(2));
 			negocio.Usuario jugadorUno = new negocio.Usuario();
-			jugadorUno.setId(rs.getInt(2));
-			jugadorUno.setNombre(rs.getString(3));
-			jugadorUno.setApodo(rs.getString(4));
+			jugadorUno.setId(rs.getInt(3));
+			jugadorUno.setNombre(rs.getString(4));
+			jugadorUno.setApodo(rs.getString(5));
 			negocio.Usuario jugadorDos = new negocio.Usuario();
-			jugadorDos.setId(rs.getInt(5));
-			jugadorDos.setNombre(rs.getString(6));
-			jugadorDos.setApodo(rs.getString(7));
+			jugadorDos.setId(rs.getInt(6));
+			jugadorDos.setNombre(rs.getString(7));
+			jugadorDos.setApodo(rs.getString(8));
 			negocio.Solicitud solicitud = new negocio.Solicitud();
 			solicitud.setJugadorUno(jugadorUno);
 			solicitud.setJugadorDos(jugadorDos);

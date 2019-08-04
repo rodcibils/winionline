@@ -2,6 +2,8 @@ package controladores;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,6 +38,30 @@ public class AmistososServlet extends HttpServlet {
 	{
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
+		String sEdit = request.getParameter("edit");
+		if(sEdit != null && !sEdit.isEmpty()) {
+			try {
+				negocio.Partido partido = datos.Partido.getInstance().getOne(Integer.parseInt(sEdit));
+				Calendar c = Calendar.getInstance();
+				c.setTime(partido.getFecha());
+				c.add(Calendar.DATE, 5);
+				Date today = new Date();
+				if(today.after(c.getTime())) {
+					request.setAttribute("err_edit", "Han pasado mas de 5 dias desde la fecha del "
+							+ "partido");
+				} else {
+					request.setAttribute("id", sEdit);
+					request.setAttribute("mode", "edit");
+					request.setAttribute("coming_from", "listFriendlyMatches?skip=" + skip + "&search="
+							+ lastSearch);
+					request.getRequestDispatcher("registerMatchResult").forward(request, response);
+					return;
+				}
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		String toSearch = request.getParameter("search");
 		if(toSearch != null && !toSearch.contentEquals(lastSearch)) {
 			lastSearch = toSearch;
@@ -66,7 +92,7 @@ public class AmistososServlet extends HttpServlet {
 			} else {
 				ArrayList<negocio.Partido> amistosos = datos.Partido.getInstance()
 						.getAmistosos(usuario.getId(), skip, LIMIT, toSearch);
-				count = datos.Partido.getInstance().getCountAmistosos(usuario.getId());
+				count = datos.Partido.getInstance().getCountAmistosos(usuario.getId(), toSearch);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) ++maxPages;
 				int currentPage = skip / LIMIT;
