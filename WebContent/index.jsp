@@ -35,7 +35,7 @@
 						</c:when>
 						<c:when test="${sol_am_rec_pend > 0}">
 						<p class="card-text">Tiene ${sol_am_rec_pend} solicitudes de amistoso pendientes de rta.</p>
-						<a href="receivedFriendRequest?skip=0" class="btn btn-primary">Verificar</a>
+						<a href="receivedFriendRequest?skip=0&search=" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
 					</div>
@@ -49,7 +49,7 @@
 						</c:when>
 						<c:when test="${sol_am_env_pend > 0}">
 						<p class="card-text">Tiene ${sol_am_env_pend} solicitudes de amistoso pendientes de rta.</p>
-						<a href="sentFriendRequest?skip=0" class="btn btn-primary">Verificar</a>
+						<a href="sentFriendRequest?skip=0&search=" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
 					</div>
@@ -63,7 +63,7 @@
 						</c:when>
 						<c:when test="${am_pend > 0}">
 						<p class="card-text">Tiene ${am_pend} amistosos pendientes</p>
-						<a href="pendingFriendlyMatch?skip=0" class="btn btn-primary">Verificar</a>
+						<a href="pendingFriendlyMatch?skip=0&search=" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
 					</div>
