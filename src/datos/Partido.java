@@ -485,7 +485,7 @@ public class Partido {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT p.id, j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, "
+		String query = "SELECT p.id, p.fecha, j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, "
 				+ "j_dos.nombre, j_dos.apodo, s.liga FROM partidos AS p "
 				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
 				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
@@ -499,14 +499,15 @@ public class Partido {
 		ResultSet rs = stmt.executeQuery();
 		if(rs.next()){
 			partido.setId(rs.getInt(1));
+			partido.setFecha(rs.getDate(2));
 			negocio.Usuario jugadorUno = new negocio.Usuario();
-			jugadorUno.setId(rs.getInt(2));
-			jugadorUno.setNombre(rs.getString(3));
-			jugadorUno.setApodo(rs.getString(4));
+			jugadorUno.setId(rs.getInt(3));
+			jugadorUno.setNombre(rs.getString(4));
+			jugadorUno.setApodo(rs.getString(5));
 			negocio.Usuario jugadorDos = new negocio.Usuario();
-			jugadorDos.setId(rs.getInt(5));
-			jugadorDos.setNombre(rs.getString(6));
-			jugadorDos.setApodo(rs.getString(7));
+			jugadorDos.setId(rs.getInt(6));
+			jugadorDos.setNombre(rs.getString(7));
+			jugadorDos.setApodo(rs.getString(8));
 			negocio.Solicitud solicitud = new negocio.Solicitud();
 			solicitud.setJugadorUno(jugadorUno);
 			solicitud.setJugadorDos(jugadorDos);

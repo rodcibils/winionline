@@ -33,6 +33,24 @@ public class Resultado {
 		ConnectionManager.getInstance().closeConnection();
 	}
 	
+	public void update(negocio.Resultado resultado) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "UPDATE resultados SET goles=? WHERE id_partido=? AND id_jugador=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, resultado.getGoles());
+		stmt.setInt(2, resultado.getPartido().getId());
+		stmt.setInt(3, resultado.getJugador().getId());
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public negocio.Resultado getOne(negocio.Usuario jugador, negocio.Partido partido) 
 			throws ClassNotFoundException, SQLException
 	{
