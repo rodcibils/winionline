@@ -72,11 +72,9 @@
 					</c:if>
 					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${amistoso.getSolicitud().getFecha()}"/></p></td>
 					<td>
-						<p class="text-center">
 						<a class="btn btn-primary">Ver Perfil</a>
 						<a class="btn btn-success" style="margin-left:20px" href="pendingFriendlyMatch?register=${amistoso.getId()}">Registrar Resultado</a>
 						<a class="btn btn-danger" style="margin-left:20px" href="pendingFriendlyMatch?reject=${amistoso.getId()}&search=${search}">Rechazar</a>
-						</p>
 					</td>
 					</tr>
 				</c:forEach>
