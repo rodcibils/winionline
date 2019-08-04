@@ -38,7 +38,7 @@
 					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${amistoso.getFecha()}"/></p></td>
 					<td> 
 						<c:if test="${amistoso.getResultadoUno().getGoles() > amistoso.getResultadoDos().getGoles()}">
-							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()}(V)</p>
+							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (V)</p>
 						</c:if>
 						<c:if test="${amistoso.getResultadoUno().getGoles() < amistoso.getResultadoDos().getGoles()}">
 							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (D)</p>
