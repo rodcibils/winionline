@@ -809,4 +809,43 @@ public class Liga {
 		
 		return temporadas;
 	}
+	
+	public boolean insertUsuarioLiga(int idUsuario, int idLiga) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		PreparedStatement stmtCount;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String queryCount = "SELECT * FROM usuario_liga WHERE id_usuario = ? AND id_liga= ?";
+		stmtCount = conn.prepareStatement(queryCount);
+		stmtCount.setInt(1, idUsuario);
+		stmtCount.setInt(2, idLiga);
+		ResultSet rs = stmtCount.executeQuery();		
+		int rowsCount = 0;
+		while(rs.next()) {
+			rowsCount++;
+		}
+		if(rowsCount == 0)
+		{		
+			String query = "INSERT INTO usuario_liga(id_usuario, id_liga) "
+					+ "VALUES (?,?)";
+			
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, idUsuario);
+			stmt.setInt(2, idLiga);
+			
+			stmt.execute();
+			stmt.close();
+			ConnectionManager.getInstance().closeConnection();
+			return true;
+		}
+		else
+		{
+			stmtCount.close();
+			ConnectionManager.getInstance().closeConnection();
+			return false;
+		}
+			
+		
+	}
 }

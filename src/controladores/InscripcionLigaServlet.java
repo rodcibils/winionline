@@ -46,7 +46,17 @@ public class InscripcionLigaServlet extends HttpServlet {
 			e1.printStackTrace();
 		}
 		
-		String inscribir = request.getParameter("inscripcion");
+		String action = request.getParameter("action");
+		
+		if(action != null && action.equals("inscribir"))
+		{
+			try {
+				inscribir(request, response);
+			} catch (ClassNotFoundException | SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		request.setAttribute("ligas", ligas);
 		String toSearch = request.getParameter("search");
@@ -114,6 +124,14 @@ public class InscripcionLigaServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
+		
+	}
+	
+	private void inscribir(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException, ClassNotFoundException{
+		negocio.Usuario usuarioActual = (negocio.Usuario)request.getSession().getAttribute("usuario");
+		int idLiga = Integer.parseInt(request.getParameter("id"));		
+		datos.Liga liga = new datos.Liga();
+		request.setAttribute("inscripto", liga.insertUsuarioLiga(usuarioActual.getId(), idLiga));
 	}
 
 }

@@ -42,7 +42,7 @@
 					<td>${liga.getCantidadInscriptos()}</td>
 					<td>
 						<p class="text-center">						
- 						<a class="btn btn-danger" style="margin-left:20px" href="ligas?inscripcion=${liga.getId()}">Inscribirme</a>
+ 						<a class="btn btn-success" data-toggle="modal" style="margin-left:20px" href="#" onclick="inscribirClicked(${liga.getId()})">Inscribirme</a>
 						</p>
 					</td>
 					</tr>
@@ -91,9 +91,71 @@
 				</c:if>
 				</ul>
 			</nav>
-	</c:if>
-	<c:if test="${count==0}">
-			<p class="h3 text-center" style="color:white; margin-left:20px; margin-top:20px">No hay ligas que mostrar</p>
+			
+			<div id="inscribirModal" class="modal fade" tabindex="-1" role="dialog">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title">Inscribirse</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			        <p>Esta seguro que desea inscribirse a esta liga?</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+			        <button type="button" id="btnInscribir" class="btn btn-primary">Aceptar</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		</c:if>
+		<c:if test="${count==0}">
+				<p class="h3 text-center" style="color:white; margin-left:20px; margin-top:20px">No hay ligas que mostrar</p>
+		</c:if>
+		<script>
+				function inscribirClicked(id){
+					console.log(id);
+					$("#btnInscribir").click(function(){
+						//console.log("prueba");
+						location.href = 'ligas?action=inscribir&id=' + id;
+					});
+					$("#inscribirModal").modal('show');
+				}
+		</script>
+		<c:if test="${inscripto == true}">
+				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+				    <div class="toast-header">
+				        <strong class="mr-auto"><i class="fa fa-grav"></i>Inscripcion - Exitosa</strong>
+				        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+				    </div>
+				    <div class="toast-body">
+				        Usted se ha inscripto exitosamente a la liga.
+				    </div>
+				</div>
+				<script>
+					$(document).ready(function(){
+						$("#myToast").toast('show');
+					});
+				</script>
+		</c:if>
+		<c:if test="${inscripto == false}">
+				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+				    <div class="toast-header">
+				        <strong class="mr-auto"><i class="fa fa-grav"></i>Inscripcion - Error</strong>
+				        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+				    </div>
+				    <div class="toast-body">
+				        Usted ya se encuentra inscripto a dicha liga.
+				    </div>
+				</div>
+				<script>
+					$(document).ready(function(){
+						$("#myToast").toast('show');
+					});
+				</script>
 		</c:if>
 	</jsp:body>
 </t:layout>
