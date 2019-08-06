@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import negocio.Estado;
+
 public class Solicitud {
 	private static Solicitud instance = null;
 	
@@ -412,5 +414,68 @@ public class Solicitud {
 		
 		return count;
 	}
+
+	public ArrayList<negocio.Solicitud> getAllSolicitudesLigaUsuario(int idLiga, int idUsuario) throws SQLException, ClassNotFoundException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * from solicitudes WHERE (jugador_uno=? OR jugador_dos=?) AND estado=? AND liga=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, idUsuario);
+		stmt.setInt(3, Estado.SOLICITUD_ACEPTADA);
+		stmt.setInt(4, idLiga);
+		
+		ResultSet rs = stmt.executeQuery();
+		ArrayList<negocio.Solicitud> solicitudes = new ArrayList<negocio.Solicitud>();
+		while(rs.next()) {
+			negocio.Solicitud so = new negocio.Solicitud();
+			so.setId(rs.getInt(1));
+			so.setFecha(rs.getDate(2));
+			so.setVencimiento(rs.getDate(3));
+			so.setEstado(datos.Estado.getInstance().getOne(rs.getInt(4)));
+			so.setJugadorUno(datos.Usuario.getInstance().getOne(rs.getInt(5)));
+			so.setJugadorDos(datos.Usuario.getInstance().getOne(rs.getInt(6)));
+			so.setLiga(datos.Liga.getInstance().getOne(rs.getInt(7)));
+			solicitudes.add(so);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return solicitudes;
+	}
+
+	public negocio.Solicitud getOne(int idSolicitud) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM solicitudes WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idSolicitud);
+		
+		ResultSet rs = stmt.executeQuery();
+		negocio.Solicitud solicitud = null;
+		if(rs.next()) {
+			solicitud = new negocio.Solicitud();
+			solicitud.setId(rs.getInt(1));
+			solicitud.setFecha(rs.getDate(2));
+			solicitud.setVencimiento(rs.getDate(3));
+			solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(4)));
+			solicitud.setJugadorUno(datos.Usuario.getInstance().getOne(rs.getInt(5)));
+			solicitud.setJugadorDos(datos.Usuario.getInstance().getOne(rs.getInt(6)));
+			solicitud.setLiga(datos.Liga.getInstance().getOne(rs.getInt(7)));
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return solicitud;
+	}
+
 }
 

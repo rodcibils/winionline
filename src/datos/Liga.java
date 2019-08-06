@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import negocio.Estado;
-import negocio.UsuarioEstadisticas;
 
 public class Liga {
 	private static Liga instance = null;
@@ -632,7 +631,7 @@ public class Liga {
 		return ligas;
 	}
 
-	public ArrayList<UsuarioEstadisticas> getAllStatsUsuarios(int idLiga) throws ClassNotFoundException, SQLException {
+	public ArrayList<negocio.Usuario> getAllUsuariosLiga(int idLiga) throws ClassNotFoundException, SQLException {
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
@@ -643,153 +642,18 @@ public class Liga {
 		stmt.setInt(1, idLiga);
 		ResultSet rs = stmt.executeQuery();
 		
-		ArrayList<negocio.UsuarioEstadisticas> usuariosEstadisticas = new ArrayList<negocio.UsuarioEstadisticas>();
+		ArrayList<negocio.Usuario> usuariosLiga = new ArrayList<negocio.Usuario>();
 		while(rs.next()) {
 			negocio.Usuario us = datos.Usuario.getInstance().getOne(rs.getInt(1));
-			negocio.UsuarioEstadisticas ue = new UsuarioEstadisticas();
-			ue = buscaSolicitudes(us.getId(), idLiga);
-			ue.setPos(0);
-			ue.setNombre(us.getNombre());
-			usuariosEstadisticas.add(ue);
+			usuariosLiga.add(us);
 		}
 		
 		stmt.close();
 		rs.close();
 		manager.closeConnection();
 		
-		// FALTA ORDENAR POR (PUNTOS), (DIFFGOLES), (GOLESFAVOR), GOLESCONTRA con ese sort
-		// LUEGO SETEAR LA POSICION DE A 1 EN EL FOREACH
 		
-		return usuariosEstadisticas;
-	}
-
-	private UsuarioEstadisticas buscaSolicitudes(int idUsu, int idLiga) throws SQLException, ClassNotFoundException {
-		int jugadorUno;
-		int jugadorDos;
-		int idSolicitud;
-		int golesContra=0;
-		int golesFavor=0;
-		int partGanados=0;
-		int partPerdidos=0;
-		int partEmpatados=0;
-		negocio.UsuarioEstadisticas ue = new UsuarioEstadisticas();
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		
-		String query = "SELECT * from solicitudes WHERE (jugador_uno=? OR jugador_dos=?) "
-				+ "AND estado=? AND liga=?";
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idUsu);
-		stmt.setInt(2, idUsu);
-		stmt.setInt(3, Estado.SOLICITUD_ACEPTADA);
-		stmt.setInt(4, idLiga);
-		ResultSet rs = stmt.executeQuery();
-		
-		while(rs.next()) {
-			jugadorUno = rs.getInt(5);
-			jugadorDos = rs.getInt(6);
-			idSolicitud = rs.getInt(7);
-
-			int golesJugadorUno = buscaPartidoJugador(jugadorUno, idSolicitud);
-			int golesJugadorDos = buscaPartidoJugador(jugadorDos, idSolicitud);
-			
-			if (golesJugadorUno != 99 && golesJugadorDos != 99)
-			{
-				if (idUsu == jugadorUno)
-				{
-					golesContra += golesJugadorDos;
-					golesFavor += golesJugadorUno;
-					if (golesJugadorUno > golesJugadorDos)
-						partGanados ++;
-					else 
-						if (golesJugadorDos > golesJugadorUno)
-							partPerdidos ++;
-						else
-							partEmpatados ++;						
-				}else
-				{
-					golesContra += golesJugadorUno;
-					golesFavor += golesJugadorDos;
-					if (golesJugadorDos > golesJugadorUno)
-						partGanados ++;
-					else 
-						if (golesJugadorUno > golesJugadorDos)
-							partPerdidos ++;
-						else
-							partEmpatados ++;
-				}
-			}
-		}
-		ue.setGolesContra(golesContra);
-		ue.setGolesFavor(golesFavor);
-		ue.setGolesDiferencia(golesFavor-golesContra);
-		ue.setPartEmpatados(partEmpatados);
-		ue.setPartGanados(partGanados);
-		ue.setPartGanados(partGanados);
-		ue.setPartJugados(partEmpatados+partGanados+partPerdidos);
-		ue.setPuntos((partGanados*3)+partEmpatados);
-		
-		stmt.close();
-		rs.close();
-		manager.closeConnection();
-		return ue;		
-	}
-
-	private int buscaPartidoJugador(int jugador, int idSolicitud) throws SQLException, ClassNotFoundException {
-		int goles = 99;
-		int idPartido = 0;
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		
-		String query = "SELECT * from partidos "+
-		"WHERE solicitud=? AND pa.estado=?";
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idSolicitud);
-		stmt.setInt(2, Estado.PARTIDO_FINALIZADO);
-
-		ResultSet rs = stmt.executeQuery();
-		
-		while(rs.next()) {
-			idPartido = rs.getInt(1);
-		}
-		
-		stmt.close();
-		rs.close();
-		manager.closeConnection();
-		
-		goles = buscaGolesJugador(idPartido, jugador);
-		
-		return goles;	
-	}
-	
-	private int buscaGolesJugador(int idPartido, int jugador) throws SQLException, ClassNotFoundException {
-		int goles = 0;
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		
-		String query = "SELECT * from resultados "+
-		"WHERE id_partido=? AND id_jugador=?";
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idPartido);
-		stmt.setInt(2, jugador);
-		
-		ResultSet rs = stmt.executeQuery();
-		
-		while(rs.next()) {
-			goles = rs.getInt(3);
-		}
-		
-		stmt.close();
-		rs.close();
-		manager.closeConnection();
-		
-		return goles;	
+		return usuariosLiga;
 	}
 	
 	public List<Integer> getTemporadas() throws ClassNotFoundException, SQLException
