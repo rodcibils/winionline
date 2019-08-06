@@ -448,5 +448,34 @@ public class Solicitud {
 		return solicitudes;
 	}
 
+	public negocio.Solicitud getOne(int idSolicitud) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM solicitudes WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idSolicitud);
+		
+		ResultSet rs = stmt.executeQuery();
+		negocio.Solicitud solicitud = null;
+		if(rs.next()) {
+			solicitud = new negocio.Solicitud();
+			solicitud.setId(rs.getInt(1));
+			solicitud.setFecha(rs.getDate(2));
+			solicitud.setVencimiento(rs.getDate(3));
+			solicitud.setEstado(datos.Estado.getInstance().getOne(rs.getInt(4)));
+			solicitud.setJugadorUno(datos.Usuario.getInstance().getOne(rs.getInt(5)));
+			solicitud.setJugadorDos(datos.Usuario.getInstance().getOne(rs.getInt(6)));
+			solicitud.setLiga(datos.Liga.getInstance().getOne(rs.getInt(7)));
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return solicitud;
+	}
+
 }
 

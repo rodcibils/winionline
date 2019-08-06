@@ -553,4 +553,213 @@ public class Partido {
 		
 		return partido;
 	}
+
+	public ArrayList<negocio.Partido> getPartidosUsuarioLiga(int idUsuario, int idLiga, int skip, int limit) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT p.id, p.fecha, j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, "
+				+ "j_dos.nombre, j_dos.apodo, r_uno.goles, r_dos.goles, u_reg.id, "
+				+ "u_reg.nombre, u_reg.apodo FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN resultados AS r_uno ON r_uno.id_partido = p.id "
+				+ "INNER JOIN resultados AS r_dos ON r_dos.id_partido = p.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = r_uno.id_jugador "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = r_dos.id_jugador "
+				+ "INNER JOIN usuarios AS u_reg ON u_reg.id = p.registro "
+				+ "WHERE r_uno.id_jugador = ? AND r_dos.id_jugador != ? "
+				+ "AND p.estado = ? "
+				+ "AND s.liga=? LIMIT ?,?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, idUsuario);
+		stmt.setInt(3, negocio.Estado.PARTIDO_FINALIZADO);
+		stmt.setInt(4, idLiga);
+		stmt.setInt(5, skip);
+		stmt.setInt(6, limit);
+		
+		ArrayList<negocio.Partido> partidosUsuarioLiga = new ArrayList<>();
+		
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Partido partido = new negocio.Partido();
+			partido.setId(rs.getInt(1));
+			partido.setFecha(rs.getDate(2));
+			
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setId(rs.getInt(3));
+			jugadorUno.setNombre(rs.getString(4));
+			jugadorUno.setApodo(rs.getString(5));
+			
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setId(rs.getInt(6));
+			jugadorDos.setNombre(rs.getString(7));
+			jugadorDos.setApodo(rs.getString(8));
+			
+			negocio.Resultado resultadoUno = new negocio.Resultado();
+			resultadoUno.setJugador(jugadorUno);
+			resultadoUno.setGoles(rs.getInt(9));
+			partido.setResultadoUno(resultadoUno);
+			
+			negocio.Resultado resultadoDos = new negocio.Resultado();
+			resultadoDos.setJugador(jugadorDos);
+			resultadoDos.setGoles(rs.getInt(10));
+			partido.setResultadoDos(resultadoDos);
+			
+			negocio.Usuario registro = new negocio.Usuario();
+			registro.setId(rs.getInt(11));
+			registro.setNombre(rs.getString(12));
+			registro.setApodo(rs.getString(13));
+			partido.setRegistro(registro);
+			
+			partidosUsuarioLiga.add(partido);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return partidosUsuarioLiga;
+	}
+
+	public ArrayList<negocio.Partido> getPartidosUsuarioLiga(int idUsuario, int idLiga, int skip, int limit, String toSearch) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT p.id, p.fecha, j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, "
+				+ "j_dos.nombre, j_dos.apodo, r_uno.goles, r_dos.goles, u_reg.id, "
+				+ "u_reg.nombre, u_reg.apodo FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN resultados AS r_uno ON r_uno.id_partido = p.id "
+				+ "INNER JOIN resultados AS r_dos ON r_dos.id_partido = p.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = r_uno.id_jugador "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = r_dos.id_jugador "
+				+ "INNER JOIN usuarios AS u_reg ON u_reg.id = p.registro "
+				+ "WHERE r_uno.id_jugador = ? AND r_dos.id_jugador != ? "
+				+ "AND p.estado = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?) "
+				+ "AND s.liga=? LIMIT ?,?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, idUsuario);
+		stmt.setInt(3, negocio.Estado.PARTIDO_FINALIZADO);
+		toSearch = "%" + toSearch + "%";
+		stmt.setString(4, toSearch);
+		stmt.setString(5, toSearch);
+		stmt.setInt(6, idLiga);
+		stmt.setInt(7, skip);
+		stmt.setInt(8, limit);
+		
+		ArrayList<negocio.Partido> partidosUsuarioLiga = new ArrayList<>();
+		
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Partido partido = new negocio.Partido();
+			partido.setId(rs.getInt(1));
+			partido.setFecha(rs.getDate(2));
+			
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setId(rs.getInt(3));
+			jugadorUno.setNombre(rs.getString(4));
+			jugadorUno.setApodo(rs.getString(5));
+			
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setId(rs.getInt(6));
+			jugadorDos.setNombre(rs.getString(7));
+			jugadorDos.setApodo(rs.getString(8));
+			
+			negocio.Resultado resultadoUno = new negocio.Resultado();
+			resultadoUno.setJugador(jugadorUno);
+			resultadoUno.setGoles(rs.getInt(9));
+			partido.setResultadoUno(resultadoUno);
+			
+			negocio.Resultado resultadoDos = new negocio.Resultado();
+			resultadoDos.setJugador(jugadorDos);
+			resultadoDos.setGoles(rs.getInt(10));
+			partido.setResultadoDos(resultadoDos);
+			
+			negocio.Usuario registro = new negocio.Usuario();
+			registro.setId(rs.getInt(11));
+			registro.setNombre(rs.getString(12));
+			registro.setNombre(rs.getString(13));
+			partido.setRegistro(registro);
+			
+			partidosUsuarioLiga.add(partido);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return partidosUsuarioLiga;
+	}
+
+	public int getCountPartidosUsuarioLiga(int idUsuario, int idLiga) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "WHERE (s.jugador_uno = ? OR s.jugador_dos = ?) "
+				+ "AND p.estado = ? "
+				+ "AND s.liga = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, idUsuario);
+		stmt.setInt(3, negocio.Estado.PARTIDO_FINALIZADO);
+		stmt.setInt(4, idLiga);
+		
+		int count = 0;
+		
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+
+	public int getCountPartidosUsuarioLiga(int idUsuario, int idLiga, String toSearch) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "WHERE ((j_dos.id = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
+				+ "OR (j_uno.id = ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?))) "
+				+ "AND p.estado = ? "
+				+ "AND s.liga = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		toSearch = "%" + toSearch + "%";
+		stmt.setString(2, toSearch);
+		stmt.setString(3, toSearch);
+		stmt.setInt(4, idUsuario);
+		stmt.setString(5, toSearch);
+		stmt.setString(6, toSearch);
+		stmt.setInt(7, negocio.Estado.PARTIDO_FINALIZADO);
+		stmt.setInt(8, idLiga);
+		
+		int count = 0;
+		
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
 }

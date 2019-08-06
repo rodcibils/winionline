@@ -8,28 +8,107 @@
 </head>
 <t:layout>
 	<jsp:body>		
-		<table class="table table-hover table-dark" align="center" style="width:50%; margin-top:40px;">
+		<script>
+			function search(){
+				var toSearch = document.getElementById('txtSearch').value;
+				window.location.href = "partidosusuarioliga?search=" + toSearch;
+			}
+		</script>
+		<div class="input-group col-6 float-right" style="margin-top:20px;margin-bottom:20px;margin-right:20px">
+		  	<input type="text" id="txtSearch" class="form-control" value="${search}" placeholder="Buscar por nombre o apodo de usuario...">
+		  	<div class="input-group-append">
+		    	<button type="button" class="btn btn-primary" onclick="search()">Buscar</button>
+		  	</div>
+		</div>
+		<c:if test="${count > 0}">
+			<table class="table table-hover table-dark">
 			<thead>
 				<tr>
-					<th scope="col" style="text-align:center">Juador uno</th>
-					<th scope="col" style="text-align:center">Goles</th>				
-					<th scope="col"></th>
-					<th scope="col" style="text-align:center">Goles</th>
-					<th scope="col" style="text-align:center">Jugador dos</th>		
+				<th scope="col">Jugador Rival</th>
+				<th scope="col">Fecha Partido</th>
+				<th scope="col">Resultado</th>
+				<th scope="col">Registrado Por</th>
+				<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${partidosligausuario}" var="plu">
+				<c:forEach items="${partidosUsuarioLiga}" var="partido">
 					<tr>
-						<td style="text-align:center">${plu.getNombreJugadorUno()}</td>
-						<td style="text-align:center">${plu.getGolesJugadorUno()}</td>	
-						<td style="text-align:center"> - </td>
-						<td style="text-align:center">${plu.getNombreJugadorDos()}</td>
-						<td style="text-align:center">${plu.getGolesJugadorDos()}</td>					
+					<td><p>${amistoso.getResultadoDos().getJugador().getNombre()} - ${amistoso.getResultadoDos().getJugador().getApodo()}</p></td>
+					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${amistoso.getFecha()}"/></p></td>
+					<td> 
+						<c:if test="${amistoso.getResultadoUno().getGoles() > amistoso.getResultadoDos().getGoles()}">
+							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (V)</p>
+						</c:if>
+						<c:if test="${amistoso.getResultadoUno().getGoles() < amistoso.getResultadoDos().getGoles()}">
+							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (D)</p>
+						</c:if>
+						<c:if test="${amistoso.getResultadoUno().getGoles() == amistoso.getResultadoDos().getGoles()}">
+							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (E)</p>
+						</c:if>
+					</td>
+					<td>${amistoso.getRegistro().getNombre()} - ${amistoso.getRegistro().getApodo()}</td>
+					<td>
+						<a class="btn btn-primary">Ver Perfil</a>
+						<c:if test="${sessionScope.usuario.getId() == amistoso.getRegistro().getId()}">
+						<a class="btn btn-success" style="margin-left:20px" href="listFriendlyMatches?edit=${amistoso.getId()}">Editar Resultado</a>
+						<a class="btn btn-danger disabled" style="margin-left:20px">Disputar Resultado</a>
+						</c:if>
+						<c:if test="${sessionScope.usuario.getId() != amistoso.getRegistro().getId()}">
+						<a class="btn btn-success disabled" style="margin-left:20px">Editar Resultado</a>
+						<a class="btn btn-danger" style="margin-left:20px">Disputar Resultado</a>
+						</c:if>
+					</td>
 					</tr>
 				</c:forEach>
 			</tbody>
-		</table>
+			</table>
+			<nav aria-label="Paginacion">
+				<ul class="pagination justify-content-center">
+				<c:if test="${skip == 0}">
+					<li class="page-item disabled">
+					<a class="page-link" href="#" aria-label="Anterior">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+				</c:if>
+				<c:if test="${skip > 0}">
+					<li class="page-item">
+					<a class="page-link" href="listFriendlyMatches?skip=${skip-10}&search=${search}" aria-label="Anterior">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+					</li>
+				</c:if>
+				<c:forEach begin="0" end="${max_pages-1}" var="index">
+				<c:if test="${current_page == index}">
+					<li class="page-item active">
+						<a class="page-link" href="#">${index+1}<span class="sr-only">(current)</span></a>
+					</li>
+				</c:if>
+				<c:if test="${current_page != index}">
+					<li class="page-item"><a class="page-link" href="listFriendlyMatches?skip=${index*10}&search=${search}">${index + 1}</a></li>
+				</c:if>	
+				</c:forEach>
+				<c:if test="${current_page == max_pages-1}">
+				<li class="page-item disabled">
+					<a class="page-link" href="#" aria-label="Siguiente">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+				</c:if>
+				<c:if test="${current_page < max_pages-1}">
+				<li class="page-item">
+					<a class="page-link" href="listFriendlyMatches?skip=${skip+10}&search=${search}" aria-label="Siguiente">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+				</c:if>
+				</ul>
+			</nav>
+		</c:if>
+		<c:if test="${count==0}">
+			<p class="h3 text-center" style="color:white; margin-left:20px; margin-top:20px">No hay partidos que mostrar</p>
+		</c:if>
 		<ul class="pagination justify-content-center">
 			<li class="page-item"><button onclick="window.location='estadisticasLiga?id=${idLiga}';return false;" class="btn btn-danger" style="margin:20px 5px 0px 5px">Volver</button></li>
 		</ul>

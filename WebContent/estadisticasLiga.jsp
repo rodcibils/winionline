@@ -12,7 +12,7 @@
 			<thead>
 				<tr>
 				<th scope="col">#</th>
-				<th scope="col">Juador</th>
+				<th scope="col">Jugador</th>
 				<th scope="col">P</th>				
 				<th scope="col">J</th>
 				<th scope="col">G</th>
@@ -28,7 +28,7 @@
 				<c:forEach items="${estadisticasUsuarios}" var="eu">
 					<tr>
 					<td>${eu.getPos()}</td>
-					<td>${eu.getNombre()}</td>	
+					<td>${eu.getNombre()}</td>
 					<td>${eu.getPartJugados()}</td>
 					<td>${eu.getPuntos()}</td>
 					<td>${eu.getPartGanados()}</td>	
@@ -37,14 +37,14 @@
 					<td>${eu.getGolesFavor()}</td>	
 					<td>${eu.getGolesContra()}</td>
 					<td>${eu.getGolesDiferencia()}</td>
-					<c:choose>
-						<c:when test="${eu.getPartJugados() == 0}">
-							<td><a class="btn btn-primary disabled" href="#">Partidos</a></td>
-						</c:when>
-						<c:otherwise>
+<%-- 					<c:choose> --%>
+<%-- 						<c:when test="${eu.getPartJugados() == 0}"> --%>
+<%-- 							<td><a class="btn btn-primary disabled" href="#">Partidos</a></td> --%>
+<%-- 						</c:when> --%>
+<%-- 						<c:otherwise> --%>
 							<td><a class="btn btn-primary" href="partidosusuarioliga?idliga=${idLiga}&idusuario=${eu.getIdUsuario()}">Partidos</a></td>
-						</c:otherwise>
-					</c:choose>					
+<%-- 						</c:otherwise> --%>
+<%-- 					</c:choose>					 --%>
 					</tr>
 				</c:forEach>
 			</tbody>
