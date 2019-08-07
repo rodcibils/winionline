@@ -25,11 +25,12 @@ DROP TABLE IF EXISTS `apelaciones`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `apelaciones` (
-  `id_disputa` int(11) NOT NULL,
+  `id_partido` int(11) NOT NULL,
   `fecha` datetime DEFAULT NULL,
   `resultado` int(11) DEFAULT NULL,
-  KEY `fk_apelaciones_disputa_idx` (`id_disputa`),
-  CONSTRAINT `fk_apelaciones_disputa` FOREIGN KEY (`id_disputa`) REFERENCES `disputas` (`id`)
+  PRIMARY KEY (`id_partido`),
+  KEY `fk_apelaciones_disputa_idx` (`id_partido`),
+  CONSTRAINT `fk_apelaciones_disputa` FOREIGN KEY (`id_partido`) REFERENCES `disputas` (`id_partido`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,13 +51,10 @@ DROP TABLE IF EXISTS `disputas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `disputas` (
-  `id` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
   `evidencia_uno` varchar(45) DEFAULT NULL,
   `evidencia_dos` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_partido_UNIQUE` (`id_partido`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
+  PRIMARY KEY (`id_partido`),
   CONSTRAINT `fk_disputas_partido` FOREIGN KEY (`id_partido`) REFERENCES `partidos` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -92,7 +90,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-INSERT INTO `estados` VALUES (4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(9,'Partido Finalizado'),(8,'Partido Pendiente'),(10,'Partido Rechazado'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
+INSERT INTO `estados` VALUES (4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(11,'Partido Disputado'),(9,'Partido Finalizado'),(8,'Partido Pendiente'),(10,'Partido Rechazado'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -309,11 +307,13 @@ DROP TABLE IF EXISTS `usuario_apelacion`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `usuario_apelacion` (
   `id_usuario` int(11) NOT NULL,
-  `id_apelacion` int(11) NOT NULL,
+  `id_partido` int(11) NOT NULL,
   `voto` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_usuario`,`id_apelacion`),
+  PRIMARY KEY (`id_usuario`,`id_partido`),
   KEY `fk_usuario_apelacion_usuario_idx` (`id_usuario`),
   KEY `fk_usuario_apelacion_voto_idx` (`voto`),
+  KEY `fk_usuario_apelacion_disputa_idx` (`id_partido`),
+  CONSTRAINT `fk_usuario_apelacion_disputa` FOREIGN KEY (`id_partido`) REFERENCES `disputas` (`id_partido`),
   CONSTRAINT `fk_usuario_apelacion_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_usuario_apelacion_voto` FOREIGN KEY (`voto`) REFERENCES `usuarios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -492,4 +492,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-27 19:10:50
+-- Dump completed on 2019-08-07 19:21:03
