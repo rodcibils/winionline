@@ -44,10 +44,11 @@ public class AmistososServlet extends HttpServlet {
 				negocio.Partido partido = datos.Partido.getInstance().getOne(Integer.parseInt(sEdit));
 				Calendar c = Calendar.getInstance();
 				c.setTime(partido.getFecha());
-				c.add(Calendar.DATE, 5);
+				c.add(Calendar.DATE, negocio.Partido.MAX_DIAS_EDICION);
 				Date today = new Date();
 				if(today.after(c.getTime())) {
-					request.setAttribute("err_edit", "Han pasado mas de 5 dias desde la fecha del "
+					request.setAttribute("err_edit", "Han pasado mas de " 
+							+ negocio.Partido.MAX_DIAS_EDICION + " dias desde la fecha del "
 							+ "partido");
 				} else {
 					request.setAttribute("id", sEdit);

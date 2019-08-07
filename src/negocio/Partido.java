@@ -11,6 +11,9 @@ public class Partido {
 	private Resultado resultadoDos;
 	private Usuario registro;
 	
+	// cant. maxima de dias que se puede editar el rtdo. de un partido
+	public static final int MAX_DIAS_EDICION = 5;
+	
 	public int getId() {
 		return id;
 	}
