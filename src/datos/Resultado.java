@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Resultado {
 	private static Resultado instance = null;
@@ -32,6 +33,32 @@ public class Resultado {
 		stmt.close();
 		ConnectionManager.getInstance().closeConnection();
 	}
+
+	public ArrayList<negocio.Resultado> getResultadoPartido(int idPartido) throws ClassNotFoundException, SQLException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM resultados WHERE id_partido=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idPartido);
+		
+		ResultSet rs = stmt.executeQuery();
+		ArrayList<negocio.Resultado> resultado = new ArrayList<negocio.Resultado>();
+		while(rs.next()) {
+			negocio.Resultado res = new negocio.Resultado();
+			res.setJugador(datos.Usuario.getInstance().getOne(rs.getInt(1)));
+			res.setPartido(datos.Partido.getInstance().getOne(rs.getInt(2)));
+			res.setGoles(rs.getInt(3));
+			resultado.add(res);
+		}
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return resultado;
+	}
+		
 	
 	public void update(negocio.Resultado resultado) throws ClassNotFoundException, SQLException
 	{
