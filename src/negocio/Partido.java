@@ -13,6 +13,10 @@ public class Partido {
 	
 	// cant. maxima de dias que se puede editar el rtdo. de un partido
 	public static final int MAX_DIAS_EDICION = 5;
+	// cant. maxima de dias en los que se puede disputar el rtdo. de un partido
+	// son mas dias que el de edicion para dar lugar a disputar cuando el rival se nego
+	// a corregir el resultado de un partido mal registrado
+	public static final int MAX_DIAS_DISPUTA = 10;
 	
 	public int getId() {
 		return id;

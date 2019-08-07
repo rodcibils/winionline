@@ -14,6 +14,7 @@ public class Estado {
 	public static final int PARTIDO_PENDIENTE = 8;
 	public static final int PARTIDO_FINALIZADO = 9;
 	public static final int PARTIDO_RECHAZADO = 10;
+	public static final int PARTIDO_DISPUTADO = 11;
 	
 	public int getId() {
 		return id;

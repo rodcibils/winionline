@@ -8,6 +8,43 @@
 </head>
 <t:layout>
 	<jsp:body>
+		<div id="matchDisputeModal" class="modal fade" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Esta seguro que desea disputar este amistoso?</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>El resultado de este partido será sometido a juicio público por los usuarios de la 
+		        comunidad, que decidirán el ganador final. Esta acción no es reversible y en caso 
+		        de reiteración injustificada su cuenta puede ser baneada.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		        <button type="button" class="btn btn-primary" id="btnDisputar">Aceptar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<c:if test="${err_dispute != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>No puede disputar el amistoso</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${err_dispute}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
 		<c:if test="${err_edit != null}">
 			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
 			    <div class="toast-header">
@@ -88,7 +125,7 @@
 						</c:if>
 						<c:if test="${sessionScope.usuario.getId() != amistoso.getRegistro().getId()}">
 						<a class="btn btn-success disabled" style="margin-left:20px">Editar Resultado</a>
-						<a class="btn btn-danger" style="margin-left:20px">Disputar Resultado</a>
+						<a class="btn btn-danger" style="margin-left:20px" data-toggle="modal" onclick="disputarClicked(${amistoso.getId()})">Disputar Resultado</a>
 						</c:if>
 					</td>
 					</tr>
@@ -141,5 +178,13 @@
 		<c:if test="${count==0}">
 			<p class="h3 text-center" style="color:white; margin-left:20px; margin-top:20px">No hay amistosos que mostrar</p>
 		</c:if>
+		<script>
+			function disputarClicked(id){
+				$('#btnDisputar').click(function(){
+					location.href = "listFriendlyMatches?dispute=" + id;
+				});
+				$('#matchDisputeModal').modal('show');
+			}
+		</script>
 	</jsp:body>
 </t:layout>

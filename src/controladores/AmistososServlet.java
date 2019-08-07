@@ -38,6 +38,29 @@ public class AmistososServlet extends HttpServlet {
 	{
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
+		String sDispute = request.getParameter("dispute");
+		if(sDispute != null && !sDispute.isEmpty()) {
+			try {
+				negocio.Partido partido = datos.Partido.getInstance()
+						.getOne(Integer.parseInt(sDispute));
+				Calendar c = Calendar.getInstance();
+				c.setTime(partido.getFecha());
+				c.add(Calendar.DATE, negocio.Partido.MAX_DIAS_DISPUTA);
+				Date today = new Date();
+				if(today.after(c.getTime())) {
+					request.setAttribute("err_dispute", "Han pasado mas de " + 
+							negocio.Partido.MAX_DIAS_DISPUTA + " desde la fecha del amistoso");
+				} else {
+					datos.Disputa.getInstance().insert(partido.getId());
+					datos.Partido.getInstance().disputarPartido(partido.getId());
+					request.setAttribute("dispute_success", "El amistoso ha sido disputado "
+							+ "correctamente");
+				}
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		String sEdit = request.getParameter("edit");
 		if(sEdit != null && !sEdit.isEmpty()) {
 			try {
@@ -49,7 +72,7 @@ public class AmistososServlet extends HttpServlet {
 				if(today.after(c.getTime())) {
 					request.setAttribute("err_edit", "Han pasado mas de " 
 							+ negocio.Partido.MAX_DIAS_EDICION + " dias desde la fecha del "
-							+ "partido");
+							+ "amistoso");
 				} else {
 					request.setAttribute("id", sEdit);
 					request.setAttribute("mode", "edit");
