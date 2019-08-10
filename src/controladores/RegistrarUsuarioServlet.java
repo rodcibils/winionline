@@ -170,7 +170,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 				if(!dUsuario.checkIfUserExists(usuario.getNombre())) {
 					if(fileName != null && !fileName.isEmpty()) {
 						String fileExt = Utils.getFileExtension(fileName);
-						File file = new File(dUsuario.getParametroPath(), 
+						File file = new File(datos.Parametro.getInstance().getAvatarsPath(), 
 								usuario.getNombre() + "." + fileExt);
 						try(InputStream stream = filePart.getInputStream()){
 							Files.copy(stream, file.toPath());

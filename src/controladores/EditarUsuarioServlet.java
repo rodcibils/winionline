@@ -146,7 +146,7 @@ public class EditarUsuarioServlet extends HttpServlet {
 						File old_file = new File(usuario.getAvatar());
 						old_file.delete();
 					}
-					File file = new File(dUsuario.getParametroPath(),
+					File file = new File(datos.Parametro.getInstance().getAvatarsPath(),
 							usuario.getNombre() + "." + fileExt);
 					try(InputStream stream = filePart.getInputStream()){
 						Files.copy(stream, file.toPath());
