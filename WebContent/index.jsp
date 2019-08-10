@@ -84,7 +84,7 @@
 						</c:when>
 						<c:when test="${disputas > 0}">
 						<p class="card-text">Tiene ${disputas} disputas en curso</p>
-						<a href="#" class="btn btn-primary">Verificar</a>
+						<a href="misDisputas?skip=0&search=" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
 					</div>
