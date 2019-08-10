@@ -54,7 +54,12 @@ CREATE TABLE `disputas` (
   `id_partido` int(11) NOT NULL,
   `evidencia_uno` varchar(45) DEFAULT NULL,
   `evidencia_dos` varchar(45) DEFAULT NULL,
+  `fecha` date NOT NULL,
+  `vencimiento` date NOT NULL,
+  `estado` int(11) NOT NULL,
   PRIMARY KEY (`id_partido`),
+  KEY `fk_disputas_estado_idx` (`estado`),
+  CONSTRAINT `fk_disputas_estado` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`),
   CONSTRAINT `fk_disputas_partido` FOREIGN KEY (`id_partido`) REFERENCES `partidos` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -90,7 +95,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-INSERT INTO `estados` VALUES (4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(11,'Partido Disputado'),(9,'Partido Finalizado'),(8,'Partido Pendiente'),(10,'Partido Rechazado'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
+INSERT INTO `estados` VALUES (14,'Disputa Apelada'),(13,'Disputa Cerrada'),(12,'Disputa En Curso'),(4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(11,'Partido Disputado'),(9,'Partido Finalizado'),(8,'Partido Pendiente'),(10,'Partido Rechazado'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -158,12 +163,11 @@ DROP TABLE IF EXISTS `parametros`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `parametros` (
-  `parametroid` int(11) NOT NULL AUTO_INCREMENT,
-  `pathavatar` varchar(100) DEFAULT NULL,
-  `key` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`parametroid`),
-  UNIQUE KEY `parametroid_UNIQUE` (`parametroid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `id` int(11) NOT NULL,
+  `parametro` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `parametroid_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -172,7 +176,7 @@ CREATE TABLE `parametros` (
 
 LOCK TABLES `parametros` WRITE;
 /*!40000 ALTER TABLE `parametros` DISABLE KEYS */;
-INSERT INTO `parametros` VALUES (1,'/media/datos/eclipse-java/winionline/avatars/','1407661933');
+INSERT INTO `parametros` VALUES (1,'1407661933'),(2,'/media/datos/eclipse-java/winionline/avatars'),(3,'/media/datos/eclipse-java/winionline/evidencias');
 /*!40000 ALTER TABLE `parametros` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -492,4 +496,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-07 19:21:03
+-- Dump completed on 2019-08-10 14:46:41
