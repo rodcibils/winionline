@@ -15,6 +15,9 @@ public class Estado {
 	public static final int PARTIDO_FINALIZADO = 9;
 	public static final int PARTIDO_RECHAZADO = 10;
 	public static final int PARTIDO_DISPUTADO = 11;
+	public static final int DISPUTA_EN_CURSO = 12;
+	public static final int DISPUTA_CERRADA = 13;
+	public static final int DISPUTA_APELADA = 14;
 	
 	public int getId() {
 		return id;

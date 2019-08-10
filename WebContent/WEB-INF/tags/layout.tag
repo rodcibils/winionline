@@ -74,6 +74,12 @@
 	  						<a class="dropdown-item" href="ligas?skip=0">Inscribirme a Liga</a>
 	  					</div>
 	  				</li>
+	  				<li class="nav-item dropdown">
+	  					<a class="nav-link dropdown-toggle" href="#" id="dropConflictos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Conflictos</a>
+	  					<div class="dropdown-menu" aria-labelledby="dropConflictos">
+	  						<a class="dropdown-item" href="#">Disputas</a>
+	  					</div>
+	  				</li>
 	  				<li class="nav-item">
 	  					<a class="nav-link" href="login">Cerrar Sesión</a>
 	  				</li>	  				

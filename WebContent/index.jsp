@@ -75,6 +75,20 @@
 						<p class="card-text">No esta participando en ninguna liga</p>
 					</div>
 				</div>
+				<div class="card bg-light">
+					<div class="card-header">Disputas en Curso</div>
+					<div class="card-body">
+						<c:choose>
+						<c:when test="${disputas == 0}">
+						<p class="card-text">No tiene disputas en curso</p>
+						</c:when>
+						<c:when test="${disputas > 0}">
+						<p class="card-text">Tiene ${disputas} disputas en curso</p>
+						<a href="#" class="btn btn-primary">Verificar</a>
+						</c:when>
+						</c:choose>
+					</div>
+				</div>
 			</div>
 			
 			<c:if test="${param.update_success == true}">
