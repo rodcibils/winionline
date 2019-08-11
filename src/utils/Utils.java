@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 public class Utils {
 	
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+	final protected static String[] imageExts = {".png", ".jpg", ".jpeg"};
 	
 	public static String getFileExtension(String filename)
 	{
@@ -44,5 +45,14 @@ public class Utils {
 		}
 		
 		return "";
+	}
+	
+	public static boolean isImageFile(String fileName)
+	{
+		for(String ext : imageExts) {
+			if(fileName.contains(ext)) return true;
+		}
+		
+		return false;
 	}
 }
