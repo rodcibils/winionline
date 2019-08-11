@@ -142,48 +142,53 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
-		
-		Part filePart = request.getPart("imagen");
-		if(filePart != null) {
-			String fileName = Paths.get(filePart.getSubmittedFileName()).toString();
-			if(fileName != null && !fileName.isEmpty()) {
-				if(Utils.isImageFile(fileName)) {
-					try(InputStream stream = filePart.getInputStream()){
-						String ext = Utils.getFileExtension(fileName);
-						try {
-							String path = datos.Parametro.getInstance().getEvidenciasPath();
-							File file = new File(path + "/" + id + "/" + 
-									Integer.toString(usuario.getId()),
-									Integer.toString(count) + "." + ext);
-							Files.copy(stream, file.toPath());
+		if(count < negocio.Evidencia.MAX_EVIDENCIAS) 
+		{
+			negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+			
+			Part filePart = request.getPart("imagen");
+			if(filePart != null) {
+				String fileName = Paths.get(filePart.getSubmittedFileName()).toString();
+				if(fileName != null && !fileName.isEmpty()) {
+					if(Utils.isImageFile(fileName)) {
+						try(InputStream stream = filePart.getInputStream()){
+							String ext = Utils.getFileExtension(fileName);
+							try {
+								String path = datos.Parametro.getInstance().getEvidenciasPath();
+								File file = new File(path + "/" + id + "/" + 
+										Integer.toString(usuario.getId()),
+										Integer.toString(count) + "." + ext);
+								Files.copy(stream, file.toPath());
+							} catch(Exception e) {
+								System.out.println(e.getMessage());
+							}
 						} catch(Exception e) {
 							System.out.println(e.getMessage());
 						}
+					} else {
+						request.setAttribute("err_imagen", "El formato de imagen cargada no es valido");
+					}
+				}
+			}
+			
+			String video = request.getParameter("video");
+			if(video != null && !video.isEmpty()) {
+				if(video.contains("www.youtube.com")) {
+					try {
+						String path = datos.Parametro.getInstance().getEvidenciasPath();
+						Path file = Paths.get(path + "/" + id + "/" + Integer.toString(usuario.getId()) 
+								+ "/" + Integer.toString(count) + ".txt");
+						List<String> content = Arrays.asList(video);
+						Files.write(file, content, StandardCharsets.UTF_8);
 					} catch(Exception e) {
 						System.out.println(e.getMessage());
 					}
 				} else {
-					request.setAttribute("err_imagen", "El formato de imagen cargada no es valido");
+					request.setAttribute("err_video", "Las unicas url de video aceptadas deben ser de Youtube");
 				}
 			}
-		}
-		
-		String video = request.getParameter("video");
-		if(video != null && !video.isEmpty()) {
-			if(video.contains("www.youtube.com")) {
-				try {
-					String path = datos.Parametro.getInstance().getEvidenciasPath();
-					Path file = Paths.get(path + "/" + id + "/" + Integer.toString(usuario.getId()) 
-							+ "/" + Integer.toString(count) + ".txt");
-					List<String> content = Arrays.asList(video);
-					Files.write(file, content, StandardCharsets.UTF_8);
-				} catch(Exception e) {
-					System.out.println(e.getMessage());
-				}
-			} else {
-				request.setAttribute("err_video", "Las unicas url de video aceptadas deben ser de Youtube");
-			}
+		} else {
+			request.setAttribute("err_gral", "No puede cargar mas de 10 evidencias a una disputa");
 		}
 		
 		doGet(request, response);

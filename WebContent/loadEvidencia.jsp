@@ -10,6 +10,23 @@
 <t:layout>
 	<jsp:body>
 	
+		<c:if test="${err_gral != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Error cargando evidencia</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${err_gral}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+	
 		<c:if test="${err_video != null}">
 			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
 			    <div class="toast-header">

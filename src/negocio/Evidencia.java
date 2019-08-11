@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Evidencia 
 {
+	public static final int MAX_EVIDENCIAS = 10;
 	public static final String IMAGEN = "Imagen";
 	public static final String VIDEO = "Video";
 	
