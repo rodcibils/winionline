@@ -126,7 +126,7 @@
 							<c:if test="${evidencia.getTipo() == Evidencia.IMAGEN}">
 							<a class="btn btn-primary" href="downloadEvidencia?path=${evidencia.getPath()}">Ver</a>
 							</c:if>
-							<a class="btn btn-danger" href="#" style="margin-left:20px">Eliminar</a>
+							<a class="btn btn-danger" href="cargarEvidenciaDisputa?delete=${evidencia.getPath()}" style="margin-left:20px">Eliminar</a>
 						</td>
 					</tr>
 				</c:forEach>

@@ -48,6 +48,8 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String toDelete = request.getParameter("delete");
+		
 		String sId = request.getParameter("id");
 		if(sId != null && !sId.isEmpty()) {
 			id = sId;
@@ -57,16 +59,22 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 		try {
 			negocio.Disputa disputa = datos.Disputa.getInstance().getOne(Integer.parseInt(id));
 			String path = datos.Parametro.getInstance().getEvidenciasPath();
+			
+			if(toDelete != null && !toDelete.isEmpty()) {
+				File file = new File(path + toDelete);
+				if(file.exists()) file.delete();
+			}
+			
 			File folder = new File(path + "/" + id + "/" + Integer.toString(usuario.getId()));
 			ArrayList<Evidencia> evidencias = new ArrayList<>();
 			if(!folder.exists()) folder.mkdirs();
 			for(File file : folder.listFiles()) {
 				Evidencia evidencia = new Evidencia();
 				evidencia.setFecha(new Date(file.lastModified()));
+				evidencia.setPath("/" + id + "/" + Integer.toString(usuario.getId()) 
+				+ "/" + file.getName());
 				if(Utils.isImageFile(file.getPath())) {
 					evidencia.setTipo(Evidencia.IMAGEN);
-					evidencia.setPath("/" + id + "/" + Integer.toString(usuario.getId()) 
-						+ "/" + file.getName());
 				} else { 
 					evidencia.setTipo(Evidencia.VIDEO);
 					try {
