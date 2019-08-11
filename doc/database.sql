@@ -25,11 +25,12 @@ DROP TABLE IF EXISTS `apelaciones`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `apelaciones` (
-  `id_disputa` int(11) NOT NULL,
+  `id_partido` int(11) NOT NULL,
   `fecha` datetime DEFAULT NULL,
   `resultado` int(11) DEFAULT NULL,
-  KEY `fk_apelaciones_disputa_idx` (`id_disputa`),
-  CONSTRAINT `fk_apelaciones_disputa` FOREIGN KEY (`id_disputa`) REFERENCES `disputas` (`id`)
+  PRIMARY KEY (`id_partido`),
+  KEY `fk_apelaciones_disputa_idx` (`id_partido`),
+  CONSTRAINT `fk_apelaciones_disputa` FOREIGN KEY (`id_partido`) REFERENCES `disputas` (`id_partido`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,13 +51,13 @@ DROP TABLE IF EXISTS `disputas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `disputas` (
-  `id` int(11) NOT NULL,
   `id_partido` int(11) NOT NULL,
-  `evidencia_uno` varchar(45) DEFAULT NULL,
-  `evidencia_dos` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_partido_UNIQUE` (`id_partido`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
+  `fecha` date NOT NULL,
+  `vencimiento` date NOT NULL,
+  `estado` int(11) NOT NULL,
+  PRIMARY KEY (`id_partido`),
+  KEY `fk_disputas_estado_idx` (`estado`),
+  CONSTRAINT `fk_disputas_estado` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`),
   CONSTRAINT `fk_disputas_partido` FOREIGN KEY (`id_partido`) REFERENCES `partidos` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -67,6 +68,7 @@ CREATE TABLE `disputas` (
 
 LOCK TABLES `disputas` WRITE;
 /*!40000 ALTER TABLE `disputas` DISABLE KEYS */;
+INSERT INTO `disputas` VALUES (15,'2019-08-10','2019-08-20',12),(16,'2019-08-10','2019-08-20',12),(17,'2019-08-10','2019-08-20',12),(18,'2019-08-10','2019-08-20',12),(19,'2019-08-10','2019-08-20',12),(20,'2019-08-10','2019-08-20',12),(21,'2019-08-10','2019-08-20',12),(22,'2019-08-10','2019-08-20',12),(30,'2019-08-10','2019-08-20',12),(31,'2019-08-10','2019-08-20',12),(32,'2019-08-10','2019-08-20',12),(34,'2019-08-10','2019-08-20',12);
 /*!40000 ALTER TABLE `disputas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -92,7 +94,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-INSERT INTO `estados` VALUES (4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(9,'Partido Finalizado'),(8,'Partido Pendiente'),(10,'Partido Rechazado'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
+INSERT INTO `estados` VALUES (14,'Disputa Apelada'),(13,'Disputa Cerrada'),(12,'Disputa En Curso'),(4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(11,'Partido Disputado'),(9,'Partido Finalizado'),(8,'Partido Pendiente'),(10,'Partido Rechazado'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,7 +116,7 @@ CREATE TABLE `ligas` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_ligas_estado_idx` (`estado`),
   CONSTRAINT `fk_ligas_estado` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,6 +125,7 @@ CREATE TABLE `ligas` (
 
 LOCK TABLES `ligas` WRITE;
 /*!40000 ALTER TABLE `ligas` DISABLE KEYS */;
+INSERT INTO `ligas` VALUES (8,'asd',2019,'2019-08-13 00:00:00','2019-08-28 00:00:00',5),(9,'asd',2018,'2019-08-13 00:00:00','2019-08-28 00:00:00',4),(10,'asd',2015,'2019-08-13 00:00:00','2019-08-28 00:00:00',4),(11,'asd',2013,'2019-08-13 00:00:00','2019-08-28 00:00:00',4);
 /*!40000 ALTER TABLE `ligas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -160,12 +163,11 @@ DROP TABLE IF EXISTS `parametros`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `parametros` (
-  `parametroid` int(11) NOT NULL AUTO_INCREMENT,
-  `pathavatar` varchar(100) DEFAULT NULL,
-  `key` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`parametroid`),
-  UNIQUE KEY `parametroid_UNIQUE` (`parametroid`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `id` int(11) NOT NULL,
+  `parametro` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `parametroid_UNIQUE` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +176,7 @@ CREATE TABLE `parametros` (
 
 LOCK TABLES `parametros` WRITE;
 /*!40000 ALTER TABLE `parametros` DISABLE KEYS */;
-INSERT INTO `parametros` VALUES (1,'/media/datos/eclipse-java/winionline/avatars/','1407661933');
+INSERT INTO `parametros` VALUES (1,'1407661933'),(2,'/media/datos/eclipse-java/winionline/avatars'),(3,'/media/datos/eclipse-java/winionline/evidencias');
 /*!40000 ALTER TABLE `parametros` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -197,7 +199,7 @@ CREATE TABLE `partidos` (
   KEY `fk_partidos_registro_idx` (`registro`),
   CONSTRAINT `fk_partidos_registro` FOREIGN KEY (`registro`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_partidos_solicitudes` FOREIGN KEY (`solicitud`) REFERENCES `solicitudes` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,6 +208,7 @@ CREATE TABLE `partidos` (
 
 LOCK TABLES `partidos` WRITE;
 /*!40000 ALTER TABLE `partidos` DISABLE KEYS */;
+INSERT INTO `partidos` VALUES (15,'2019-08-03 00:00:00',11,1,51),(16,'2019-08-03 00:00:00',11,2,51),(17,'2019-08-03 00:00:00',11,3,51),(18,'2019-08-03 00:00:00',11,4,51),(19,'2019-08-03 00:00:00',11,5,51),(20,'2019-08-03 00:00:00',11,6,51),(21,'2019-08-03 00:00:00',11,7,51),(22,'2019-08-03 00:00:00',11,8,51),(23,NULL,8,9,NULL),(24,NULL,8,10,NULL),(25,NULL,8,11,NULL),(26,NULL,8,12,NULL),(27,NULL,8,13,NULL),(28,NULL,8,14,NULL),(29,NULL,8,15,NULL),(30,'2019-08-03 00:00:00',11,16,51),(31,'2019-08-03 00:00:00',11,17,51),(32,'2019-08-03 00:00:00',11,18,51),(33,NULL,8,19,NULL),(34,'2019-08-03 00:00:00',11,20,51),(35,NULL,8,21,NULL),(36,NULL,8,22,NULL),(37,NULL,8,23,NULL),(38,NULL,8,24,NULL),(39,NULL,8,25,NULL),(40,NULL,8,26,NULL),(41,NULL,8,27,NULL),(42,NULL,8,28,NULL),(43,NULL,8,29,NULL),(44,NULL,8,30,NULL);
 /*!40000 ALTER TABLE `partidos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,6 +237,7 @@ CREATE TABLE `resultados` (
 
 LOCK TABLES `resultados` WRITE;
 /*!40000 ALTER TABLE `resultados` DISABLE KEYS */;
+INSERT INTO `resultados` VALUES (45,15,4),(45,16,1),(45,17,3),(45,18,2),(45,19,1),(45,20,5),(45,21,3),(45,22,11),(45,30,10),(45,31,10),(45,32,3),(45,34,7),(50,15,1),(50,16,3),(50,17,3),(50,18,2),(50,19,5),(50,20,1),(50,21,2),(50,22,10),(50,30,11),(50,31,10),(50,32,3),(50,34,3);
 /*!40000 ALTER TABLE `resultados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -288,7 +292,7 @@ CREATE TABLE `solicitudes` (
   CONSTRAINT `fk_solicitudes_jugador_dos` FOREIGN KEY (`jugador_dos`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_solicitudes_jugador_uno` FOREIGN KEY (`jugador_uno`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_solicitudes_liga` FOREIGN KEY (`liga`) REFERENCES `ligas` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -297,6 +301,7 @@ CREATE TABLE `solicitudes` (
 
 LOCK TABLES `solicitudes` WRITE;
 /*!40000 ALTER TABLE `solicitudes` DISABLE KEYS */;
+INSERT INTO `solicitudes` VALUES (1,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(2,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(3,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(4,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(5,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(6,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(7,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(8,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(9,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(10,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(11,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(12,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(13,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(14,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(15,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(16,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(17,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(18,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(19,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(20,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(21,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(22,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(23,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(24,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(25,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(26,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(27,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(28,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(29,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(30,'2019-08-03 00:00:00','2019-08-20 00:00:00',7,45,50,NULL),(31,'2019-08-03 00:00:00','2019-08-20 00:00:00',6,45,51,NULL),(32,'2019-08-03 00:00:00','2019-08-20 00:00:00',6,45,51,NULL),(33,'2019-08-03 00:00:00','2019-08-20 00:00:00',6,45,51,NULL),(34,'2019-08-03 00:00:00','2019-08-20 00:00:00',6,51,45,NULL),(35,'2019-08-03 00:00:00','2019-08-20 00:00:00',6,51,45,NULL),(36,'2019-08-03 00:00:00','2019-08-20 00:00:00',6,51,45,NULL);
 /*!40000 ALTER TABLE `solicitudes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -309,11 +314,13 @@ DROP TABLE IF EXISTS `usuario_apelacion`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `usuario_apelacion` (
   `id_usuario` int(11) NOT NULL,
-  `id_apelacion` int(11) NOT NULL,
+  `id_partido` int(11) NOT NULL,
   `voto` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_usuario`,`id_apelacion`),
+  PRIMARY KEY (`id_usuario`,`id_partido`),
   KEY `fk_usuario_apelacion_usuario_idx` (`id_usuario`),
   KEY `fk_usuario_apelacion_voto_idx` (`voto`),
+  KEY `fk_usuario_apelacion_disputa_idx` (`id_partido`),
+  CONSTRAINT `fk_usuario_apelacion_disputa` FOREIGN KEY (`id_partido`) REFERENCES `disputas` (`id_partido`),
   CONSTRAINT `fk_usuario_apelacion_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_usuario_apelacion_voto` FOREIGN KEY (`voto`) REFERENCES `usuarios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -414,7 +421,7 @@ CREATE TABLE `usuarios` (
   CONSTRAINT `fk_usuarios_estado` FOREIGN KEY (`estado`) REFERENCES `estados` (`id`),
   CONSTRAINT `fk_usuarios_pais` FOREIGN KEY (`pais`) REFERENCES `paises` (`id`),
   CONSTRAINT `fk_usuarios_rol` FOREIGN KEY (`rol`) REFERENCES `roles` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -423,7 +430,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (45,'admin','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1993-03-17 00:00:00','admin@admin.com','admin','2019-07-18 22:56:05.621083','admin','admin','/media/datos/eclipse-java/winionline/avatars/admin.png',1,1,1),(46,'prueba','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','prueba','2019-07-15 00:39:22.838214','prueba','prueba',NULL,1,2,2),(47,'dummy_uno','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','dummy_uno','2019-07-14 23:14:23.129225','dummy_uno','dummy_uno',NULL,1,2,1),(48,'rodrigo','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','pepe','2019-07-17 02:20:35.578461','dummy_dos','dummy_dos',NULL,1,2,1);
+INSERT INTO `usuarios` VALUES (45,'admin','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1993-03-17 00:00:00','admin@admin.com','admin','2019-08-11 19:21:02.649016','admin','admin','/media/datos/eclipse-java/winionline/avatars/admin.png',1,1,1),(49,'prueba','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','asdasd','2019-07-25 01:37:22.057200','','',NULL,1,2,1),(50,'asd','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','1212-12-12 00:00:00','asd@asd.com','asd','2019-08-03 23:42:07.361665','','',NULL,1,2,1),(51,'rodcibils','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','2008-10-01 00:00:00','asd@asd.com','rodri','2019-08-11 19:24:43.796747','','',NULL,1,2,1),(52,'ghjghj','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','2018-12-31 00:00:00','asd@asd.com','','2019-07-24 00:48:44.462160','','',NULL,1,2,1),(55,'qwe','1B0D820CF2EEA20000CC81EE9C6D50E690300AFBDAB3641B064153FA15462017','2019-08-01 00:00:00','qwe@qwe.com','','2019-08-10 17:43:52.450493','','','/media/datos/eclipse-java/winionline/avatars/qwe.jpeg',1,2,1);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -492,4 +499,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-07-27 19:10:50
+-- Dump completed on 2019-08-11 16:57:29

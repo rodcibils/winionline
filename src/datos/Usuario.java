@@ -1,7 +1,5 @@
 package datos;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,17 +8,12 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Random;
 
 import negocio.Estado;
+import utils.Utils;
 
 public class Usuario {
-	
 	private static Usuario instance = null;
-
-	private static final int ID_PARAMETRO = 1;
-	
-	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	
 	public static Usuario getInstance()
 	{
@@ -273,11 +266,11 @@ public class Usuario {
 	
 	public boolean checkPassword(String password, negocio.Usuario usuario) throws SQLException, Exception
 	{
-		String key = getParametroKey();
-		if (key == null) {
-			key = setParametroKey();
+		String key = datos.Parametro.getInstance().getKey();
+		if (key.isEmpty()) {
+			key = datos.Parametro.getInstance().generateKey();
 		}
-		String contrasenaEnc = EncPassword(key, password);
+		String contrasenaEnc = Utils.encrypt(key, password);
 		
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
@@ -305,11 +298,11 @@ public class Usuario {
 	
 	public void updatePassword(negocio.Usuario usuario) throws Exception
 	{
-		String key = getParametroKey();
-		if (key == null) {
-			key = setParametroKey();
+		String key = datos.Parametro.getInstance().getKey();
+		if (key.isEmpty()) {
+			key = datos.Parametro.getInstance().generateKey();
 		}
-		String contrasenaEnc = EncPassword(key, usuario.getPassword());
+		String contrasenaEnc = Utils.encrypt(key, usuario.getPassword());
 		
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
@@ -329,11 +322,11 @@ public class Usuario {
 	public void insert(negocio.Usuario usuario) throws Exception 
 	{
 		// recupero clave de encriptacion
-		String key = getParametroKey();
-		if (key == null) {
-			key = setParametroKey();
+		String key = datos.Parametro.getInstance().getKey();
+		if (key.isEmpty()) {
+			key = datos.Parametro.getInstance().generateKey();
 		}
-		String contrasenaEnc = EncPassword(key, usuario.getPassword());
+		String contrasenaEnc = Utils.encrypt(key, usuario.getPassword());
 		
 		
 		PreparedStatement stmt;
@@ -449,8 +442,8 @@ public class Usuario {
 	
 	public negocio.Usuario login(String username, String password)throws SQLException, Exception  {
 		// encripto contraseña 
-		String key = getParametroKey();
-		String contrasenaEnc = EncPassword(key, password);
+		String key = datos.Parametro.getInstance().getKey();
+		String contrasenaEnc = Utils.encrypt(key, password);
 		// usuario a devolver
 		negocio.Usuario usuario = new negocio.Usuario();
 		int idPais;
@@ -496,98 +489,6 @@ public class Usuario {
         
     	return usuario;
     }
-	
-	public String getParametroKey()throws SQLException, Exception {
-		String key = new String();
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		// busco la key para encriptar
-        String query = "SELECT * FROM parametros WHERE parametroid=?";
-        stmt = conn.prepareStatement(query);
-        stmt.setInt(1, ID_PARAMETRO);
-        
-        ResultSet rs = stmt.executeQuery();
-        if(rs.next()) {
-        	key = rs.getString(3);
-        }
-        
-        rs.close();
-        stmt.close();
-		manager.closeConnection();
-		return key;
-	}
-	
-	public String setParametroKey()throws SQLException, Exception {
-		// genero la nueva key random
-		Random rand = new Random();
-		int keyInt = rand.nextInt();
-		if (keyInt < 0) {
-			keyInt = keyInt * -1;
-		}
-		String key = Integer.toString(keyInt);
-		
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		// actualizo la key con el nuevo valor
-        String query = "update parametros set parametros.key = ? where parametroid = ?";
-        stmt = conn.prepareStatement(query);
-        stmt.setString(1, key);
-        stmt.setInt(2, ID_PARAMETRO);
-        
-        stmt.execute();
-		stmt.close();
-		manager.closeConnection();
-        
-		return key;
-	}
-	
-	public String getParametroPath()throws SQLException, Exception {
-		String path = new String();
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		// busco el path de los avatars
-        String query = "SELECT * FROM parametros WHERE parametroid=?";
-        stmt = conn.prepareStatement(query);
-        stmt.setInt(1, ID_PARAMETRO);
-        
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-        	path = rs.getString(2);
-        }
-        rs.close();
-        stmt.close();
-		manager.closeConnection();
-		return path;
-	}
 
-	public static String bytesToHex(byte[] bytes) {
-	  char[] hexChars = new char[bytes.length * 2];
-	  int v;
-	  for (int j = 0; j < bytes.length; j++) {
-	    v = bytes[j] & 0xFF;
-	    hexChars[j * 2] = hexArray[v >>> 4];
-	    hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-	  }
-	  return new String(hexChars);
-	}
 	
-	// encripto contraseña
-	public static String EncPassword(String key, String in) {
-	  try {
-	    MessageDigest md = MessageDigest
-	        .getInstance("SHA-256");
-	    // antepongo key
-	    md.update(key.getBytes());
-	    md.update(in.getBytes());
-
-	    byte[] out = md.digest();
-	    return bytesToHex(out);
-	  } catch (NoSuchAlgorithmException e) {
-	    e.printStackTrace();
-	  }
-	  return "";
-	}
 }

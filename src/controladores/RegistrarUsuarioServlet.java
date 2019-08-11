@@ -99,8 +99,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 		Part filePart = request.getPart("avatar");
 		String fileName = Paths.get(filePart.getSubmittedFileName()).toString();
 		if(fileName != null && !fileName.isEmpty()) {
-			if(!fileName.contains(".jpg") && !fileName.contains(".jpeg") && 
-					!fileName.contains(".png")) 
+			if(!Utils.isImageFile(fileName)) 
 			{
 				request.setAttribute("err_avatar", "El formato de imagen cargado no es valido");
 				isValid = false;
@@ -170,7 +169,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 				if(!dUsuario.checkIfUserExists(usuario.getNombre())) {
 					if(fileName != null && !fileName.isEmpty()) {
 						String fileExt = Utils.getFileExtension(fileName);
-						File file = new File(dUsuario.getParametroPath(), 
+						File file = new File(datos.Parametro.getInstance().getAvatarsPath(), 
 								usuario.getNombre() + "." + fileExt);
 						try(InputStream stream = filePart.getInputStream()){
 							Files.copy(stream, file.toPath());

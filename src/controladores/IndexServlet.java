@@ -40,6 +40,9 @@ public class IndexServlet extends HttpServlet {
 			
 			int amPend = datos.Partido.getInstance().getCountAmistososPendientes(usuario.getId());
 			request.setAttribute("am_pend", amPend);
+			
+			int disputas = datos.Disputa.getInstance().getCountDisputasEnCurso(usuario.getId());
+			request.setAttribute("disputas", disputas);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}

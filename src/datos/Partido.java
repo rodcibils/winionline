@@ -269,6 +269,23 @@ public class Partido {
 		return count;
 	}
 	
+	public void disputarPartido(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "UPDATE partidos SET estado=? WHERE id=?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.PARTIDO_DISPUTADO);
+		stmt.setInt(2, id);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public ArrayList<negocio.Partido> getAmistosos(int jugador, int skip, 
 			int limit) throws ClassNotFoundException, SQLException 
 	{
