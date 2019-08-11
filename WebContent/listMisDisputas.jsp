@@ -4,7 +4,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <head>
-	<title>Winionline | Historial de Amistosos</title>
+	<title>Winionline | Mis Disputas</title>
 </head>
 <t:layout>
 	<jsp:body>

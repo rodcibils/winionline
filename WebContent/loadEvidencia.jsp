@@ -5,7 +5,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page import="negocio.Evidencia" %>
 <head>
-	<title>Winionline | Historial de Amistosos</title>
+	<title>Winionline | Cargar Evidencia Disputa</title>
 </head>
 <t:layout>
 	<jsp:body>
