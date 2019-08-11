@@ -4,8 +4,6 @@ public class Disputa {
 	public static final int MAX_DIAS_DISPUTA = 10;
 	
 	private Partido partido;
-	private String evidenciaUno;
-	private String evidenciaDos;
 	private java.sql.Date fecha;
 	private java.sql.Date vencimiento;
 	private Estado estado;
@@ -16,22 +14,6 @@ public class Disputa {
 	
 	public void setPartido(Partido partido) {
 		this.partido = partido;
-	}
-
-	public String getEvidenciaUno() {
-		return evidenciaUno;
-	}
-
-	public void setEvidenciaUno(String evidenciaUno) {
-		this.evidenciaUno = evidenciaUno;
-	}
-
-	public String getEvidenciaDos() {
-		return evidenciaDos;
-	}
-
-	public void setEvidenciaDos(String evidenciaDos) {
-		this.evidenciaDos = evidenciaDos;
 	}
 
 	public java.sql.Date getFecha() {

@@ -88,4 +88,27 @@ public class Parametro {
 		
 		return path;
 	}
+	
+	public String getEvidenciasPath() throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT parametro FROM parametros WHERE id = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, EVIDENCIAS);
+		
+		ResultSet rs = stmt.executeQuery();
+		String path = "";
+		if(rs.next()) {
+			path = rs.getString(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return path;
+	}
 }

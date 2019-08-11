@@ -19,6 +19,60 @@ public class Disputa
 		return instance;
 	}
 	
+	public negocio.Disputa getOne(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT d.fecha, d.vencimiento, p.fecha, j_uno.id, j_uno.nombre, "
+				+ "j_uno.apodo, j_dos.id, j_dos.nombre, j_dos.apodo, r_uno.goles, "
+				+ "r_dos.goles FROM disputas AS d "
+				+ "INNER JOIN partidos AS p ON p.id = d.id_partido "
+				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "INNER JOIN resultados AS r_uno ON "
+				+ "(p.id = r_uno.id_partido AND s.jugador_uno = r_uno.id_jugador) "
+				+ "INNER JOIN resultados AS r_dos ON "
+				+ "(p.id = r_dos.id_partido AND s.jugador_dos = r_dos.id_jugador) "
+				+ "WHERE d.id_partido = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		
+		ResultSet rs = stmt.executeQuery();
+		negocio.Disputa disputa = new negocio.Disputa();
+		if(rs.next()) {
+			disputa.setFecha(rs.getDate(1));
+			disputa.setVencimiento(rs.getDate(2));
+			negocio.Partido partido = new negocio.Partido();
+			partido.setFecha(rs.getDate(3));
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setId(rs.getInt(4));
+			jugadorUno.setNombre(rs.getString(5));
+			jugadorUno.setApodo(rs.getString(6));
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setId(rs.getInt(7));
+			jugadorDos.setNombre(rs.getString(8));
+			jugadorDos.setApodo(rs.getString(9));
+			negocio.Resultado resultadoUno = new negocio.Resultado();
+			resultadoUno.setGoles(rs.getInt(10));
+			resultadoUno.setJugador(jugadorUno);
+			negocio.Resultado resultadoDos = new negocio.Resultado();
+			resultadoDos.setGoles(rs.getInt(11));
+			resultadoDos.setJugador(jugadorDos);
+			partido.setResultadoUno(resultadoUno);
+			partido.setResultadoDos(resultadoDos);
+			disputa.setPartido(partido);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return disputa;
+	}
+	
 	public void insert(int id) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;

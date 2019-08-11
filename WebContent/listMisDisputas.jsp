@@ -56,7 +56,7 @@
 					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${disputa.getFecha()}"/></p></td>
 					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${disputa.getVencimiento()}"/></p></td>
 					<td>
-						<a class="btn btn-primary">Subir Evidencia</a>
+						<a class="btn btn-primary" href="cargarEvidenciaDisputa?id=${disputa.getPartido().getId()}">Evidencias</a>
 					</td>
 					</tr>
 				</c:forEach>
