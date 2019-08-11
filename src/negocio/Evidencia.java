@@ -7,9 +7,10 @@ public class Evidencia
 	public static final String IMAGEN = "Imagen";
 	public static final String VIDEO = "Video";
 	
-	private String path;
+	private String path; // relative path a la evidencia de imagen
 	private String tipo;
 	private Date fecha;
+	private String link; // link a la pagina que hostea evidencia de video
 	
 	public String getPath() {
 		return path;
@@ -34,5 +35,13 @@ public class Evidencia
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
 	}
-	
+
+	public String getLink() {
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
 }

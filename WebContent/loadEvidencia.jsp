@@ -2,7 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@page import="negocio.Evidencia" %>
 <head>
 	<title>Winionline | Historial de Amistosos</title>
 </head>
@@ -119,7 +120,12 @@
 						<td><p>${evidencia.getTipo()}</p></td>
 						<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy HH:mm:ss" value="${evidencia.getFecha()}"/></p></td>
 						<td>
-							<a class="btn btn-primary" href="#">Ver</a>
+							<c:if test="${evidencia.getTipo() == Evidencia.VIDEO}">
+							<a class="btn btn-primary" href="${evidencia.getLink()}" target="_blank" rel="noopener noreferrer">Ver</a>
+							</c:if>
+							<c:if test="${evidencia.getTipo() == Evidencia.IMAGEN}">
+							<a class="btn btn-primary" href="downloadEvidencia?path=${evidencia.getPath()}">Ver</a>
+							</c:if>
 							<a class="btn btn-danger" href="#" style="margin-left:20px">Eliminar</a>
 						</td>
 					</tr>

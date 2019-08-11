@@ -1,6 +1,8 @@
 package controladores;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -60,11 +62,25 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 			if(!folder.exists()) folder.mkdirs();
 			for(File file : folder.listFiles()) {
 				Evidencia evidencia = new Evidencia();
-				evidencia.setPath(file.getPath());
 				evidencia.setFecha(new Date(file.lastModified()));
-				if(Utils.isImageFile(evidencia.getPath()))
+				if(Utils.isImageFile(file.getPath())) {
 					evidencia.setTipo(Evidencia.IMAGEN);
-				else evidencia.setTipo(Evidencia.VIDEO);
+					evidencia.setPath("/" + id + "/" + Integer.toString(usuario.getId()) 
+						+ "/" + file.getName());
+				} else { 
+					evidencia.setTipo(Evidencia.VIDEO);
+					try {
+						FileReader reader = new FileReader(file.getPath());
+						BufferedReader buffer = new BufferedReader(reader);
+						String line;
+						while((line = buffer.readLine()) != null) {
+							evidencia.setLink(line);
+						}
+						buffer.close();
+					} catch(Exception e) {
+						System.out.println(e.getMessage());
+					}
+				}
 				evidencias.add(evidencia);
 			}
 			
