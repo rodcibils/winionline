@@ -42,8 +42,8 @@
 						<td><p>${disputa.getPartido().getResultadoUno().getGoles()} - ${disputa.getPartido().getResultadoDos().getGoles()}</p></td>
 						<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${disputa.getVencimiento()}"/></p></td>
 						<td>
-							<a class="btn btn-primary" href="#">Evidencia Jugador Uno</a>
-							<a class="btn btn-primary" style="margin-left:20px" href="#">Evidencia Jugador Dos</a>
+							<a class="btn btn-primary" href="evidencia?id=${disputa.getPartido().getId()}&jugador=${disputa.getPartido().getResultadoUno().getJugador().getId()}">Evidencia Jugador Uno</a>
+							<a class="btn btn-primary" style="margin-left:20px" href="evidencia?id=${disputa.getPartido().getId()}&jugador=${disputa.getPartido().getResultadoDos().getJugador().getId()}">Evidencia Jugador Dos</a>
 							<a class="btn btn-success" style="margin-left:20px" href="#">Votar Jugador Uno</a>
 							<a class="btn btn-success" style="margin-left:20px" href="#">Votar Jugador Dos</a>
 						</td>

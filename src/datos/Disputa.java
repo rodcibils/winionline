@@ -92,8 +92,8 @@ public class Disputa
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT d.vencimiento, p.id, p.fecha, j_uno.nombre, j_uno.apodo, "
-				+ "j_dos.nombre, j_dos.apodo, r_uno.goles, r_dos.goles "
+		String query = "SELECT d.vencimiento, p.id, p.fecha, j_uno.id, j_uno.nombre, j_uno.apodo, "
+				+ "j_dos.id, j_dos.nombre, j_dos.apodo, r_uno.goles, r_dos.goles "
 				+ "FROM disputas AS d "
 				+ "INNER JOIN partidos AS p ON d.id_partido = p.id "
 				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud "
@@ -129,17 +129,19 @@ public class Disputa
 			partido.setId(rs.getInt(2));
 			partido.setFecha(rs.getDate(3));
 			negocio.Usuario jugadorUno = new negocio.Usuario();
-			jugadorUno.setNombre(rs.getString(4));
-			jugadorUno.setApodo(rs.getString(5));
+			jugadorUno.setId(rs.getInt(4));
+			jugadorUno.setNombre(rs.getString(5));
+			jugadorUno.setApodo(rs.getString(6));
 			negocio.Usuario jugadorDos = new negocio.Usuario();
-			jugadorDos.setNombre(rs.getString(6));
-			jugadorDos.setApodo(rs.getString(7));
+			jugadorDos.setId(rs.getInt(7));
+			jugadorDos.setNombre(rs.getString(8));
+			jugadorDos.setApodo(rs.getString(9));
 			negocio.Resultado resultadoUno = new negocio.Resultado();
 			resultadoUno.setJugador(jugadorUno);
-			resultadoUno.setGoles(rs.getInt(8));
+			resultadoUno.setGoles(rs.getInt(10));
 			negocio.Resultado resultadoDos = new negocio.Resultado();
 			resultadoDos.setJugador(jugadorDos);
-			resultadoDos.setGoles(rs.getInt(9));
+			resultadoDos.setGoles(rs.getInt(11));
 			partido.setResultadoUno(resultadoUno);
 			partido.setResultadoDos(resultadoDos);
 			disputa.setPartido(partido);
@@ -160,8 +162,8 @@ public class Disputa
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT d.vencimiento, p.id, p.fecha, j_uno.nombre, j_uno.apodo, "
-				+ "j_dos.nombre, j_dos.apodo, r_uno.goles, r_dos.goles "
+		String query = "SELECT d.vencimiento, p.id, p.fecha, j_uno.id, j_uno.nombre, "
+				+ "j_uno.apodo, j_dos.id, j_dos.nombre, j_dos.apodo, r_uno.goles, r_dos.goles "
 				+ "FROM disputas AS d "
 				+ "INNER JOIN partidos AS p ON d.id_partido = p.id "
 				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud "
@@ -190,17 +192,19 @@ public class Disputa
 			partido.setId(rs.getInt(2));
 			partido.setFecha(rs.getDate(3));
 			negocio.Usuario jugadorUno = new negocio.Usuario();
-			jugadorUno.setNombre(rs.getString(4));
-			jugadorUno.setApodo(rs.getString(5));
+			jugadorUno.setId(rs.getInt(4));
+			jugadorUno.setNombre(rs.getString(5));
+			jugadorUno.setApodo(rs.getString(6));
 			negocio.Usuario jugadorDos = new negocio.Usuario();
-			jugadorDos.setNombre(rs.getString(6));
-			jugadorDos.setApodo(rs.getString(7));
+			jugadorDos.setId(rs.getInt(7));
+			jugadorDos.setNombre(rs.getString(8));
+			jugadorDos.setApodo(rs.getString(9));
 			negocio.Resultado resultadoUno = new negocio.Resultado();
 			resultadoUno.setJugador(jugadorUno);
-			resultadoUno.setGoles(rs.getInt(8));
+			resultadoUno.setGoles(rs.getInt(10));
 			negocio.Resultado resultadoDos = new negocio.Resultado();
 			resultadoDos.setJugador(jugadorDos);
-			resultadoDos.setGoles(rs.getInt(9));
+			resultadoDos.setGoles(rs.getInt(11));
 			partido.setResultadoUno(resultadoUno);
 			partido.setResultadoDos(resultadoDos);
 			disputa.setPartido(partido);
