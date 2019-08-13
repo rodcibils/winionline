@@ -34,6 +34,19 @@ public class DisputasServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
+		try {
+			if(datos.Partido.getInstance().getCountPartidosJugados(usuario.getId()) 
+					< negocio.Disputa.ANTIGUEDAD_PARA_VOTAR)
+			{
+				request.setAttribute("err_vote", "Debe tener al menos " 
+						+ negocio.Disputa.ANTIGUEDAD_PARA_VOTAR  + " partidos jugados "
+						+ "para poder votar en las disputas");
+				request.getRequestDispatcher("index").forward(request, response);
+			}
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
 		String toSearch = request.getParameter("search");
 		if(toSearch != null && !toSearch.contentEquals(lastSearch)) {
 			lastSearch = toSearch;

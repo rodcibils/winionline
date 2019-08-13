@@ -21,6 +21,34 @@ public class Partido {
 		return instance;
 	}
 	
+	public int getCountPartidosJugados(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "WHERE p.estado = ? AND (s.jugador_uno = ? OR "
+				+ "s.jugador_dos = ?)";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.PARTIDO_FINALIZADO);
+		stmt.setInt(2, id);
+		stmt.setInt(3, id);
+		
+		ResultSet rs = stmt.executeQuery();
+		int count = 0;
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+	
 	public void finalizarPartido(int id, int registro) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;

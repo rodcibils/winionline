@@ -12,6 +12,24 @@
 		<c:redirect url="index"/>
 	</c:if>
 		<t:layout>
+			
+			<c:if test="${err_vote != null}">
+				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+				    <div class="toast-header">
+				        <strong class="mr-auto"><i class="fa fa-grav"></i>No puede votar disputas</strong>
+				        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+				    </div>
+				    <div class="toast-body">
+				        ${err_vote}
+				    </div>
+				</div>
+				<script>
+					$(document).ready(function(){
+						$("#myToast").toast('show');
+					});
+				</script>
+			</c:if>
+		
 			<div class="card-columns" style="margin-top:20px; margin-left:20px">
 				<div class="card text-white bg-info text-center">
 					<div class="card-header" style="font-weight:bold">Datos Personales</div>
