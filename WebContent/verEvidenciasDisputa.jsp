@@ -18,7 +18,7 @@
 		<p style="color:white">Vencimiento: ${vencimiento}</p>
 		<p>
 			<a class="btn btn-success" href="#">Votar por Jugador</a>
-			<a class="btn btn-danger" style="margin-left:20px" href="#">Volver</a>
+			<button class="btn btn-danger" style="margin-left:20px" onclick="history.back();return false;">Volver</button>
 		</p>
 		
 		<c:if test="${count > 0}">
