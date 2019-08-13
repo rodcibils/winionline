@@ -44,8 +44,8 @@
 						<td>
 							<a class="btn btn-primary" href="evidencia?id=${disputa.getPartido().getId()}&jugador=${disputa.getPartido().getResultadoUno().getJugador().getId()}">Evidencia Jugador Uno</a>
 							<a class="btn btn-primary" style="margin-left:20px" href="evidencia?id=${disputa.getPartido().getId()}&jugador=${disputa.getPartido().getResultadoDos().getJugador().getId()}">Evidencia Jugador Dos</a>
-							<a class="btn btn-success" style="margin-left:20px" href="#">Votar Jugador Uno</a>
-							<a class="btn btn-success" style="margin-left:20px" href="#">Votar Jugador Dos</a>
+							<a class="btn btn-success" style="margin-left:20px" href="listDisputas?vote=${disputa.getPartido().getId()}&jugador=${disputa.getPartido().getResultadoUno().getJugador().getId()}">Votar Jugador Uno</a>
+							<a class="btn btn-success" style="margin-left:20px" href="listDisputas?vote=${disputa.getPartido().getId()}&jugador=${disputa.getPartido().getResultadoDos().getJugador().getId()}">Votar Jugador Dos</a>
 						</td>
 					</tr>
 				</c:forEach>

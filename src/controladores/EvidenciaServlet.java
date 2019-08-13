@@ -39,6 +39,20 @@ public class EvidenciaServlet extends HttpServlet {
 		String idDisputa = request.getParameter("id");
 		String idJugador = request.getParameter("jugador");
 		
+		String votar = request.getParameter("vote");
+		if(votar != null && !votar.isEmpty()) {
+			negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+			try {
+				datos.Disputa.getInstance().votarDisputa(usuario.getId(), 
+						Integer.parseInt(votar), Integer.parseInt(idJugador));
+				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
+				request.getRequestDispatcher("listDisputas?skip=0&search=").forward(request, response);
+				return;
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		ArrayList<Evidencia> evidencias = new ArrayList<>();
 		try {
 			negocio.Disputa disputa = datos.Disputa.getInstance().getOne(Integer.parseInt(idDisputa));
@@ -94,6 +108,8 @@ public class EvidenciaServlet extends HttpServlet {
 			System.out.println(e.getMessage());
 		}
 		
+		request.setAttribute("id_disputa", idDisputa);
+		request.setAttribute("id_jugador", idJugador);
 		request.setAttribute("count", evidencias.size());
 		request.getRequestDispatcher("verEvidenciasDisputa.jsp").forward(request, response);
 	}

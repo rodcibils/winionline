@@ -41,6 +41,17 @@ public class DisputasServlet extends HttpServlet {
 		}
 		request.setAttribute("search", lastSearch);
 		
+		String votar = request.getParameter("vote");
+		if(votar != null && !votar.isEmpty()) {
+			String idJugador = request.getParameter("jugador");
+			try {
+				datos.Disputa.getInstance().votarDisputa(usuario.getId(), 
+						Integer.parseInt(votar), Integer.parseInt(idJugador));
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		String sSkip = request.getParameter("skip");
 		if(sSkip != null && !sSkip.isEmpty()) {
 			skip = Integer.parseInt(sSkip);

@@ -19,6 +19,25 @@ public class Disputa
 		return instance;
 	}
 	
+	public void votarDisputa(int idVotante, int idDisputa, int idVoto) 
+			throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "INSERT INTO usuario_disputa(id_usuario, id_disputa, id_voto) "
+				+ "VALUES (?,?,?)";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idVotante);
+		stmt.setInt(2, idDisputa);
+		stmt.setInt(3, idVoto);
+		
+		stmt.execute();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public int getAllCount(int id, String toSearch) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;

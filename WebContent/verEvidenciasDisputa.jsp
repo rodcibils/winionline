@@ -17,13 +17,13 @@
 		<p style="color:white">Resultado: ${resultado_partido} (vs.${rival})</p>
 		<p style="color:white">Vencimiento: ${vencimiento}</p>
 		<p>
-			<a class="btn btn-success" href="#">Votar por Jugador</a>
+			<a class="btn btn-success" href="evidencia?vote=${id_disputa}&jugador=${id_jugador}">Votar por Jugador</a>
 			<button class="btn btn-danger" style="margin-left:20px" onclick="history.back();return false;">Volver</button>
 		</p>
 		
 		<c:if test="${count > 0}">
 		<c:forEach items="${evidencias}" var="evidencia" varStatus="index">
-		<p class="h2" style="color:white; margin-top:20px;">Evidencia nº ${index.index} - <fmt:formatDate type="date" pattern="dd/MM/yyyy HH:mm:ss" value="${evidencia.getFecha()}"/></p>
+		<p class="h2" style="color:white; margin-top:20px;">Evidencia nº ${index.index + 1} - <fmt:formatDate type="date" pattern="dd/MM/yyyy HH:mm:ss" value="${evidencia.getFecha()}"/></p>
 		<c:if test="${evidencia.getTipo() == Evidencia.IMAGEN}">
 			<img src="showEvidencia?path=${evidencia.getPath()}" />
 		</c:if>
