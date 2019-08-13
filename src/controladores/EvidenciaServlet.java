@@ -69,27 +69,27 @@ public class EvidenciaServlet extends HttpServlet {
 					}
 					evidencias.add(evidencia);
 				}
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-				
-				request.setAttribute("jugador", jugador.getNombre() + " - " + jugador.getApodo());
-				request.setAttribute("fecha_partido", sdf.format(disputa.getPartido().getFecha()));
-				request.setAttribute("vencimiento", sdf.format(disputa.getVencimiento()));
-				request.setAttribute("resultado_partido" , disputa.getPartido().getResultadoUno()
-						.getGoles() + " - " + disputa.getPartido().getResultadoDos().getGoles());
-				if(disputa.getPartido().getResultadoUno().getJugador().getId() 
-						== Integer.parseInt(idJugador))
-				{
-					request.setAttribute("rival", disputa.getPartido().getResultadoUno()
-							.getJugador().getNombre() + " - " + disputa.getPartido().getResultadoUno()
-							.getJugador().getApodo());
-				} else {
-					request.setAttribute("rival", disputa.getPartido().getResultadoDos()
-							.getJugador().getNombre() + " - " + disputa.getPartido().getResultadoDos()
-							.getJugador().getApodo());
-				}
-				request.setAttribute("evidencias", evidencias);
 			}
+				
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			
+			request.setAttribute("jugador", jugador.getNombre() + " - " + jugador.getApodo());
+			request.setAttribute("fecha_partido", sdf.format(disputa.getPartido().getFecha()));
+			request.setAttribute("vencimiento", sdf.format(disputa.getVencimiento()));
+			request.setAttribute("resultado_partido" , disputa.getPartido().getResultadoUno()
+					.getGoles() + " - " + disputa.getPartido().getResultadoDos().getGoles());
+			if(disputa.getPartido().getResultadoUno().getJugador().getId() 
+					== Integer.parseInt(idJugador))
+			{
+				request.setAttribute("rival", disputa.getPartido().getResultadoUno()
+						.getJugador().getNombre() + " - " + disputa.getPartido().getResultadoUno()
+						.getJugador().getApodo());
+			} else {
+				request.setAttribute("rival", disputa.getPartido().getResultadoDos()
+						.getJugador().getNombre() + " - " + disputa.getPartido().getResultadoDos()
+						.getJugador().getApodo());
+			}
+			request.setAttribute("evidencias", evidencias);
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
