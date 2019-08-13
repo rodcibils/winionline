@@ -50,7 +50,8 @@ public class Disputa
 				+ "INNER JOIN usuarios AS j_dos ON s.jugador_dos = j_dos.id "
 				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ? "
 				+ "AND ((j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?) OR (j_dos.nombre LIKE ? "
-				+ "OR j_dos.apodo LIKE ?))";
+				+ "OR j_dos.apodo LIKE ?)) AND p.id NOT IN (SELECT id_disputa FROM "
+				+ "usuario_disputa WHERE id_usuario = ?)";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
@@ -61,6 +62,7 @@ public class Disputa
 		stmt.setString(5, toSearch);
 		stmt.setString(6, toSearch);
 		stmt.setString(7, toSearch);
+		stmt.setInt(8, id);
 		
 		int count = 0;
 		ResultSet rs = stmt.executeQuery();
@@ -85,12 +87,14 @@ public class Disputa
 				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud "
 				+ "INNER JOIN usuarios AS j_uno ON s.jugador_uno = j_uno.id "
 				+ "INNER JOIN usuarios AS j_dos ON s.jugador_dos = j_dos.id "
-				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ?";
+				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ? AND p.id "
+				+ "NOT IN (SELECT id_disputa FROM usuario_disputa WHERE id_usuario = ?)";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
 		stmt.setInt(2, id);
 		stmt.setInt(3, negocio.Estado.DISPUTA_EN_CURSO);
+		stmt.setInt(4, id);
 		
 		int count = 0;
 		ResultSet rs = stmt.executeQuery();
@@ -124,7 +128,8 @@ public class Disputa
 				+ "AND r_dos.id_jugador = j_dos.id) "
 				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ? "
 				+ "AND ((j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?) OR (j_dos.nombre LIKE ? "
-				+ "OR j_dos.apodo LIKE ?)) "
+				+ "OR j_dos.apodo LIKE ?)) AND p.id NOT IN (SELECT id_disputa FROM usuario_disputa "
+				+ "WHERE id_usuario = ?) "
 				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
@@ -136,8 +141,9 @@ public class Disputa
 		stmt.setString(5, toSearch);
 		stmt.setString(6, toSearch);
 		stmt.setString(7, toSearch);
-		stmt.setInt(8, skip);
-		stmt.setInt(9, limit);
+		stmt.setInt(8, id);
+		stmt.setInt(9, skip);
+		stmt.setInt(10, limit);
 		
 		ArrayList<negocio.Disputa> disputas = new ArrayList<>();
 		ResultSet rs = stmt.executeQuery();
@@ -192,15 +198,17 @@ public class Disputa
 				+ "AND r_uno.id_jugador = j_uno.id) "
 				+ "INNER JOIN resultados AS r_dos ON (r_dos.id_partido = p.id "
 				+ "AND r_dos.id_jugador = j_dos.id) "
-				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ? "
+				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ? AND p.id NOT IN "
+				+ "(SELECT id_disputa FROM usuario_disputa WHERE id_usuario = ?) "
 				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
 		stmt.setInt(2, id);
 		stmt.setInt(3, negocio.Estado.DISPUTA_EN_CURSO);
-		stmt.setInt(4, skip);
-		stmt.setInt(5, limit);
+		stmt.setInt(4, id);
+		stmt.setInt(5, skip);
+		stmt.setInt(6, limit);
 		
 		ArrayList<negocio.Disputa> disputas = new ArrayList<>();
 		ResultSet rs = stmt.executeQuery();
