@@ -19,6 +19,113 @@ public class Disputa
 		return instance;
 	}
 	
+	public void cerrarDisputa(int idDisputa) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "UPDATE disputas SET estado = ? WHERE id_partido = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.DISPUTA_CERRADA);
+		stmt.setInt(2, idDisputa);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
+	public int getVotos(int idDisputa, int idJugador) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM usuario_disputa WHERE "
+				+ "id_disputa = ? AND id_voto = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idDisputa);
+		stmt.setInt(2, idJugador);
+		
+		ResultSet rs = stmt.executeQuery();
+		int count = 0;
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+	
+	public ArrayList<negocio.Disputa> getDisputasVencidas() 
+			throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT d.id_partido, j_uno.id, j_dos.id FROM disputas AS d "
+				+ "INNER JOIN partidos AS p ON p.id = d.id_partido "
+				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "WHERE d.estado = ? AND d.vencimiento < CURRENT_DATE()";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.DISPUTA_EN_CURSO);
+		
+		ResultSet rs = stmt.executeQuery();
+		ArrayList<negocio.Disputa> disputas = new ArrayList<>();
+		while(rs.next()) {
+			negocio.Disputa disputa = new negocio.Disputa();
+			negocio.Partido partido = new negocio.Partido();
+			negocio.Solicitud solicitud = new negocio.Solicitud();
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			partido.setId(rs.getInt(1));
+			jugadorUno.setId(rs.getInt(2));
+			jugadorDos.setId(rs.getInt(3));
+			solicitud.setJugadorUno(jugadorUno);
+			solicitud.setJugadorDos(jugadorDos);
+			partido.setSolicitud(solicitud);
+			disputa.setPartido(partido);
+			
+			disputas.add(disputa);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return disputas;
+	}
+	
+	public int getCountDisputasVencidas() throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM disputas WHERE "
+				+ "vencimiento < CURRENT_DATE() AND estado = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.DISPUTA_EN_CURSO);
+		ResultSet rs = stmt.executeQuery();
+		int count = 0;
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+	
 	public void votarDisputa(int idVotante, int idDisputa, int idVoto) 
 			throws ClassNotFoundException, SQLException
 	{
@@ -51,7 +158,7 @@ public class Disputa
 				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ? "
 				+ "AND ((j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?) OR (j_dos.nombre LIKE ? "
 				+ "OR j_dos.apodo LIKE ?)) AND p.id NOT IN (SELECT id_disputa FROM "
-				+ "usuario_disputa WHERE id_usuario = ?)";
+				+ "usuario_disputa WHERE id_usuario = ?) AND d.vencimiento >= CURRENT_DATE()";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
@@ -88,7 +195,8 @@ public class Disputa
 				+ "INNER JOIN usuarios AS j_uno ON s.jugador_uno = j_uno.id "
 				+ "INNER JOIN usuarios AS j_dos ON s.jugador_dos = j_dos.id "
 				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ? AND p.id "
-				+ "NOT IN (SELECT id_disputa FROM usuario_disputa WHERE id_usuario = ?)";
+				+ "NOT IN (SELECT id_disputa FROM usuario_disputa WHERE id_usuario = ?) "
+				+ "AND d.vencimiento >= CURRENT_DATE()";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
@@ -129,7 +237,7 @@ public class Disputa
 				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ? "
 				+ "AND ((j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?) OR (j_dos.nombre LIKE ? "
 				+ "OR j_dos.apodo LIKE ?)) AND p.id NOT IN (SELECT id_disputa FROM usuario_disputa "
-				+ "WHERE id_usuario = ?) "
+				+ "WHERE id_usuario = ?) AND d.vencimiento >= CURRENT_DATE() "
 				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
@@ -200,7 +308,8 @@ public class Disputa
 				+ "AND r_dos.id_jugador = j_dos.id) "
 				+ "WHERE j_uno.id != ? AND j_dos.id != ? AND d.estado = ? AND p.id NOT IN "
 				+ "(SELECT id_disputa FROM usuario_disputa WHERE id_usuario = ?) "
-				+ "LIMIT ?,?";
+				+ "AND d.vencimiento >= CURRENT_DATE() "
+				+ "LIMIT ?,? ";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
@@ -332,7 +441,8 @@ public class Disputa
 		String query = "SELECT COUNT(*) FROM disputas AS d "
 				+ "INNER JOIN partidos AS p ON p.id = d.id_partido "
 				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud "
-				+ "WHERE s.jugador_uno = ? OR s.jugador_dos = ? AND d.estado = ?";
+				+ "WHERE (s.jugador_uno = ? OR s.jugador_dos = ?) AND d.estado = ? "
+				+ "AND d.vencimiento >= CURRENT_DATE()";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idUsuario);
@@ -366,7 +476,7 @@ public class Disputa
 				+ "WHERE (s.jugador_uno = ? OR s.jugador_dos = ?) "
 				+ "AND (j_uno.id != ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?) "
 				+ "OR (j_dos.id != ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?))) "
-				+ "AND d.estado = ?";
+				+ "AND d.estado = ? AND d.vencimiento >= CURRENT_DATE()";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idUsuario);
@@ -411,7 +521,9 @@ public class Disputa
 				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
 				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
 				+ "WHERE d.estado = ? AND ((r_uno.id_jugador = ? AND r_dos.id_jugador != ?) OR "
-				+ "(r_uno.id_jugador != ? AND r_dos.id_jugador = ?)) LIMIT ?,?";
+				+ "(r_uno.id_jugador != ? AND r_dos.id_jugador = ?)) "
+				+ "AND d.vencimiento >= CURRENT_DATE() "
+				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, negocio.Estado.DISPUTA_EN_CURSO);
@@ -479,6 +591,7 @@ public class Disputa
 				+ "(r_uno.id_jugador != ? AND r_dos.id_jugador = ?)) "
 				+ "AND ((j_uno.id != ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ?)) "
 				+ "OR (j_dos.id != ? AND (j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?))) "
+				+ "AND d.vencimiento >= CURRENT_DATE() "
 				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);

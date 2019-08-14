@@ -29,6 +29,23 @@
 					});
 				</script>
 			</c:if>
+			
+			<c:if test="${param.disputas_success == true}">
+				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+				    <div class="toast-header">
+				        <strong class="mr-auto"><i class="fa fa-grav"></i>Disputas Vencidas Cerradas</strong>
+				        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+				    </div>
+				    <div class="toast-body">
+				        Disputas vencidas cerradas correctamente.
+				    </div>
+				</div>
+				<script>
+					$(document).ready(function(){
+						$("#myToast").toast('show');
+					});
+				</script>
+			</c:if>
 		
 			<div class="card-columns" style="margin-top:20px; margin-left:20px">
 				<div class="card text-white bg-info text-center">
@@ -45,6 +62,22 @@
 						<p class="card-text"><b>Fecha Nacimiento:</b> <fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${sessionScope.usuario.getFechanac()}"/></p>
 					</div>
 				</div>
+				<c:if test="${sessionScope.usuario.isAdmin()}">
+					<div class="card bg-danger text-white">
+						<div class="card-header">Disputas Vencidas</div>
+						<div class="card-body">
+							<c:choose>
+							<c:when test="${disputas_vencidas == 0}">
+							<p class="card-text">No hay disputas vencidas que cerrar</p>
+							</c:when>
+							<c:when test="${disputas_vencidas > 0}">
+							<p class="card-text">Hay ${disputas_vencidas} disputas vencidas que cerrar</p>
+							<a href="cerrarDisputas" class="btn btn-dark">Cerrar Disputas</a>
+							</c:when>
+							</c:choose>
+						</div>
+					</div>
+				</c:if>
 				<div class="card bg-light">
 					<div class="card-header">Solicitudes de Amistosos Recibidas</div>
 					<div class="card-body">

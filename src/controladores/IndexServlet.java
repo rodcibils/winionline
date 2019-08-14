@@ -29,7 +29,16 @@ public class IndexServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		request.setAttribute("data_getted", true);
-		try {	
+		try {
+			if(usuario.isAdmin()) {
+				try {
+					int countDisputasVencidas = datos.Disputa.getInstance().getCountDisputasVencidas();
+					request.setAttribute("disputas_vencidas", countDisputasVencidas);
+				} catch(Exception e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			
 			int cantSolAmRecPend = datos.Solicitud.getInstance()
 					.getCountSolicitudesRecibidasAmistososPendientes(usuario);
 			request.setAttribute("sol_am_rec_pend", cantSolAmRecPend);
