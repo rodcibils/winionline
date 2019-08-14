@@ -2,6 +2,7 @@ package negocio;
 
 public class Disputa {
 	public static final int MAX_DIAS_DISPUTA = 10;
+	public static final int ANTIGUEDAD_PARA_VOTAR = 15;
 	
 	private Partido partido;
 	private java.sql.Date fecha;

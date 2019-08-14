@@ -34,6 +34,19 @@ public class DisputasServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
+		try {
+			if(datos.Partido.getInstance().getCountPartidosJugados(usuario.getId()) 
+					< negocio.Disputa.ANTIGUEDAD_PARA_VOTAR)
+			{
+				request.setAttribute("err_vote", "Debe tener al menos " 
+						+ negocio.Disputa.ANTIGUEDAD_PARA_VOTAR  + " partidos jugados "
+						+ "para poder votar en las disputas");
+				request.getRequestDispatcher("index").forward(request, response);
+			}
+		} catch(Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
 		String toSearch = request.getParameter("search");
 		if(toSearch != null && !toSearch.contentEquals(lastSearch)) {
 			lastSearch = toSearch;
@@ -41,13 +54,26 @@ public class DisputasServlet extends HttpServlet {
 		}
 		request.setAttribute("search", lastSearch);
 		
+		String votar = request.getParameter("vote");
+		if(votar != null && !votar.isEmpty()) {
+			String idJugador = request.getParameter("jugador");
+			try {
+				datos.Disputa.getInstance().votarDisputa(usuario.getId(), 
+						Integer.parseInt(votar), Integer.parseInt(idJugador));
+				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
+				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		String sSkip = request.getParameter("skip");
 		if(sSkip != null && !sSkip.isEmpty()) {
 			skip = Integer.parseInt(sSkip);
 		}
 		
 		try {
-			if(toSearch != null && toSearch.isEmpty()) {
+			if(toSearch == null || toSearch.isEmpty()) {
 				ArrayList<negocio.Disputa> disputas = datos.Disputa.getInstance()
 						.getAll(usuario.getId(), skip, LIMIT);
 				count = datos.Disputa.getInstance().getAllCount(usuario.getId());

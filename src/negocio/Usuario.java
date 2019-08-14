@@ -3,7 +3,8 @@ package negocio;
 import java.sql.Date;
 import java.sql.Timestamp;
 
-public class Usuario {
+public class Usuario 
+{
 	private int id;
 	private String nombre;
 	private String password;
