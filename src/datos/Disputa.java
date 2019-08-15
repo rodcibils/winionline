@@ -19,6 +19,23 @@ public class Disputa
 		return instance;
 	}
 	
+	public void apelar(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "UPDATE disputas SET estado = ? WHERE id_partido = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.DISPUTA_APELADA);
+		stmt.setInt(2, id);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public int getCountDisputasCerradas(int id) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;

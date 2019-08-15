@@ -8,12 +8,63 @@
 </head>
 <t:layout>
 	<jsp:body>
+		
+		<div id="matchAppealModal" class="modal fade" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Esta seguro que desea apelar esta disputa?</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>El veredicto final de la disputa estará a cargo de 5 administradores 
+		        que oficiarán de jueces de la misma. Su desición final será inalterable e 
+		        inapelable. En caso de reiteraciones injustificadas su cuenta puede ser 
+		        baneada.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		        <button type="button" class="btn btn-primary" id="btnApelar">Aceptar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<script>
+			function apelarClicked(id){
+				$('#btnApelar').click(function(){
+					location.href = "misDisputasCerradas?apelar=" + id;
+				});
+				$('#matchAppealModal').modal('show');
+			}
+		</script>
+	
 		<script>
 			function search(){
 				var toSearch = document.getElementById('txtSearch').value;
 				window.location.href = "misDisputasCerradas?search=" + toSearch;
 			}
 		</script>
+		
+		<c:if test="${apelar_success != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Disputa apelada</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${apelar_success}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+		
 		<div class="input-group col-6 float-right" style="margin-top:20px;margin-bottom:20px;margin-right:20px">
 		  	<input type="text" id="txtSearch" class="form-control" value="${search}" placeholder="Buscar por nombre o apodo de usuario...">
 		  	<div class="input-group-append">
@@ -66,7 +117,7 @@
 					</td>
 					<td>
 					<c:if test="${disputa.isApelable()}">
-						<a class="btn btn-danger" href="#">Apelar Disputa</a>
+						<a class="btn btn-danger" onclick="apelarClicked(${disputa.getPartido().getId()})">Apelar Disputa</a>
 					</c:if>
 					<c:if test="${!disputa.isApelable()}">
 						<a class="btn btn-danger disabled" href="#" >Apelar Disputa</a>

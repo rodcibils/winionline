@@ -18,6 +18,8 @@ public class Estado {
 	public static final int DISPUTA_EN_CURSO = 12;
 	public static final int DISPUTA_CERRADA = 13;
 	public static final int DISPUTA_APELADA = 14;
+	public static final int APELACION_EN_CURSO = 15;
+	public static final int APELACION_CERRADA = 16;
 	
 	public int getId() {
 		return id;
