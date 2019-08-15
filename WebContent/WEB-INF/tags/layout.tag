@@ -77,8 +77,9 @@
 	  				<li class="nav-item dropdown">
 	  					<a class="nav-link dropdown-toggle" href="#" id="dropConflictos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Conflictos</a>
 	  					<div class="dropdown-menu" aria-labelledby="dropConflictos">
-	  						<a class="dropdown-item" href="misDisputas?skip=0&search=">Mis Disputas</a>
-	  						<a class="dropdown-item" href="listDisputas?skip=0&search=">Votar en Disputas</a>
+	  						<a class="dropdown-item" href="misDisputas?skip=0&search=">Mis Disputas en Curso</a>
+	  						<a class="dropdown-item" href="misDisputasCerradas?skip=0&search=">Mis Disputas Cerradas</a>
+	  						<a class="dropdown-item" href="listDisputas?skip=0&search=">Votar en Disputas en Curso</a>
 	  					</div>
 	  				</li>
 	  				<li class="nav-item">
