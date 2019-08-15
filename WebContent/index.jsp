@@ -140,6 +140,20 @@
 						</c:choose>
 					</div>
 				</div>
+				<div class="card bg-light">
+					<div class="card-header">Apelaciones en Curso</div>
+					<div class="card-body">
+						<c:choose>
+						<c:when test="${apelaciones == 0}">
+						<p class="card-text">No tiene disputas en curso</p>
+						</c:when>
+						<c:when test="${apelaciones > 0}">
+						<p class="card-text">Tiene ${apelaciones} apelaciones en curso</p>
+						<a href="misApelacionesEnCurso?skip=0&search=" class="btn btn-primary">Verificar</a>
+						</c:when>
+						</c:choose>
+					</div>
+				</div>
 			</div>
 			
 			<c:if test="${param.update_success == true}">

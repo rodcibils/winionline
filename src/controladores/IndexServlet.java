@@ -52,6 +52,9 @@ public class IndexServlet extends HttpServlet {
 			
 			int disputas = datos.Disputa.getInstance().getCountDisputasEnCurso(usuario.getId());
 			request.setAttribute("disputas", disputas);
+			
+			int apelaciones = datos.Apelacion.getInstance().getCountMisApelacionesEnCurso(usuario.getId());
+			request.setAttribute("apelaciones", apelaciones);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}

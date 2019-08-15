@@ -80,6 +80,8 @@
 	  						<a class="dropdown-item" href="misDisputas?skip=0&search=">Mis Disputas en Curso</a>
 	  						<a class="dropdown-item" href="misDisputasCerradas?skip=0&search=">Mis Disputas Cerradas</a>
 	  						<a class="dropdown-item" href="listDisputas?skip=0&search=">Votar en Disputas en Curso</a>
+	  						<a class="dropdown-item" href="misApelacionesEnCurso?skip=0&search=">Mis Apelaciones en Curso</a>
+	  						<a class="dropdown-item" href="#">Mis Apelaciones Cerradas</a>
 	  					</div>
 	  				</li>
 	  				<li class="nav-item">

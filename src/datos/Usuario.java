@@ -43,7 +43,7 @@ public class Usuario {
 		stmt.setInt(1, datos.Rol.ADMINISTRADOR);
 		stmt.setInt(2, id);
 		stmt.setInt(3, id);
-		stmt.setInt(4, 5);
+		stmt.setInt(4, negocio.Apelacion.CANT_JUECES);
 		
 		ArrayList<negocio.Usuario> jueces = new ArrayList<>();
 		ResultSet rs = stmt.executeQuery();
