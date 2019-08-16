@@ -34,6 +34,10 @@ public class IndexServlet extends HttpServlet {
 				try {
 					int countDisputasVencidas = datos.Disputa.getInstance().getCountDisputasVencidas();
 					request.setAttribute("disputas_vencidas", countDisputasVencidas);
+					
+					int apelacionesAdmin = datos.Apelacion.getInstance()
+							.getCountApelacionesAJuzgar(usuario.getId());
+					request.setAttribute("apelaciones_admin", apelacionesAdmin);
 				} catch(Exception e) {
 					System.out.println(e.getMessage());
 				}
@@ -52,6 +56,9 @@ public class IndexServlet extends HttpServlet {
 			
 			int disputas = datos.Disputa.getInstance().getCountDisputasEnCurso(usuario.getId());
 			request.setAttribute("disputas", disputas);
+			
+			int apelaciones = datos.Apelacion.getInstance().getCountMisApelacionesEnCurso(usuario.getId());
+			request.setAttribute("apelaciones", apelaciones);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}

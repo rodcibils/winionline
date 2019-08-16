@@ -77,6 +77,20 @@
 							</c:choose>
 						</div>
 					</div>
+					<div class="card bg-danger text-white">
+						<div class="card-header">Apelaciones a Juzgar</div>
+						<div class="card-body">
+							<c:choose>
+							<c:when test="${apelaciones_admin == 0}">
+							<p class="card-text">No tiene apelaciones asignadas para juzgar</p>
+							</c:when>
+							<c:when test="${apelaciones_admin > 0}">
+							<p class="card-text">Esta asignado como juez en ${apelaciones_admin} apelaciones</p>
+							<a href="apelacionesAJuzgar?skip=0&search=" class="btn btn-dark">Verificar</a>
+							</c:when>
+							</c:choose>
+						</div>
+					</div>
 				</c:if>
 				<div class="card bg-light">
 					<div class="card-header">Solicitudes de Amistosos Recibidas</div>
@@ -136,6 +150,20 @@
 						<c:when test="${disputas > 0}">
 						<p class="card-text">Tiene ${disputas} disputas en curso</p>
 						<a href="misDisputas?skip=0&search=" class="btn btn-primary">Verificar</a>
+						</c:when>
+						</c:choose>
+					</div>
+				</div>
+				<div class="card bg-light">
+					<div class="card-header">Apelaciones en Curso</div>
+					<div class="card-body">
+						<c:choose>
+						<c:when test="${apelaciones == 0}">
+						<p class="card-text">No tiene disputas en curso</p>
+						</c:when>
+						<c:when test="${apelaciones > 0}">
+						<p class="card-text">Tiene ${apelaciones} apelaciones en curso</p>
+						<a href="misApelacionesEnCurso?skip=0&search=" class="btn btn-primary">Verificar</a>
 						</c:when>
 						</c:choose>
 					</div>

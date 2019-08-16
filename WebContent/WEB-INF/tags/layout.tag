@@ -46,6 +46,7 @@
 		  					<a class="nav-link dropdown-toggle" href="#" id="dropAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administrador</a>
 		  					<div class="dropdown-menu" aria-labelledby="dropAdmin">
 		  						<a class="dropdown-item" href="wwligas">Ligas</a>
+		  						<a class="dropdown-item" href="apelacionesAJuzgar?skip=0&search=">Apelaciones a Juzgar</a>
 		  					</div>
 		  				</li>
 	  				</c:if>
@@ -77,8 +78,11 @@
 	  				<li class="nav-item dropdown">
 	  					<a class="nav-link dropdown-toggle" href="#" id="dropConflictos" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Conflictos</a>
 	  					<div class="dropdown-menu" aria-labelledby="dropConflictos">
-	  						<a class="dropdown-item" href="misDisputas?skip=0&search=">Mis Disputas</a>
-	  						<a class="dropdown-item" href="listDisputas?skip=0&search=">Votar en Disputas</a>
+	  						<a class="dropdown-item" href="misDisputas?skip=0&search=">Mis Disputas en Curso</a>
+	  						<a class="dropdown-item" href="misDisputasCerradas?skip=0&search=">Mis Disputas Cerradas</a>
+	  						<a class="dropdown-item" href="listDisputas?skip=0&search=">Votar en Disputas en Curso</a>
+	  						<a class="dropdown-item" href="misApelacionesEnCurso?skip=0&search=">Mis Apelaciones en Curso</a>
+	  						<a class="dropdown-item" href="#">Mis Apelaciones Cerradas</a>
 	  					</div>
 	  				</li>
 	  				<li class="nav-item">

@@ -24,6 +24,42 @@ public class Usuario {
 		return instance;
 	}
 	
+	public ArrayList<negocio.Usuario> getJuecesApelacion(int id) 
+			throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT id FROM usuarios WHERE rol = ? "
+				+ "AND id NOT IN (SELECT s.jugador_uno FROM disputas AS d "
+				+ "INNER JOIN partidos AS p ON d.id_partido = p.id "
+				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud "
+				+ "WHERE d.id_partido = ?) AND id NOT IN (SELECT s.jugador_dos "
+				+ "FROM disputas AS d INNER JOIN partidos AS p ON d.id_partido = p.id " 
+				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud " 
+				+ "WHERE d.id_partido = ?) LIMIT ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, datos.Rol.ADMINISTRADOR);
+		stmt.setInt(2, id);
+		stmt.setInt(3, id);
+		stmt.setInt(4, negocio.Apelacion.CANT_JUECES);
+		
+		ArrayList<negocio.Usuario> jueces = new ArrayList<>();
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Usuario juez = new negocio.Usuario();
+			juez.setId(rs.getInt(1));
+			jueces.add(juez);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return jueces;
+	}
+	
 	public negocio.Usuario getOne(int id) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;
