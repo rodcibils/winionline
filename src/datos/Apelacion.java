@@ -212,6 +212,50 @@ public class Apelacion {
 		return count;
 	}
 	
+	public void cerrar(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "UPDATE apelaciones SET estado = ?, cierre = ? WHERE id_disputa = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.APELACION_CERRADA);
+		Calendar c = Calendar.getInstance();
+		java.sql.Date today = new java.sql.Date(c.getTime().getTime());
+		stmt.setDate(2, today);
+		stmt.setInt(3, id);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
+	public int getCountVotos(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM usuario_apelacion WHERE id_disputa = ? "
+				+ "AND voto IS NOT NULL";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		
+		int count = 0;
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+	
 	public int getCountApelacionesAJuzgar(int id) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;
@@ -234,6 +278,64 @@ public class Apelacion {
 		ConnectionManager.getInstance().closeConnection();
 		
 		return count;
+	}
+	
+	public int getVotos(int idApelacion, int idJugador) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM usuario_apelacion WHERE "
+				+ "id_disputa = ? AND voto = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idApelacion);
+		stmt.setInt(2, idJugador);
+		
+		int votos = 0;
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			votos = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return votos;
+	}
+	
+	public ArrayList<negocio.Usuario> getJugadores(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT j_uno.id, j_dos.id FROM apelaciones AS a "
+				+ "INNER JOIN partidos AS p ON a.id_disputa = p.id "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "WHERE a.id_disputa = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		
+		ArrayList<negocio.Usuario> jugadores = new ArrayList<>();
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setId(rs.getInt(1));
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setId(rs.getInt(2));
+			jugadores.add(jugadorUno);
+			jugadores.add(jugadorDos);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return jugadores;
 	}
 	
 	public ArrayList<negocio.Apelacion> getMisApelacionesEnCurso(int id, int skip, 
