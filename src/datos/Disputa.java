@@ -324,6 +324,27 @@ public class Disputa
 		return count;
 	}
 	
+	public boolean checkApelacion(int idDisputa) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM disputas WHERE id_partido = ? AND estado = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idDisputa);
+		stmt.setInt(2, negocio.Estado.DISPUTA_APELADA);
+		
+		ResultSet rs = stmt.executeQuery();
+		boolean flag = rs.next();
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return flag;
+	}
+	
 	public void votarDisputa(int idVotante, int idDisputa, int idVoto) 
 			throws ClassNotFoundException, SQLException
 	{

@@ -34,6 +34,57 @@ public class ApelacionesAJuzgarServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
+		String votar = request.getParameter("vote");
+		if(votar != null && !votar.isEmpty()) {
+			String idJugador = request.getParameter("jugador");
+			try {
+				int parsedId = Integer.parseInt(votar);
+				datos.Apelacion.getInstance().votarApelacion(usuario.getId(), parsedId, 
+						Integer.parseInt(idJugador));
+				
+				//chequeo para cerrar apelacion
+				int votos = datos.Apelacion.getInstance().getCountVotos(parsedId);
+				if(votos == negocio.Apelacion.CANT_JUECES) {
+					datos.Apelacion.getInstance().cerrar(parsedId);
+					datos.Disputa.getInstance().cerrarDisputa(parsedId);
+					
+					ArrayList<negocio.Usuario> jugadores = datos.Apelacion.getInstance()
+							.getJugadores(parsedId);
+					int votosUno = datos.Apelacion.getInstance().getVotos(parsedId, 
+							jugadores.get(0).getId());
+					int votosDos = datos.Apelacion.getInstance().getVotos(parsedId, 
+							jugadores.get(1).getId());
+					
+					negocio.Resultado resultadoUno = new negocio.Resultado();
+					resultadoUno.setJugador(jugadores.get(0));
+					negocio.Partido partido = new negocio.Partido();
+					partido.setId(parsedId);
+					resultadoUno.setPartido(partido);
+					negocio.Resultado resultadoDos = new negocio.Resultado();
+					resultadoDos.setPartido(partido);
+					resultadoDos.setJugador(jugadores.get(1));
+					if(votosUno > votosDos) {
+						resultadoUno.setGoles(3);
+						resultadoDos.setGoles(0);
+					} else if(votosUno < votosDos) {
+						resultadoUno.setGoles(0);
+						resultadoDos.setGoles(3);
+					} else {
+						resultadoUno.setGoles(0);
+						resultadoDos.setGoles(0);
+					}
+					
+					datos.Resultado.getInstance().update(resultadoUno);
+					datos.Resultado.getInstance().update(resultadoDos);
+				}
+				
+				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
+				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		String toSearch = request.getParameter("search");
 		if(toSearch != null && !toSearch.contentEquals(lastSearch)) {
 			lastSearch = toSearch;
