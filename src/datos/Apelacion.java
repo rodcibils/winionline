@@ -16,6 +16,25 @@ public class Apelacion {
 		return instance;
 	}
 	
+	public void votarApelacion(int idUsuario, int idApelacion, int idVoto) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "UPDATE usuario_apelacion SET voto = ? WHERE id_usuario = ? "
+				+ "AND id_disputa = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idVoto);
+		stmt.setInt(2, idUsuario);
+		stmt.setInt(3, idApelacion);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public ArrayList<negocio.Apelacion> getApelacionesAJuzgar(int id, int skip, int limit,
 			String search) throws ClassNotFoundException, SQLException
 	{
@@ -170,7 +189,7 @@ public class Apelacion {
 				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
 				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
 				+ "WHERE id_usuario = ? AND (j_uno.nombre LIKE ? OR j_uno.apodo LIKE ? "
-				+ "OR j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?)";
+				+ "OR j_dos.nombre LIKE ? OR j_dos.apodo LIKE ?) AND ua.voto IS NULL";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);
@@ -198,7 +217,8 @@ public class Apelacion {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT COUNT(*) FROM usuario_apelacion WHERE id_usuario = ?";
+		String query = "SELECT COUNT(*) FROM usuario_apelacion WHERE id_usuario = ? "
+				+ "AND voto IS NULL";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, id);

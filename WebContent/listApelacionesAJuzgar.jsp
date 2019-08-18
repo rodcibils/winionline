@@ -43,8 +43,8 @@
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${apelacion.getDisputa().getVencimiento()}"/></td>
 					<td>${apelacion.getDisputa().getVotosUno()} - ${apelacion.getDisputa().getVotosDos()}</td>
 					<td>
-						<a class="btn btn-primary">Evidencia Jugador Uno</a>
-						<a class="btn btn-primary" style="margin-left:20px">Evidencia Jugador Dos</a>
+						<a class="btn btn-primary" href="evidencia?id=${apelacion.getDisputa().getPartido().getId()}&jugador=${apelacion.getDisputa().getPartido().getResultadoUno().getJugador().getId()}">Evidencia Jugador Uno</a>
+						<a class="btn btn-primary"  style="margin-left:20px" href="evidencia?id=${apelacion.getDisputa().getPartido().getId()}&jugador=${apelacion.getDisputa().getPartido().getResultadoDos().getJugador().getId()}">Evidencia Jugador Dos</a>
 						<a class="btn btn-success" style="margin-left:20px">Votar Jugador Uno</a>
 						<a class="btn btn-success" style="margin-left:20px">Votar Jugador Dos</a>
 					</td>

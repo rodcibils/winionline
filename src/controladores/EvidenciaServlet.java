@@ -43,11 +43,19 @@ public class EvidenciaServlet extends HttpServlet {
 		if(votar != null && !votar.isEmpty()) {
 			negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 			try {
-				datos.Disputa.getInstance().votarDisputa(usuario.getId(), 
-						Integer.parseInt(votar), Integer.parseInt(idJugador));
-				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
-				request.getRequestDispatcher("listDisputas?skip=0&search=").forward(request, response);
-				return;
+				if(datos.Disputa.getInstance().checkApelacion(Integer.parseInt(votar))) {
+					datos.Apelacion.getInstance().votarApelacion(usuario.getId(),
+							Integer.parseInt(votar), Integer.parseInt(idJugador));
+					request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
+					request.getRequestDispatcher("apelacionesAJuzgar?skip=0&search=")
+						.forward(request, response);
+				} else {
+					datos.Disputa.getInstance().votarDisputa(usuario.getId(), 
+							Integer.parseInt(votar), Integer.parseInt(idJugador));
+					request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
+					request.getRequestDispatcher("listDisputas?skip=0&search=").forward(request, response);
+					return;
+				}
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
 			}
