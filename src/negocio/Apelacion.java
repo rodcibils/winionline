@@ -6,6 +6,9 @@ public class Apelacion {
 	private Disputa disputa;
 	private java.sql.Date fecha;
 	private java.sql.Date cierre;
+	
+	private int votosUno;
+	private int votosDos;
 
 	public java.sql.Date getFecha() {
 		return fecha;
@@ -29,5 +32,21 @@ public class Apelacion {
 
 	public void setDisputa(Disputa disputa) {
 		this.disputa = disputa;
+	}
+
+	public int getVotosUno() {
+		return votosUno;
+	}
+
+	public void setVotosUno(int votosUno) {
+		this.votosUno = votosUno;
+	}
+
+	public int getVotosDos() {
+		return votosDos;
+	}
+
+	public void setVotosDos(int votosDos) {
+		this.votosDos = votosDos;
 	}
 }
