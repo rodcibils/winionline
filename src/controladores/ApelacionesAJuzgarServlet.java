@@ -34,6 +34,19 @@ public class ApelacionesAJuzgarServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
+		String votar = request.getParameter("vote");
+		if(votar != null && !votar.isEmpty()) {
+			String idJugador = request.getParameter("jugador");
+			try {
+				datos.Apelacion.getInstance().votarApelacion(usuario.getId(), Integer.parseInt(votar), 
+						Integer.parseInt(idJugador));
+				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
+				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		String toSearch = request.getParameter("search");
 		if(toSearch != null && !toSearch.contentEquals(lastSearch)) {
 			lastSearch = toSearch;
