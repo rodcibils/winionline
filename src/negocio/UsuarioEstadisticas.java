@@ -1,8 +1,9 @@
 package negocio;
 
+import java.util.ArrayList;
+
 public class UsuarioEstadisticas {
 	private int idUsuario;
-	private int pos;
 	private String nombre;
 	private int puntos;
 	private int partJugados;
@@ -13,13 +14,37 @@ public class UsuarioEstadisticas {
 	private int golesContra;
 	private int golesDiferencia;
 	
-	
-	public int getPos() {
-		return pos;
-	}
-	
-	public void setPos(int pos) {
-		this.pos = pos;
+	public static ArrayList<UsuarioEstadisticas> 
+		determinarPosiciones(ArrayList<UsuarioEstadisticas> jugadores)
+	{
+		for(int i=0; i<(jugadores.size() - 1); ++i) {
+			UsuarioEstadisticas jugadorUno = jugadores.get(i);
+			for(int j=1; j<jugadores.size(); ++j) {
+				UsuarioEstadisticas jugadorDos = jugadores.get(j);
+				
+				if(jugadorDos.getPuntos() > jugadorUno.getPuntos()) {
+					jugadores.set(i, jugadorDos);
+					jugadores.set(j, jugadorUno);
+				} else if(jugadorDos.getPuntos() == jugadorUno.getPuntos()) {
+					if(jugadorDos.getGolesDiferencia() > jugadorUno.getGolesDiferencia()) {
+						jugadores.set(i, jugadorDos);
+						jugadores.set(j, jugadorUno);
+					} else if(jugadorDos.getGolesDiferencia() == jugadorUno.getGolesDiferencia()) {
+						if(jugadorDos.getGolesFavor() > jugadorUno.getGolesFavor()) {
+							jugadores.set(i, jugadorDos);
+							jugadores.set(j, jugadorUno);
+						} else if(jugadorDos.getGolesFavor() == jugadorUno.getGolesFavor()) {
+							if(jugadorDos.getGolesContra() < jugadorUno.getGolesContra()) {
+								jugadores.set(i, jugadorDos);
+								jugadores.set(j, jugadorUno);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return jugadores;
 	}
 	
 	public String getNombre() {
