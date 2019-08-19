@@ -3,6 +3,7 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@page import="negocio.Estado" %>
 <head>
 	<title>Winionline | Mis Ligas </title>
 </head>
@@ -26,8 +27,8 @@
 				<tr>
 				<th scope="col">Nombre</th>
 				<th scope="col">Temporada</th>
-				<th scope="col">FechaInicio</th>
-				<th scope="col">FechaFin</th>				
+				<th scope="col">Fecha Inicio</th>
+				<th scope="col">Fecha Fin</th>				
 				<th scope="col">Estado</th>	
 				<th scope="col"></th>			
 				</tr>
@@ -40,7 +41,12 @@
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getInicio()}"/></td>
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getFin()}"/></td>	
 					<td>${liga.getEstado().getDescripcion()}</td>
-					<td><a class="btn btn-primary" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a></td>				
+					<c:if test="${liga.getEstado().getId() != 3}">
+					<td><a class="btn btn-primary" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a></td>
+					</c:if>
+					<c:if test="${liga.getEstado().getId() == 3}">
+					<td><a class="btn btn-primary disabled" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a></td>
+					</c:if>				
 					</tr>
 				</c:forEach>
 			</tbody>

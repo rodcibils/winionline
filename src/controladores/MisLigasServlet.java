@@ -1,7 +1,6 @@
 package controladores;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/misLigas")
 public class MisLigasServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ArrayList<negocio.Liga> ligas = null;
 	private static final int LIMIT = 10;
 	private int skip = 0;
 	private int count = 0;
@@ -34,19 +32,9 @@ public class MisLigasServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		negocio.Usuario usuarioActual = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
-//		estado=3 LIGAS PENDIENTES
-		try {				
-			ligas = datos.Liga.getInstance().getAllByUsuario(usuarioActual.getId());
-		} catch (ClassNotFoundException | SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		request.setAttribute("ligas", ligas);
 		String toSearch = request.getParameter("search");
-		
 		if(toSearch!=null && !toSearch.contentEquals(lastSearch)){
 			lastSearch = toSearch;
 			skip = 0;
@@ -59,19 +47,17 @@ public class MisLigasServlet extends HttpServlet {
 		}
 	
 		try {
-			if(toSearch == null || toSearch.contentEquals("")) 
+			if(toSearch == null || toSearch.isEmpty()) 
 			{
-				count = datos.Liga.getInstance()
-						.getCountLigasByUsuario(usuarioActual.getId());
+				count = datos.Liga.getInstance().getCount(usuarioActual.getId());
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
 					++maxPages;
 				}
-				
 				int currentPage = skip / LIMIT;
 				
 				ArrayList<negocio.Liga> ligas = datos.Liga.getInstance()
-						.getAllPaginadoByUsuario(skip,LIMIT,usuarioActual.getId());
+						.getAll(usuarioActual.getId(), skip, LIMIT);
 				request.setAttribute("misLigas", ligas);
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
@@ -81,16 +67,15 @@ public class MisLigasServlet extends HttpServlet {
 			else 
 			{
 				count = datos.Liga.getInstance()
-						.getCountLigasFilteredByUsuario(toSearch, usuarioActual.getId());
+						.getCount(usuarioActual.getId(), toSearch);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
 					++maxPages;
 				}
-				
 				int currentPage = skip / LIMIT;
 				
 				ArrayList<negocio.Liga> ligas = datos.Liga.getInstance()
-						.getLigasPaginationByUsuario(toSearch, skip, LIMIT, usuarioActual.getId());
+						.getAll(usuarioActual.getId(), toSearch, skip, LIMIT);
 				request.setAttribute("misLigas", ligas);
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
@@ -100,8 +85,8 @@ public class MisLigasServlet extends HttpServlet {
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
+		
 		request.getRequestDispatcher("misLigas.jsp").forward(request, response);
-
 	}
 
 	/**

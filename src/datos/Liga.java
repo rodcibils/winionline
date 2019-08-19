@@ -453,48 +453,17 @@ public class Liga {
 		return rowsCount;
 	}
 	
-	public ArrayList<negocio.Liga> getAllByUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		
-		String query = "SELECT * from usuario_liga WHERE id_usuario = ?";
-		
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idUsuario);
-		ResultSet rs = stmt.executeQuery();
-		
-		
-		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
-		while(rs.next()) {
-			negocio.Liga liga = datos.Liga.getInstance().getOne(rs.getInt(2));			
-//			liga.setId(rs.getInt(1));
-//			liga.setNombre(rs.getString(2));
-//			liga.setTemporada(rs.getInt(3));
-//			liga.setInicio(rs.getDate(4));
-//			liga.setFin(rs.getDate(5));
-			ligas.add(liga);
-		}
-		
-		stmt.close();
-		rs.close();
-		manager.closeConnection();
-		
-		return ligas;
-	}
-	
-	public int getCountLigasByUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
+	public int getCount(int idUsuario) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT COUNT(*) from usuario_liga where id_usuario=?";
+		String query = "SELECT COUNT(*) from usuario_liga where id_usuario = ?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idUsuario);
 		ResultSet rs = stmt.executeQuery();
 		int rowsCount = 0;
-		while(rs.next()) {
+		if(rs.next()) {
 			rowsCount = rs.getInt(1);
 		}
 		
@@ -505,7 +474,8 @@ public class Liga {
 		return rowsCount;
 	}
 	
-	public ArrayList<negocio.Liga> getAllPaginadoByUsuario(int skip, int limit, int idUsuario) throws ClassNotFoundException, SQLException {
+	public ArrayList<negocio.Liga> getAll(int idUsuario, int skip, int limit) throws ClassNotFoundException, SQLException 
+	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
@@ -532,23 +502,24 @@ public class Liga {
 		return ligas;
 	}
 	
-	public int getCountLigasFilteredByUsuario(String toSearch, int idUsuario) throws SQLException, ClassNotFoundException {
+	public int getCount(int idUsuario, String toSearch) throws SQLException, ClassNotFoundException 
+	{
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT * from usuario_liga WHERE id_usuario=?";
+		String query = "SELECT COUNT(*) FROM usuario_liga AS ul "
+				+ "INNER JOIN ligas AS l ON l.id = ul.id_liga "
+				+ "WHERE ul.id_usuario = ? AND l.nombre LIKE ?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idUsuario);
+		toSearch = "%" + toSearch + "%";
+		stmt.setString(2, toSearch);
 		
 		ResultSet rs = stmt.executeQuery();
 		int rowsCount = 0;
-		while(rs.next()) {
-			negocio.Liga liga = datos.Liga.getInstance().getOne(rs.getInt(2));
-			if(liga.getNombre().contains(toSearch))
-			{
-				++rowsCount;
-			}
+		if(rs.next()) {
+			rowsCount = rs.getInt(1);
 		}
 		
 		rs.close();
@@ -558,37 +529,30 @@ public class Liga {
 		return rowsCount;
 	}
 	
-	public ArrayList<negocio.Liga> getLigasPaginationByUsuario(String toSearch, int skip, int limit, int idUsuario) throws ClassNotFoundException, SQLException {
+	public ArrayList<negocio.Liga> getAll(int idUsuario, String toSearch, 
+			int skip, int limit) throws ClassNotFoundException, SQLException 
+	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from usuario_liga WHERE id_usuario=?";
+		String query = "SELECT ul.* FROM usuario_liga AS ul "
+				+ "INNER JOIN ligas AS l ON l.id = ul.id_liga "
+				+ "WHERE ul.id_usuario = ? AND l.nombre LIKE ? "
+				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idUsuario);
-		ResultSet rs = stmt.executeQuery();
+		toSearch = "%" + toSearch + "%";
+		stmt.setString(2, toSearch);
+		stmt.setInt(3, skip);
+		stmt.setInt(4, limit);
 		
+		ResultSet rs = stmt.executeQuery();
 		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
 		while(rs.next()) {
 			negocio.Liga lg = datos.Liga.getInstance().getOne(rs.getInt(2));
-			if(lg.getNombre().contains(toSearch))
-			{				
-				ligas.add(lg);
-			}
-		}
-		
-		ArrayList<negocio.Liga> filteredLigas = new ArrayList<>();
-		
-		if(skip+limit < ligas.size()) { 
-			for(int i=skip; i<skip+limit; ++i)
-			{
-				filteredLigas.add(ligas.get(i));
-			}
-		} else {
-			for(int i=skip; i<ligas.size(); ++i) {
-				filteredLigas.add(ligas.get(i));
-			}
+			ligas.add(lg);
 		}
 		
 		stmt.close();
