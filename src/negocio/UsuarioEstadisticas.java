@@ -13,6 +13,7 @@ public class UsuarioEstadisticas {
 	private int golesFavor;
 	private int golesContra;
 	private int golesDiferencia;
+	private boolean puedeJugar;
 	
 	public static ArrayList<UsuarioEstadisticas> 
 		determinarPosiciones(ArrayList<UsuarioEstadisticas> jugadores)
@@ -125,5 +126,13 @@ public class UsuarioEstadisticas {
 
 	public void setIdUsuario(int id) {
 		this.idUsuario = id;
+	}
+
+	public boolean isPuedeJugar() {
+		return puedeJugar;
+	}
+
+	public void setPuedeJugar(boolean puedeJugar) {
+		this.puedeJugar = puedeJugar;
 	}
 }

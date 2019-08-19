@@ -30,8 +30,21 @@ public class StatsLigaServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
+		try 
+		{
+			negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+			
 			int idLiga = Integer.parseInt(request.getParameter("id"));
+			request.setAttribute("id", idLiga);
+			
+			String desafiar = request.getParameter("desafiar");
+			if(desafiar != null && !desafiar.isEmpty()) {
+				datos.Solicitud.getInstance().createSolicitudLiga(usuario.getId(), 
+						Integer.parseInt(desafiar), idLiga);
+				request.setAttribute("challenge_success", "La solicitud de partido al rival fue "
+						+ "enviada correctamente");
+			}
+			
 			ArrayList<negocio.Usuario> usuariosLiga = datos.Liga.getInstance()
 					.getAllUsuariosLiga(idLiga);
 			ArrayList<negocio.UsuarioEstadisticas> estadisticasUsuarios = 
@@ -89,6 +102,9 @@ public class StatsLigaServlet extends HttpServlet {
 				ue.setPuntos((partGanados * 3) + partEmpatados);
 				ue.setIdUsuario(user.getId());
 				ue.setNombre(user.getNombre());
+				ue.setPuedeJugar(!datos.Solicitud.getInstance().checkSolicitudLiga(usuario.getId(), 
+						user.getId(), idLiga));
+				
 				estadisticasUsuarios.add(ue);
 			}			
 			

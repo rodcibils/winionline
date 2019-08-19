@@ -7,7 +7,25 @@
 	<title>Winionline | Estadisticas liga </title>
 </head>
 <t:layout>
-	<jsp:body>		
+	<jsp:body>
+		
+		<c:if test="${challenge_success != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Partido Solicitado</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${challenge_success}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+	
 		<table class="table table-hover table-dark" style="margin-top:40px">
 			<thead>
 				<tr>
@@ -37,7 +55,15 @@
 					<td>${eu.getGolesFavor()}</td>	
 					<td>${eu.getGolesContra()}</td>
 					<td>${eu.getGolesDiferencia()}</td>
-					<td><a class="btn btn-primary" href="partidosusuarioliga?idliga=${idLiga}&idusuario=${eu.getIdUsuario()}">Ver Partidos</a></td>
+					<td>
+						<a class="btn btn-primary" href="partidosusuarioliga?idliga=${idLiga}&idusuario=${eu.getIdUsuario()}">Ver Partidos</a>
+						<c:if test="${eu.isPuedeJugar() == true && eu.getIdUsuario() != sessionScope.usuario.getId()}">
+							<a class="btn btn-success" style="margin-left:20px" href="estadisticasLiga?desafiar=${eu.getIdUsuario()}&id=${id}">Desafiar</a>
+						</c:if>
+						<c:if test="${eu.isPuedeJugar() == false}">
+							<a class="btn btn-success disabled" style="margin-left:20px" href="#">Desafiar</a>
+						</c:if>
+					</td>
 					</tr>
 				</c:forEach>
 			</tbody>

@@ -61,6 +61,33 @@ public class Solicitud {
 		return flag;
 	}
 	
+	public void createSolicitudLiga(int jugadorUno, int jugadorDos, int liga) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "INSERT INTO solicitudes(fecha, vencimiento, estado, jugador_uno, "
+				+ "jugador_dos, liga) VALUES (?,?,?,?,?,?)";
+		
+		Calendar c = Calendar.getInstance();
+		java.sql.Date today = new java.sql.Date(c.getTime().getTime());
+		c.add(Calendar.DATE, negocio.Solicitud.MAX_DIAS_SOLICITUD);
+		java.sql.Date vencimiento = new java.sql.Date(c.getTime().getTime());
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setDate(1, today);
+		stmt.setDate(2, vencimiento);
+		stmt.setInt(3, negocio.Estado.SOLICITUD_PENDIENTE);
+		stmt.setInt(4, jugadorUno);
+		stmt.setInt(5, jugadorDos);
+		stmt.setInt(6, liga);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public void createSolicitudAmistoso(int jugadorUno, int jugadorDos) 
 			throws ClassNotFoundException, SQLException
 	{
@@ -73,7 +100,7 @@ public class Solicitud {
 		Date fecha = new Date();
 		Calendar c = Calendar.getInstance();
 		c.setTime(fecha);
-		c.add(Calendar.DATE, 10);
+		c.add(Calendar.DATE, negocio.Solicitud.MAX_DIAS_SOLICITUD);
 		Date vencimiento = c.getTime();
 		
 		java.sql.Date sqlFecha = new java.sql.Date(fecha.getTime());
@@ -477,6 +504,31 @@ public class Solicitud {
 		
 		return solicitud;
 	}
-
+	
+	public boolean checkSolicitudLiga(int idUno, int idDos, int idLiga) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM solicitudes WHERE "
+				+ "((jugador_uno = ? AND jugador_dos = ?) OR (jugador_uno = ? AND jugador_dos = ?)) "
+				+ "AND liga = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUno);
+		stmt.setInt(2, idDos);
+		stmt.setInt(3, idDos);
+		stmt.setInt(4, idUno);
+		stmt.setInt(5, idLiga);
+		
+		ResultSet rs = stmt.executeQuery();
+		boolean result = rs.next();
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return result;
+	}
 }
 
