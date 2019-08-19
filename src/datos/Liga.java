@@ -474,6 +474,32 @@ public class Liga {
 		return rowsCount;
 	}
 	
+	public int getCountLigasActivas(int idUsuario) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM usuario_liga AS ul "
+				+ "INNER JOIN ligas AS l ON l.id = ul.id_liga "
+				+ "WHERE ul.id_usuario = ? AND l.estado != ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, negocio.Estado.LIGA_FINALIZADA);
+		
+		int count = 0;
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+	
 	public ArrayList<negocio.Liga> getAll(int idUsuario, int skip, int limit) throws ClassNotFoundException, SQLException 
 	{
 		PreparedStatement stmt;

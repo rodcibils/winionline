@@ -137,7 +137,13 @@
 				<div class="card bg-light">
 					<div class="card-header">Ligas</div>
 					<div class="card-body">
+						<c:if test="${insc_ligas == 0}">
 						<p class="card-text">No esta participando en ninguna liga</p>
+						</c:if>
+						<c:if test="${insc_ligas > 0}">
+						<p class="card-text">Esta participando en ${insc_ligas} ligas</p>
+						<a href="misLigas?skip=0&search=" class="btn btn-primary">Verificar</a>
+						</c:if>
 					</div>
 				</div>
 				<div class="card bg-light">
