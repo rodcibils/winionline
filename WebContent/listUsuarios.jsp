@@ -70,10 +70,7 @@
 					<td><c:out value="${usuario.email}" /></td>
 					<td><c:out value="${usuario.getPais().getNombre()}" /></td>
 					<td>
-						<p class="text-center">
-						<a class="btn btn-primary">Ver Perfil</a>
  						<a class="btn btn-danger" style="margin-left:20px" href="usuarios?desafiar=${usuario.getId()}">Desafiar</a>
-						</p>
 					</td>
 					</tr>
 				</c:forEach>

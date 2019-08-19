@@ -76,8 +76,7 @@ public class UsuariosServlet extends HttpServlet {
 		try {
 			if(toSearch == null || toSearch.contentEquals("")) 
 			{
-				count = datos.Usuario.getInstance()
-						.getAllCount(usuarioActual);
+				count = datos.Usuario.getInstance().getAllCount(usuarioActual);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
 					++maxPages;
@@ -95,8 +94,7 @@ public class UsuariosServlet extends HttpServlet {
 			} 
 			else 
 			{
-				count = datos.Usuario.getInstance()
-						.getCountUsuariosFiltered(toSearch, usuarioActual);
+				count = datos.Usuario.getInstance().getAllCount(toSearch, usuarioActual);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
 					++maxPages;

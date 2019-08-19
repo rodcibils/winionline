@@ -208,27 +208,26 @@ public class Usuario {
 	return usuarios;
 }
 	
-	public int getCountUsuariosFiltered
+	public int getAllCount
 	(String toSearch, negocio.Usuario usuarioActual) throws ClassNotFoundException, SQLException
 {
 	PreparedStatement stmt;
 	Connection conn = ConnectionManager.getInstance().getConnection();
 	
-	String query = "SELECT * from usuarios WHERE estado = ? AND id != ?";
+	String query = "SELECT COUNT(*) from usuarios WHERE estado = ? AND id != ? "
+			+ "AND (nombre LIKE ? OR apodo LIKE ?)";
 	
 	stmt = conn.prepareStatement(query);
 	stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
 	stmt.setInt(2, usuarioActual.getId());
-	
+	toSearch = "%" + toSearch + "%";
+	stmt.setString(3, toSearch);
+	stmt.setString(4, toSearch);
 	
 	ResultSet rs = stmt.executeQuery();
 	int count = 0;
-	while(rs.next()) {
-		negocio.Usuario usuario = datos.Usuario.getInstance().getOne(rs.getInt(1));
-		if(usuario.getNombre().contains(toSearch) || usuario.getApodo().contains(toSearch))
-		{
-			++count;
-		}
+	if(rs.next()) {
+		count = rs.getInt(1);
 	}
 	
 	rs.close();
@@ -245,18 +244,21 @@ public class Usuario {
 	PreparedStatement stmt;
 	Connection conn = ConnectionManager.getInstance().getConnection();
 	
-	String query = "SELECT * from usuarios WHERE estado = ? AND id != ?";
+	String query = "SELECT * from usuarios WHERE estado = ? AND id != ? "
+			+ "AND (nombre LIKE ? OR apodo LIKE ?) LIMIT ?,?";
 	
 	stmt = conn.prepareStatement(query);
 	stmt.setInt(1, negocio.Estado.USUARIO_ACTIVO);
 	stmt.setInt(2, usuarioActual.getId());
+	toSearch = "%" + toSearch + "%";
+	stmt.setString(3, toSearch);
+	stmt.setString(4, toSearch);
+	stmt.setInt(5, skip);
+	stmt.setInt(6, limit);
 	
 	ResultSet rs = stmt.executeQuery();
 	ArrayList<negocio.Usuario> usuarios = new ArrayList<>();
 	while(rs.next()) {
-		negocio.Usuario usu = datos.Usuario.getInstance().getOne(rs.getInt(1));
-		if(usu.getNombre().contains(toSearch) || usu.getApodo().contains(toSearch))
-		{
 			negocio.Usuario usuario = new negocio.Usuario();
 			negocio.Pais pais = datos.Pais.getInstance().getOne(rs.getInt(11));
 			negocio.Rol rol = datos.Rol.getInstance().getOne(rs.getInt(12));
@@ -276,27 +278,13 @@ public class Usuario {
 			usuario.setEstado(estado);
 			
 			usuarios.add(usuario);
-		}
-	}
-	
-	ArrayList<negocio.Usuario> filteredUsuarios = new ArrayList<>();
-	
-	if(skip+limit < usuarios.size()) { 
-		for(int i=skip; i<skip+limit; ++i)
-		{
-			filteredUsuarios.add(usuarios.get(i));
-		}
-	} else {
-		for(int i=skip; i<usuarios.size(); ++i) {
-			filteredUsuarios.add(usuarios.get(i));
-		}
 	}
 	
 	rs.close();
 	stmt.close();
 	ConnectionManager.getInstance().closeConnection();
 	
-	return filteredUsuarios;
+	return usuarios;
 }
 	
 	
