@@ -177,6 +177,21 @@ public class Liga {
 		
 	}
 	
+	public void desinscribirse(int idUsuario, int idLiga) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "DELETE FROM usuario_liga WHERE id_usuario = ? AND id_liga = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, idLiga);
+		
+		stmt.execute();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
 	public boolean checkLigaTerminada(int id) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;

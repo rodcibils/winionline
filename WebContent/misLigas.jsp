@@ -9,6 +9,24 @@
 </head>
 <t:layout>
 	<jsp:body>
+	
+		<c:if test="${unsuscribe_success != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Inscripcion Anulada</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${unsuscribe_success}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+	
 		<script>
 			function search(){
 				var toSearch = document.getElementById('txtSearch').value;
@@ -45,7 +63,10 @@
 					<td><a class="btn btn-primary" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a></td>
 					</c:if>
 					<c:if test="${liga.getEstado().getId() == 3}">
-					<td><a class="btn btn-primary disabled" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a></td>
+					<td>
+						<a class="btn btn-danger" href="misLigas?unsuscribe=${liga.getId()}&skip=${skip}&search=${search}">Eliminar Inscripcion</a>
+						<a class="btn btn-primary disabled" style="margin-left:20px" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a>
+					</td>
 					</c:if>				
 					</tr>
 				</c:forEach>

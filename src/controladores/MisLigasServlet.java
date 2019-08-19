@@ -34,6 +34,18 @@ public class MisLigasServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		negocio.Usuario usuarioActual = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
+		String unsuscribe = request.getParameter("unsuscribe");
+		if(unsuscribe != null && !unsuscribe.isEmpty()) {
+			try {
+				datos.Liga.getInstance().desinscribirse(usuarioActual.getId(), 
+						Integer.parseInt(unsuscribe));
+				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
+				request.setAttribute("unsuscribe_success", "Se ha removido correctamente la inscripcion a la liga");
+			} catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		String toSearch = request.getParameter("search");
 		if(toSearch!=null && !toSearch.contentEquals(lastSearch)){
 			lastSearch = toSearch;
