@@ -35,7 +35,6 @@ public class WWLigasServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		try 
 		{
 			List<Integer> temporadas = datos.Liga.getInstance().getTemporadas();
@@ -44,7 +43,8 @@ public class WWLigasServlet extends HttpServlet {
 			String action = request.getParameter("action");
 			if (action != null && action.equals("eliminar"))
 			{
-				eliminar(request, response);
+				int id = Integer.parseInt(request.getParameter("id"));
+				datos.Liga.getInstance().delete(id);
 			}
 			
 			String toSearch = request.getParameter("search");
@@ -78,7 +78,7 @@ public class WWLigasServlet extends HttpServlet {
 			else
 			{
 				ligas = datos.Liga.getInstance().getAllPaginado(toSearch, yearSearch, skip, LIMIT);
-				count = datos.Liga.getInstance().getCountLigasFiltered(toSearch, yearSearch);
+				count = datos.Liga.getInstance().getCountLigas(toSearch, yearSearch);
 			}
 			request.setAttribute("ligas", ligas);
 			request.setAttribute("skip", skip);
@@ -109,14 +109,6 @@ public class WWLigasServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
-	}
-	
-	private void eliminar(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException, ClassNotFoundException{
-		int id = Integer.parseInt(request.getParameter("id"));
-		negocio.Liga nliga;
-		datos.Liga liga = new datos.Liga();
-		nliga = liga.getOne(id);
-		liga.delete(nliga);
 	}
 
 }
