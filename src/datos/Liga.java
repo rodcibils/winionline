@@ -176,6 +176,27 @@ public class Liga {
 		ConnectionManager.getInstance().closeConnection();
 		
 	}
+	
+	public boolean checkLigaTerminada(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM ligas WHERE id = ? AND estado = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		stmt.setInt(2, negocio.Estado.LIGA_FINALIZADA);
+		
+		ResultSet rs = stmt.executeQuery();
+		boolean result = rs.next();
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return result;
+	}
 
 	public ArrayList<negocio.Liga> getAllPaginado(int skip, int limit) throws ClassNotFoundException, SQLException {
 		PreparedStatement stmt;

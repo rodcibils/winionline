@@ -110,6 +110,8 @@ public class StatsLigaServlet extends HttpServlet {
 			
 			estadisticasUsuarios = negocio.UsuarioEstadisticas
 					.determinarPosiciones(estadisticasUsuarios);
+			boolean ligaTerminada = datos.Liga.getInstance().checkLigaTerminada(idLiga);
+			request.setAttribute("liga_terminada", ligaTerminada);
 			request.setAttribute("estadisticasUsuarios", estadisticasUsuarios);
 			request.setAttribute("idLiga", idLiga);
 		} catch (ClassNotFoundException e) {

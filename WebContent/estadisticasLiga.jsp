@@ -57,11 +57,13 @@
 					<td>${eu.getGolesDiferencia()}</td>
 					<td>
 						<a class="btn btn-primary" href="partidosusuarioliga?idliga=${idLiga}&idusuario=${eu.getIdUsuario()}">Ver Partidos</a>
+						<c:if test="${liga_terminada == false}">
 						<c:if test="${eu.isPuedeJugar() == true && eu.getIdUsuario() != sessionScope.usuario.getId()}">
 							<a class="btn btn-success" style="margin-left:20px" href="estadisticasLiga?desafiar=${eu.getIdUsuario()}&id=${id}">Desafiar</a>
 						</c:if>
 						<c:if test="${eu.isPuedeJugar() == false}">
 							<a class="btn btn-success disabled" style="margin-left:20px" href="#">Desafiar</a>
+						</c:if>
 						</c:if>
 					</td>
 					</tr>
