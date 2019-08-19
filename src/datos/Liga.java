@@ -91,37 +91,6 @@ public class Liga {
 		return ligas;
 	}
 	
-	public ArrayList<negocio.Liga> getAllByEstado(int idEstado) throws SQLException, ClassNotFoundException {
-		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		
-		String query = "SELECT * from ligas where estado=?";
-		stmt = conn.prepareStatement(query);	
-		stmt.setInt(1, idEstado);
-		ResultSet rs = stmt.executeQuery();
-		
-		if(rs.next()) {
-			int cantidad = getCountUsuariosInscriptosPorLiga(rs.getInt(1));
-			negocio.Liga liga = new negocio.Liga();
-			liga.setId(rs.getInt(1));
-			liga.setNombre(rs.getString(2));
-			liga.setTemporada(rs.getInt(3));
-			liga.setInicio(rs.getDate(4));
-			liga.setFin(rs.getDate(5));
-			liga.setEstado(datos.Estado.getInstance().getOne(rs.getInt(6)));
-			liga.setCantidadInscriptos(cantidad);
-			ligas.add(liga);
-		}
-		
-		stmt.close();
-		rs.close();
-		manager.closeConnection();
-		
-		return ligas;
-	}
-	
 	public int getCountUsuariosInscriptosPorLiga(int idLiga) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
@@ -139,8 +108,8 @@ public class Liga {
 		stmt.close();
 		rs.close();
 		manager.closeConnection();
-		return count;
 		
+		return count;	
 	}
 	
 	
@@ -240,18 +209,22 @@ public class Liga {
 		return ligas;
 	}
 	
-	public ArrayList<negocio.Liga> getAllPaginadoByEstado(int skip, int limit, int idEstado) throws ClassNotFoundException, SQLException {
+	public ArrayList<negocio.Liga> getAllPendientes(int id, int skip, int limit) 
+			throws ClassNotFoundException, SQLException 
+	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from ligas WHERE estado=? "
-		+ "LIMIT ?,?";
+		String query = "SELECT * FROM ligas WHERE estado = ? AND "
+				+ "id NOT IN (SELECT id_liga FROM usuario_liga WHERE id_usuario = ?) "
+				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idEstado);
-		stmt.setInt(2, skip);
-		stmt.setInt(3, limit);		
+		stmt.setInt(1, negocio.Estado.LIGA_NO_INICIADA);
+		stmt.setInt(2, id);
+		stmt.setInt(3, skip);
+		stmt.setInt(4, limit);
 		ResultSet rs = stmt.executeQuery();
 		
 		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
@@ -264,6 +237,7 @@ public class Liga {
 			liga.setInicio(rs.getDate(4));
 			liga.setFin(rs.getDate(5));
 			liga.setCantidadInscriptos(cantidad);
+			
 			ligas.add(liga);
 		}
 		
@@ -331,43 +305,35 @@ public class Liga {
 		return ligas;
 	}
 
-	public ArrayList<negocio.Liga> getLigasPaginationByEstado(String toSearch, int skip, int limit, int idEstado) throws ClassNotFoundException, SQLException {
+	public ArrayList<negocio.Liga> getAllPendientes(int id, String search, int skip, int limit) 
+			throws ClassNotFoundException, SQLException 
+	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from ligas WHERE estado=?";
+		String query = "SELECT * from ligas WHERE estado = ? AND nombre LIKE ? AND "
+				+ "id NOT IN (SELECT id_liga FROM usuario_liga WHERE id_usuario = ?) "
+				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idEstado);
+		stmt.setInt(1, negocio.Estado.LIGA_NO_INICIADA);
+		search = "%" + search + "%";
+		stmt.setString(2, search);
+		stmt.setInt(3, id);
+		stmt.setInt(4, skip);
+		stmt.setInt(5, limit);
 		ResultSet rs = stmt.executeQuery();
 		
 		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
 		while(rs.next()) {
-			negocio.Liga lg = datos.Liga.getInstance().getOne(rs.getInt(1));
-			if(lg.getNombre().contains(toSearch))
-			{
-				negocio.Liga liga = new negocio.Liga();
-				liga.setId(rs.getInt(1));
-				liga.setNombre(rs.getString(2));
-				liga.setTemporada(rs.getInt(3));
-				liga.setInicio(rs.getDate(4));
-				liga.setFin(rs.getDate(5));
-				ligas.add(liga);
-			}
-		}
-		
-		ArrayList<negocio.Liga> filteredLigas = new ArrayList<>();
-		
-		if(skip+limit < ligas.size()) { 
-			for(int i=skip; i<skip+limit; ++i)
-			{
-				filteredLigas.add(ligas.get(i));
-			}
-		} else {
-			for(int i=skip; i<ligas.size(); ++i) {
-				filteredLigas.add(ligas.get(i));
-			}
+			negocio.Liga liga = new negocio.Liga();
+			liga.setId(rs.getInt(1));
+			liga.setNombre(rs.getString(2));
+			liga.setTemporada(rs.getInt(3));
+			liga.setInicio(rs.getDate(4));
+			liga.setFin(rs.getDate(5));
+			ligas.add(liga);
 		}
 		
 		stmt.close();
@@ -398,17 +364,20 @@ public class Liga {
 		return rowsCount;
 	}
 	
-	public int getCountLigasByEstado(int idEstado) throws SQLException, ClassNotFoundException {
+	public int getCountPendientes(int id) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT COUNT(*) FROM ligas WHERE estado=?";
+		String query = "SELECT COUNT(*) FROM ligas WHERE estado = ? AND "
+				+ "id NOT IN (SELECT id_liga FROM usuario_liga WHERE id_usuario = ?)";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idEstado);
+		stmt.setInt(1, negocio.Estado.LIGA_NO_INICIADA);
+		stmt.setInt(2, id);
 		ResultSet rs = stmt.executeQuery();
+		
 		int rowsCount = 0;
-		while(rs.next()) {
+		if(rs.next()) {
 			rowsCount = rs.getInt(1);
 		}
 		
@@ -456,23 +425,25 @@ public class Liga {
 		return rowsCount;
 	}
 	
-	public int getCountLigasFilteredByEstado(String toSearch, int idEstado) throws SQLException, ClassNotFoundException {
+	public int getCountPendientes(int id, String search) 
+			throws SQLException, ClassNotFoundException 
+	{
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT * from ligas WHERE estado=?";
+		String query = "SELECT COUNT(*) from ligas WHERE estado = ? AND nombre LIKE ? "
+				+ "AND id NOT IN (SELECT id_liga FROM usuario_liga WHERE id_usuario = ?)";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idEstado);
+		stmt.setInt(1, negocio.Estado.LIGA_NO_INICIADA);
+		search = "%" + search + "%";
+		stmt.setString(2, search);
+		stmt.setInt(3, id);
 		
 		ResultSet rs = stmt.executeQuery();
 		int rowsCount = 0;
-		while(rs.next()) {
-			negocio.Liga liga = datos.Liga.getInstance().getOne(rs.getInt(1));
-			if(liga.getNombre().contains(toSearch))
-			{
-				++rowsCount;
-			}
+		if(rs.next()) {
+			rowsCount = rs.getInt(1);
 		}
 		
 		rs.close();
@@ -670,42 +641,20 @@ public class Liga {
 		return temporadas;
 	}
 	
-	public boolean insertUsuarioLiga(int idUsuario, int idLiga) throws ClassNotFoundException, SQLException
+	public void inscribir(int idUsuario, int idLiga) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;
-		PreparedStatement stmtCount;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String queryCount = "SELECT * FROM usuario_liga WHERE id_usuario = ? AND id_liga= ?";
-		stmtCount = conn.prepareStatement(queryCount);
-		stmtCount.setInt(1, idUsuario);
-		stmtCount.setInt(2, idLiga);
-		ResultSet rs = stmtCount.executeQuery();		
-		int rowsCount = 0;
-		while(rs.next()) {
-			rowsCount++;
-		}
-		if(rowsCount == 0)
-		{		
-			String query = "INSERT INTO usuario_liga(id_usuario, id_liga) "
-					+ "VALUES (?,?)";
-			
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, idUsuario);
-			stmt.setInt(2, idLiga);
-			
-			stmt.execute();
-			stmt.close();
-			ConnectionManager.getInstance().closeConnection();
-			return true;
-		}
-		else
-		{
-			stmtCount.close();
-			ConnectionManager.getInstance().closeConnection();
-			return false;
-		}
-			
+		String query = "INSERT INTO usuario_liga(id_usuario, id_liga) VALUES (?,?)";
 		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, idLiga);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
 	}
 }

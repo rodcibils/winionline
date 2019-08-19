@@ -40,10 +40,8 @@
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getInicio()}"/></td>
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getFin()}"/></td>
 					<td>${liga.getCantidadInscriptos()}</td>
-					<td>
-						<p class="text-center">						
+					<td>						
  						<a class="btn btn-success" data-toggle="modal" style="margin-left:20px" href="#" onclick="inscribirClicked(${liga.getId()})">Inscribirme</a>
-						</p>
 					</td>
 					</tr>
 				</c:forEach>
@@ -119,36 +117,19 @@
 				function inscribirClicked(id){
 					console.log(id);
 					$("#btnInscribir").click(function(){
-						//console.log("prueba");
 						location.href = 'ligas?action=inscribir&id=' + id;
 					});
 					$("#inscribirModal").modal('show');
 				}
 		</script>
-		<c:if test="${inscripto == true}">
+		<c:if test="${inscripto != null}">
 				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
 				    <div class="toast-header">
-				        <strong class="mr-auto"><i class="fa fa-grav"></i>Inscripcion - Exitosa</strong>
+				        <strong class="mr-auto"><i class="fa fa-grav"></i>Inscripcion Exitosa</strong>
 				        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
 				    </div>
 				    <div class="toast-body">
-				        Usted se ha inscripto exitosamente a la liga.
-				    </div>
-				</div>
-				<script>
-					$(document).ready(function(){
-						$("#myToast").toast('show');
-					});
-				</script>
-		</c:if>
-		<c:if test="${inscripto == false}">
-				<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
-				    <div class="toast-header">
-				        <strong class="mr-auto"><i class="fa fa-grav"></i>Inscripcion - Error</strong>
-				        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
-				    </div>
-				    <div class="toast-body">
-				        Usted ya se encuentra inscripto a dicha liga.
+				        ${inscripto}
 				    </div>
 				</div>
 				<script>
