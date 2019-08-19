@@ -52,7 +52,7 @@ public class ReceivedFriendRequestServlet extends HttpServlet {
 				datos.Solicitud.getInstance().delete(Integer.parseInt(sDelete));
 				request.setAttribute("friendly_sol_deleted", true);
 				if((count - 1) % LIMIT == 0 && skip != 0) {
-					skip -= 10;
+					skip -= LIMIT;
 				}
 			} catch(Exception e) {
 				System.out.println(e.getMessage());

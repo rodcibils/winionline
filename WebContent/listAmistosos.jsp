@@ -103,22 +103,21 @@
 			<tbody>
 				<c:forEach items="${amistosos}" var="amistoso">
 					<tr>
-					<td><p>${amistoso.getResultadoDos().getJugador().getNombre()} - ${amistoso.getResultadoDos().getJugador().getApodo()}</p></td>
-					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${amistoso.getFecha()}"/></p></td>
+					<td>${amistoso.getResultadoDos().getJugador().getNombre()} - ${amistoso.getResultadoDos().getJugador().getApodo()}</td>
+					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${amistoso.getFecha()}"/></td>
 					<td> 
 						<c:if test="${amistoso.getResultadoUno().getGoles() > amistoso.getResultadoDos().getGoles()}">
-							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (V)</p>
+							${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (V)
 						</c:if>
 						<c:if test="${amistoso.getResultadoUno().getGoles() < amistoso.getResultadoDos().getGoles()}">
-							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (D)</p>
+							${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (D)
 						</c:if>
 						<c:if test="${amistoso.getResultadoUno().getGoles() == amistoso.getResultadoDos().getGoles()}">
-							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (E)</p>
+							${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (E)
 						</c:if>
 					</td>
 					<td>${amistoso.getRegistro().getNombre()} - ${amistoso.getRegistro().getApodo()}</td>
 					<td>
-						<a class="btn btn-primary">Ver Perfil</a>
 						<c:if test="${sessionScope.usuario.getId() == amistoso.getRegistro().getId()}">
 						<a class="btn btn-success" style="margin-left:20px" href="listFriendlyMatches?edit=${amistoso.getId()}">Editar Resultado</a>
 						<a class="btn btn-danger disabled" style="margin-left:20px">Disputar Resultado</a>
