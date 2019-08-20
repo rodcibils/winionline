@@ -147,6 +147,18 @@
 					</div>
 				</div>
 				<div class="card bg-light">
+					<div class="card-header">Solicitudes de Partido de Liga Enviadas</div>
+					<div class="card-body">
+						<c:if test="${liga_enviadas == 0}">
+						<p class="card-text">No hay solicitudes enviadas pendientes</p>
+						</c:if>
+						<c:if test="${liga_enviadas > 0}">
+						<p class="card-text">Tiene ${liga_enviadas} solicitudes de partido de liga enviadas pendientes</p>
+						<a href="solicitudesEnviadasLiga?skip=0&search=" class="btn btn-primary">Verificar</a>
+						</c:if>
+					</div>
+				</div>
+				<div class="card bg-light">
 					<div class="card-header">Disputas en Curso</div>
 					<div class="card-body">
 						<c:choose>

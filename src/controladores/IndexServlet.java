@@ -62,6 +62,10 @@ public class IndexServlet extends HttpServlet {
 			
 			int inscLigas = datos.Liga.getInstance().getCountLigasActivas(usuario.getId());
 			request.setAttribute("insc_ligas", inscLigas);
+			
+			int cantSolEnvLigaPend = datos.Solicitud.getInstance()
+					.getCountSolicitudesEnviadasLigaPendientes(usuario.getId());
+			request.setAttribute("liga_enviadas", cantSolEnvLigaPend);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
