@@ -73,7 +73,7 @@
 	  					<div class="dropdown-menu" aria-labelledby="dropLigas">
 	  						<a class="dropdown-item" href="misLigas?skip=0">Mis Ligas</a>
 	  						<a class="dropdown-item" href="solicitudesEnviadasLiga?skip=0&search=">Solicitudes Enviadas</a>
-	  						<a class="dropdown-item" href="#">Solicitudes Recibidas</a>
+	  						<a class="dropdown-item" href="solicitudesRecibidasLiga?skip=0&search=">Solicitudes Recibidas</a>
 	  						<a class="dropdown-item" href="#">Partidos Pendientes</a>
 	  						<a class="dropdown-item" href="ligas?skip=0">Inscribirme a Liga</a>
 	  					</div>

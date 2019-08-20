@@ -66,6 +66,11 @@ public class IndexServlet extends HttpServlet {
 			int cantSolEnvLigaPend = datos.Solicitud.getInstance()
 					.getCountSolicitudesEnviadasLigaPendientes(usuario.getId());
 			request.setAttribute("liga_enviadas", cantSolEnvLigaPend);
+			
+			int cantSolRecLigaPend = datos.Solicitud.getInstance()
+					.getCountSolicitudesRecibidasLigaPendientes(usuario.getId());
+			request.setAttribute("liga_recibidas", cantSolRecLigaPend);
+			
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
