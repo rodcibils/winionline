@@ -91,37 +91,6 @@ public class Liga {
 		return ligas;
 	}
 	
-	public ArrayList<negocio.Liga> getAllByEstado(int idEstado) throws SQLException, ClassNotFoundException {
-		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		
-		String query = "SELECT * from ligas where estado=?";
-		stmt = conn.prepareStatement(query);	
-		stmt.setInt(1, idEstado);
-		ResultSet rs = stmt.executeQuery();
-		
-		if(rs.next()) {
-			int cantidad = getCountUsuariosInscriptosPorLiga(rs.getInt(1));
-			negocio.Liga liga = new negocio.Liga();
-			liga.setId(rs.getInt(1));
-			liga.setNombre(rs.getString(2));
-			liga.setTemporada(rs.getInt(3));
-			liga.setInicio(rs.getDate(4));
-			liga.setFin(rs.getDate(5));
-			liga.setEstado(datos.Estado.getInstance().getOne(rs.getInt(6)));
-			liga.setCantidadInscriptos(cantidad);
-			ligas.add(liga);
-		}
-		
-		stmt.close();
-		rs.close();
-		manager.closeConnection();
-		
-		return ligas;
-	}
-	
 	public int getCountUsuariosInscriptosPorLiga(int idLiga) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
@@ -139,8 +108,8 @@ public class Liga {
 		stmt.close();
 		rs.close();
 		manager.closeConnection();
-		return count;
 		
+		return count;	
 	}
 	
 	
@@ -171,7 +140,7 @@ public class Liga {
 		return liga;
 	}
 	
-	public void delete(negocio.Liga liga) throws ClassNotFoundException, SQLException
+	public void delete(int id) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
@@ -180,7 +149,7 @@ public class Liga {
 		String query = "DELETE FROM ligas WHERE id=?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, liga.getId());
+		stmt.setInt(1, id);
 		
 		stmt.execute();
 		stmt.close();
@@ -206,6 +175,42 @@ public class Liga {
 		stmt.close();
 		ConnectionManager.getInstance().closeConnection();
 		
+	}
+	
+	public void desinscribirse(int idUsuario, int idLiga) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "DELETE FROM usuario_liga WHERE id_usuario = ? AND id_liga = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, idLiga);
+		
+		stmt.execute();
+		ConnectionManager.getInstance().closeConnection();
+	}
+	
+	public boolean checkLigaTerminada(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT * FROM ligas WHERE id = ? AND estado = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		stmt.setInt(2, negocio.Estado.LIGA_FINALIZADA);
+		
+		ResultSet rs = stmt.executeQuery();
+		boolean result = rs.next();
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return result;
 	}
 
 	public ArrayList<negocio.Liga> getAllPaginado(int skip, int limit) throws ClassNotFoundException, SQLException {
@@ -240,18 +245,22 @@ public class Liga {
 		return ligas;
 	}
 	
-	public ArrayList<negocio.Liga> getAllPaginadoByEstado(int skip, int limit, int idEstado) throws ClassNotFoundException, SQLException {
+	public ArrayList<negocio.Liga> getAllPendientes(int id, int skip, int limit) 
+			throws ClassNotFoundException, SQLException 
+	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from ligas WHERE estado=? "
-		+ "LIMIT ?,?";
+		String query = "SELECT * FROM ligas WHERE estado = ? AND "
+				+ "id NOT IN (SELECT id_liga FROM usuario_liga WHERE id_usuario = ?) "
+				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idEstado);
-		stmt.setInt(2, skip);
-		stmt.setInt(3, limit);		
+		stmt.setInt(1, negocio.Estado.LIGA_NO_INICIADA);
+		stmt.setInt(2, id);
+		stmt.setInt(3, skip);
+		stmt.setInt(4, limit);
 		ResultSet rs = stmt.executeQuery();
 		
 		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
@@ -264,6 +273,7 @@ public class Liga {
 			liga.setInicio(rs.getDate(4));
 			liga.setFin(rs.getDate(5));
 			liga.setCantidadInscriptos(cantidad);
+			
 			ligas.add(liga);
 		}
 		
@@ -281,54 +291,47 @@ public class Liga {
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from ligas ";
-		
-		stmt = conn.prepareStatement(query);
-		ResultSet rs = stmt.executeQuery();
-		
-		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
-		while(rs.next()) {
-			negocio.Liga lg = datos.Liga.getInstance().getOne(rs.getInt(1));
-			if(lg.getNombre().contains(toSearch))
-			{
-				if (yearSearch == 0)
-				{
-					negocio.Liga liga = new negocio.Liga();
-					liga.setId(rs.getInt(1));
-					liga.setNombre(rs.getString(2));
-					liga.setTemporada(rs.getInt(3));
-					liga.setInicio(rs.getDate(4));
-					liga.setFin(rs.getDate(5));
-					liga.setEstado(datos.Estado.getInstance().getOne(rs.getInt(6)));
-					ligas.add(liga);
-				}else
-				{
-					if (yearSearch == lg.getTemporada())
-					{
-						negocio.Liga liga = new negocio.Liga();
-						liga.setId(rs.getInt(1));
-						liga.setNombre(rs.getString(2));
-						liga.setTemporada(rs.getInt(3));
-						liga.setInicio(rs.getDate(4));
-						liga.setFin(rs.getDate(5));
-						liga.setEstado(datos.Estado.getInstance().getOne(rs.getInt(6)));
-						ligas.add(liga);
-					}
-				}
-			}
+		if(yearSearch != 0 && toSearch != null && !toSearch.isEmpty()) {
+			String query = "SELECT * from ligas WHERE temporada = ? AND "
+					+ "nombre LIKE ? LIMIT ?,?";
+			
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, yearSearch);
+			toSearch = "%" + toSearch + "%";
+			stmt.setString(2, toSearch);
+			stmt.setInt(3, skip);
+			stmt.setInt(4, limit);
+		}else if(yearSearch != 0 && (toSearch == null || toSearch.isEmpty())) {
+			String query = "SELECT * from ligas WHERE temporada = ? "
+					+ "LIMIT ?,?";
+			
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, yearSearch);
+			stmt.setInt(2, skip);
+			stmt.setInt(3, limit);
+		} else {
+			String query = "SELECT * from ligas WHERE "
+					+ "nombre LIKE ? LIMIT ?,?";
+			
+			stmt = conn.prepareStatement(query);
+			toSearch = "%" + toSearch + "%";
+			stmt.setString(1, toSearch);
+			stmt.setInt(2, skip);
+			stmt.setInt(3, limit);
 		}
 		
-		ArrayList<negocio.Liga> filteredLigas = new ArrayList<>();
-		
-		if(skip+limit < ligas.size()) { 
-			for(int i=skip; i<skip+limit; ++i)
-			{
-				filteredLigas.add(ligas.get(i));
-			}
-		} else {
-			for(int i=skip; i<ligas.size(); ++i) {
-				filteredLigas.add(ligas.get(i));
-			}
+		ResultSet rs = stmt.executeQuery();
+		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
+		while(rs.next()) {
+			negocio.Liga liga = new negocio.Liga();
+			liga.setId(rs.getInt(1));
+			liga.setNombre(rs.getString(2));
+			liga.setTemporada(rs.getInt(3));
+			liga.setInicio(rs.getDate(4));
+			liga.setFin(rs.getDate(5));
+			liga.setEstado(datos.Estado.getInstance().getOne(rs.getInt(6)));
+			
+			ligas.add(liga);
 		}
 		
 		stmt.close();
@@ -338,43 +341,35 @@ public class Liga {
 		return ligas;
 	}
 
-	public ArrayList<negocio.Liga> getLigasPaginationByEstado(String toSearch, int skip, int limit, int idEstado) throws ClassNotFoundException, SQLException {
+	public ArrayList<negocio.Liga> getAllPendientes(int id, String search, int skip, int limit) 
+			throws ClassNotFoundException, SQLException 
+	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from ligas WHERE estado=?";
+		String query = "SELECT * from ligas WHERE estado = ? AND nombre LIKE ? AND "
+				+ "id NOT IN (SELECT id_liga FROM usuario_liga WHERE id_usuario = ?) "
+				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idEstado);
+		stmt.setInt(1, negocio.Estado.LIGA_NO_INICIADA);
+		search = "%" + search + "%";
+		stmt.setString(2, search);
+		stmt.setInt(3, id);
+		stmt.setInt(4, skip);
+		stmt.setInt(5, limit);
 		ResultSet rs = stmt.executeQuery();
 		
 		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
 		while(rs.next()) {
-			negocio.Liga lg = datos.Liga.getInstance().getOne(rs.getInt(1));
-			if(lg.getNombre().contains(toSearch))
-			{
-				negocio.Liga liga = new negocio.Liga();
-				liga.setId(rs.getInt(1));
-				liga.setNombre(rs.getString(2));
-				liga.setTemporada(rs.getInt(3));
-				liga.setInicio(rs.getDate(4));
-				liga.setFin(rs.getDate(5));
-				ligas.add(liga);
-			}
-		}
-		
-		ArrayList<negocio.Liga> filteredLigas = new ArrayList<>();
-		
-		if(skip+limit < ligas.size()) { 
-			for(int i=skip; i<skip+limit; ++i)
-			{
-				filteredLigas.add(ligas.get(i));
-			}
-		} else {
-			for(int i=skip; i<ligas.size(); ++i) {
-				filteredLigas.add(ligas.get(i));
-			}
+			negocio.Liga liga = new negocio.Liga();
+			liga.setId(rs.getInt(1));
+			liga.setNombre(rs.getString(2));
+			liga.setTemporada(rs.getInt(3));
+			liga.setInicio(rs.getDate(4));
+			liga.setFin(rs.getDate(5));
+			ligas.add(liga);
 		}
 		
 		stmt.close();
@@ -388,13 +383,13 @@ public class Liga {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT COUNT(*) from ligas";
+		String query = "SELECT COUNT(*) FROM ligas";
 		
 		stmt = conn.prepareStatement(query);
 		
 		ResultSet rs = stmt.executeQuery();
 		int rowsCount = 0;
-		while(rs.next()) {
+		if(rs.next()) {
 			rowsCount = rs.getInt(1);
 		}
 		
@@ -405,17 +400,20 @@ public class Liga {
 		return rowsCount;
 	}
 	
-	public int getCountLigasByEstado(int idEstado) throws SQLException, ClassNotFoundException {
+	public int getCountPendientes(int id) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT COUNT(*) from ligas where estado=?";
+		String query = "SELECT COUNT(*) FROM ligas WHERE estado = ? AND "
+				+ "id NOT IN (SELECT id_liga FROM usuario_liga WHERE id_usuario = ?)";
 		
 		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idEstado);
+		stmt.setInt(1, negocio.Estado.LIGA_NO_INICIADA);
+		stmt.setInt(2, id);
 		ResultSet rs = stmt.executeQuery();
+		
 		int rowsCount = 0;
-		while(rs.next()) {
+		if(rs.next()) {
 			rowsCount = rs.getInt(1);
 		}
 		
@@ -426,108 +424,33 @@ public class Liga {
 		return rowsCount;
 	}
 
-	public int getCountLigasFiltered(String toSearch, int yearSearch) throws SQLException, ClassNotFoundException {
+	public int getCountLigas(String toSearch, int yearSearch) throws SQLException, ClassNotFoundException {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT * from ligas";
-		
-		stmt = conn.prepareStatement(query);
+		if(yearSearch != 0 && toSearch != null && !toSearch.isEmpty()) {
+			String query = "SELECT COUNT(*) FROM ligas WHERE temporada = ? AND nombre LIKE ?";
+			
+			stmt = conn.prepareStatement(query);
+			toSearch = "%" + toSearch + "%";
+			stmt.setInt(1, yearSearch);
+			stmt.setString(2, toSearch);
+		}else if(yearSearch != 0 && (toSearch == null || toSearch.isEmpty())) {
+			String query = "SELECT COUNT(*) FROM ligas WHERE temporada = ?";
+			
+			stmt = conn.prepareStatement(query);
+			stmt.setInt(1, yearSearch);
+		} else {
+			String query = "SELECT COUNT(*) FROM ligas WHERE nombre LIKE ?";
+			
+			stmt = conn.prepareStatement(query);
+			toSearch = "%" + toSearch + "%";
+			stmt.setString(1, toSearch);
+		}
 		
 		ResultSet rs = stmt.executeQuery();
 		int rowsCount = 0;
-		while(rs.next()) {
-			negocio.Liga liga = datos.Liga.getInstance().getOne(rs.getInt(1));
-			if(liga.getNombre().contains(toSearch))
-			{
-				if (yearSearch == 0)
-				{
-					++rowsCount;
-				}else
-				{
-					if (yearSearch == liga.getTemporada())
-					{
-						++rowsCount;
-					}
-				}
-			}
-		}
-		
-		rs.close();
-		stmt.close();
-		ConnectionManager.getInstance().closeConnection();
-		
-		return rowsCount;
-	}
-	
-	public int getCountLigasFilteredByEstado(String toSearch, int idEstado) throws SQLException, ClassNotFoundException {
-		PreparedStatement stmt;
-		Connection conn = ConnectionManager.getInstance().getConnection();
-		
-		String query = "SELECT * from ligas WHERE estado=?";
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idEstado);
-		
-		ResultSet rs = stmt.executeQuery();
-		int rowsCount = 0;
-		while(rs.next()) {
-			negocio.Liga liga = datos.Liga.getInstance().getOne(rs.getInt(1));
-			if(liga.getNombre().contains(toSearch))
-			{
-				++rowsCount;
-			}
-		}
-		
-		rs.close();
-		stmt.close();
-		ConnectionManager.getInstance().closeConnection();
-		
-		return rowsCount;
-	}
-	
-	public ArrayList<negocio.Liga> getAllByUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
-		PreparedStatement stmt;
-		ConnectionManager manager = ConnectionManager.getInstance();
-		Connection conn = manager.getConnection();
-		
-		String query = "SELECT * from usuario_liga WHERE id_usuario = ?";
-		
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idUsuario);
-		ResultSet rs = stmt.executeQuery();
-		
-		
-		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
-		while(rs.next()) {
-			negocio.Liga liga = datos.Liga.getInstance().getOne(rs.getInt(2));			
-//			liga.setId(rs.getInt(1));
-//			liga.setNombre(rs.getString(2));
-//			liga.setTemporada(rs.getInt(3));
-//			liga.setInicio(rs.getDate(4));
-//			liga.setFin(rs.getDate(5));
-			ligas.add(liga);
-		}
-		
-		stmt.close();
-		rs.close();
-		manager.closeConnection();
-		
-		return ligas;
-	}
-	
-	public int getCountLigasByUsuario(int idUsuario) throws SQLException, ClassNotFoundException {
-		PreparedStatement stmt;
-		Connection conn = ConnectionManager.getInstance().getConnection();
-		
-		String query = "SELECT COUNT(*) from usuario_liga where id_usuario=?";
-		
-		stmt = conn.prepareStatement(query);
-		stmt.setInt(1, idUsuario);
-		ResultSet rs = stmt.executeQuery();
-		int rowsCount = 0;
-		while(rs.next()) {
+		if(rs.next()) {
 			rowsCount = rs.getInt(1);
 		}
 		
@@ -538,7 +461,83 @@ public class Liga {
 		return rowsCount;
 	}
 	
-	public ArrayList<negocio.Liga> getAllPaginadoByUsuario(int skip, int limit, int idUsuario) throws ClassNotFoundException, SQLException {
+	public int getCountPendientes(int id, String search) 
+			throws SQLException, ClassNotFoundException 
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) from ligas WHERE estado = ? AND nombre LIKE ? "
+				+ "AND id NOT IN (SELECT id_liga FROM usuario_liga WHERE id_usuario = ?)";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.LIGA_NO_INICIADA);
+		search = "%" + search + "%";
+		stmt.setString(2, search);
+		stmt.setInt(3, id);
+		
+		ResultSet rs = stmt.executeQuery();
+		int rowsCount = 0;
+		if(rs.next()) {
+			rowsCount = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return rowsCount;
+	}
+	
+	public int getCount(int idUsuario) throws SQLException, ClassNotFoundException {
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) from usuario_liga where id_usuario = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		ResultSet rs = stmt.executeQuery();
+		int rowsCount = 0;
+		if(rs.next()) {
+			rowsCount = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return rowsCount;
+	}
+	
+	public int getCountLigasActivas(int idUsuario) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT COUNT(*) FROM usuario_liga AS ul "
+				+ "INNER JOIN ligas AS l ON l.id = ul.id_liga "
+				+ "WHERE ul.id_usuario = ? AND l.estado != ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, negocio.Estado.LIGA_FINALIZADA);
+		
+		int count = 0;
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return count;
+	}
+	
+	public ArrayList<negocio.Liga> getAll(int idUsuario, int skip, int limit) throws ClassNotFoundException, SQLException 
+	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
@@ -565,23 +564,24 @@ public class Liga {
 		return ligas;
 	}
 	
-	public int getCountLigasFilteredByUsuario(String toSearch, int idUsuario) throws SQLException, ClassNotFoundException {
+	public int getCount(int idUsuario, String toSearch) throws SQLException, ClassNotFoundException 
+	{
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT * from usuario_liga WHERE id_usuario=?";
+		String query = "SELECT COUNT(*) FROM usuario_liga AS ul "
+				+ "INNER JOIN ligas AS l ON l.id = ul.id_liga "
+				+ "WHERE ul.id_usuario = ? AND l.nombre LIKE ?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idUsuario);
+		toSearch = "%" + toSearch + "%";
+		stmt.setString(2, toSearch);
 		
 		ResultSet rs = stmt.executeQuery();
 		int rowsCount = 0;
-		while(rs.next()) {
-			negocio.Liga liga = datos.Liga.getInstance().getOne(rs.getInt(2));
-			if(liga.getNombre().contains(toSearch))
-			{
-				++rowsCount;
-			}
+		if(rs.next()) {
+			rowsCount = rs.getInt(1);
 		}
 		
 		rs.close();
@@ -591,37 +591,30 @@ public class Liga {
 		return rowsCount;
 	}
 	
-	public ArrayList<negocio.Liga> getLigasPaginationByUsuario(String toSearch, int skip, int limit, int idUsuario) throws ClassNotFoundException, SQLException {
+	public ArrayList<negocio.Liga> getAll(int idUsuario, String toSearch, 
+			int skip, int limit) throws ClassNotFoundException, SQLException 
+	{
 		PreparedStatement stmt;
 		ConnectionManager manager = ConnectionManager.getInstance();
 		Connection conn = manager.getConnection();
 		
-		String query = "SELECT * from usuario_liga WHERE id_usuario=?";
+		String query = "SELECT ul.* FROM usuario_liga AS ul "
+				+ "INNER JOIN ligas AS l ON l.id = ul.id_liga "
+				+ "WHERE ul.id_usuario = ? AND l.nombre LIKE ? "
+				+ "LIMIT ?,?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idUsuario);
-		ResultSet rs = stmt.executeQuery();
+		toSearch = "%" + toSearch + "%";
+		stmt.setString(2, toSearch);
+		stmt.setInt(3, skip);
+		stmt.setInt(4, limit);
 		
+		ResultSet rs = stmt.executeQuery();
 		ArrayList<negocio.Liga> ligas = new ArrayList<negocio.Liga>();
 		while(rs.next()) {
 			negocio.Liga lg = datos.Liga.getInstance().getOne(rs.getInt(2));
-			if(lg.getNombre().contains(toSearch))
-			{				
-				ligas.add(lg);
-			}
-		}
-		
-		ArrayList<negocio.Liga> filteredLigas = new ArrayList<>();
-		
-		if(skip+limit < ligas.size()) { 
-			for(int i=skip; i<skip+limit; ++i)
-			{
-				filteredLigas.add(ligas.get(i));
-			}
-		} else {
-			for(int i=skip; i<ligas.size(); ++i) {
-				filteredLigas.add(ligas.get(i));
-			}
+			ligas.add(lg);
 		}
 		
 		stmt.close();
@@ -674,42 +667,20 @@ public class Liga {
 		return temporadas;
 	}
 	
-	public boolean insertUsuarioLiga(int idUsuario, int idLiga) throws ClassNotFoundException, SQLException
+	public void inscribir(int idUsuario, int idLiga) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;
-		PreparedStatement stmtCount;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String queryCount = "SELECT * FROM usuario_liga WHERE id_usuario = ? AND id_liga= ?";
-		stmtCount = conn.prepareStatement(queryCount);
-		stmtCount.setInt(1, idUsuario);
-		stmtCount.setInt(2, idLiga);
-		ResultSet rs = stmtCount.executeQuery();		
-		int rowsCount = 0;
-		while(rs.next()) {
-			rowsCount++;
-		}
-		if(rowsCount == 0)
-		{		
-			String query = "INSERT INTO usuario_liga(id_usuario, id_liga) "
-					+ "VALUES (?,?)";
-			
-			stmt = conn.prepareStatement(query);
-			stmt.setInt(1, idUsuario);
-			stmt.setInt(2, idLiga);
-			
-			stmt.execute();
-			stmt.close();
-			ConnectionManager.getInstance().closeConnection();
-			return true;
-		}
-		else
-		{
-			stmtCount.close();
-			ConnectionManager.getInstance().closeConnection();
-			return false;
-		}
-			
+		String query = "INSERT INTO usuario_liga(id_usuario, id_liga) VALUES (?,?)";
 		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idUsuario);
+		stmt.setInt(2, idLiga);
+		
+		stmt.execute();
+		
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
 	}
 }

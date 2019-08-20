@@ -59,6 +59,22 @@ public class IndexServlet extends HttpServlet {
 			
 			int apelaciones = datos.Apelacion.getInstance().getCountMisApelacionesEnCurso(usuario.getId());
 			request.setAttribute("apelaciones", apelaciones);
+			
+			int inscLigas = datos.Liga.getInstance().getCountLigasActivas(usuario.getId());
+			request.setAttribute("insc_ligas", inscLigas);
+			
+			int cantSolEnvLigaPend = datos.Solicitud.getInstance()
+					.getCountSolicitudesEnviadasLigaPendientes(usuario.getId());
+			request.setAttribute("liga_enviadas", cantSolEnvLigaPend);
+			
+			int cantSolRecLigaPend = datos.Solicitud.getInstance()
+					.getCountSolicitudesRecibidasLigaPendientes(usuario.getId());
+			request.setAttribute("liga_recibidas", cantSolRecLigaPend);
+			
+			int partLigaPendientes = datos.Partido.getInstance()
+					.getPartidosLigaPendientes(usuario.getId());
+			request.setAttribute("liga_pendientes", partLigaPendientes);
+			
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}

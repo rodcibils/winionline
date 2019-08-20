@@ -170,32 +170,33 @@ public class NuevaLigaServlet extends HttpServlet {
 			{
 				switch(mode)
 				{
-				case "update":
-					int id = Integer.parseInt(sid);
-					liga.setId(id);
-					dLiga.update(liga);		
-					break;
-				case "insert":
-					if(!dLiga.checkIfLigaExists(liga))
-					{
-						dLiga.insert(liga);
-					}
-					else 
-					{
-						request.setAttribute("old_mode", mode);
-						request.setAttribute("old_id", sid);
-						request.setAttribute("old_id", sestado);
-						request.setAttribute("err_nombre", "Ya existe una liga con ese nombre en esta temporada");
-						request.setAttribute("old_nombre", name);
-						request.setAttribute("cur_season", season);
-						request.setAttribute("old_sday", startDay);
-						request.setAttribute("old_eday", endDay);
-						request.setAttribute("has_datepicker", "true");
-						request.getRequestDispatcher("newLeague.jsp").forward(request, response);
-					}
-					break;
+					case "update":
+						int id = Integer.parseInt(sid);
+						liga.setId(id);
+						dLiga.update(liga);		
+						break;
+					case "insert":
+						if(!dLiga.checkIfLigaExists(liga))
+						{
+							dLiga.insert(liga);
+						}
+						else 
+						{
+							request.setAttribute("old_mode", mode);
+							request.setAttribute("old_id", sid);
+							request.setAttribute("old_id", sestado);
+							request.setAttribute("err_nombre", "Ya existe una liga con ese nombre en esta temporada");
+							request.setAttribute("old_nombre", name);
+							request.setAttribute("cur_season", season);
+							request.setAttribute("old_sday", startDay);
+							request.setAttribute("old_eday", endDay);
+							request.setAttribute("has_datepicker", "true");
+							request.getRequestDispatcher("newLeague.jsp").forward(request, response);
+						}
+						break;
 				}
-					response.sendRedirect("wwligas?new_league_success=true");
+				
+				response.sendRedirect("wwligas?new_league_success=true");
 			} catch(Exception e) {
 				System.out.println(e.getMessage());
 			}

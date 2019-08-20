@@ -137,7 +137,49 @@
 				<div class="card bg-light">
 					<div class="card-header">Ligas</div>
 					<div class="card-body">
+						<c:if test="${insc_ligas == 0}">
 						<p class="card-text">No esta participando en ninguna liga</p>
+						</c:if>
+						<c:if test="${insc_ligas > 0}">
+						<p class="card-text">Esta participando en ${insc_ligas} ligas</p>
+						<a href="misLigas?skip=0&search=" class="btn btn-primary">Verificar</a>
+						</c:if>
+					</div>
+				</div>
+				<div class="card bg-light">
+					<div class="card-header">Solicitudes de Partido de Liga Enviadas</div>
+					<div class="card-body">
+						<c:if test="${liga_enviadas == 0}">
+						<p class="card-text">No hay solicitudes enviadas pendientes</p>
+						</c:if>
+						<c:if test="${liga_enviadas > 0}">
+						<p class="card-text">Tiene ${liga_enviadas} solicitudes de partido de liga enviadas pendientes</p>
+						<a href="solicitudesEnviadasLiga?skip=0&search=" class="btn btn-primary">Verificar</a>
+						</c:if>
+					</div>
+				</div>
+				<div class="card bg-light">
+					<div class="card-header">Solicitudes de Partido de Liga Recibidas</div>
+					<div class="card-body">
+						<c:if test="${liga_recibidas == 0}">
+						<p class="card-text">No hay solicitudes recibidas pendientes</p>
+						</c:if>
+						<c:if test="${liga_recibidas > 0}">
+						<p class="card-text">Tiene ${liga_recibidas} solicitudes de partido de liga recibidas pendientes</p>
+						<a href="solicitudesRecibidasLiga?skip=0&search=" class="btn btn-primary">Verificar</a>
+						</c:if>
+					</div>
+				</div>
+				<div class="card bg-light">
+					<div class="card-header">Partidos de Liga Pendientes</div>
+					<div class="card-body">
+						<c:if test="${liga_pendientes == 0}">
+						<p class="card-text">No hay partidos de liga pendientes</p>
+						</c:if>
+						<c:if test="${liga_pendientes > 0}">
+						<p class="card-text">Tiene ${liga_pendientes} partidos de liga pendientes</p>
+						<a href="#" class="btn btn-primary">Verificar</a>
+						</c:if>
 					</div>
 				</div>
 				<div class="card bg-light">

@@ -1,7 +1,6 @@
 package controladores;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -11,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class InscripcionLigaServlet
+ * Servlet implementation class SolicitudesEnviadasLigaServlet
  */
-@WebServlet("/ligas")
-public class InscripcionLigaServlet extends HttpServlet {
+@WebServlet("/solicitudesEnviadasLiga")
+public class SolicitudesEnviadasLigaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int LIMIT = 10;
 	private int skip = 0;
@@ -24,7 +23,7 @@ public class InscripcionLigaServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public InscripcionLigaServlet() {
+    public SolicitudesEnviadasLigaServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,22 +32,7 @@ public class InscripcionLigaServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		negocio.Usuario usuarioActual = (negocio.Usuario)request.getSession().getAttribute("usuario");
-		
-		String action = request.getParameter("action");
-		
-		if(action != null && action.equals("inscribir"))
-		{
-			try {
-				int idLiga = Integer.parseInt(request.getParameter("id"));
-				datos.Liga.getInstance().inscribir(usuarioActual.getId(), idLiga);
-				request.setAttribute("inscripto", "Se ha inscripto a la liga correctamente");
-			} catch (ClassNotFoundException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
+		negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
 		
 		String toSearch = request.getParameter("search");
 		if(toSearch!=null && !toSearch.contentEquals(lastSearch)){
@@ -61,11 +45,22 @@ public class InscripcionLigaServlet extends HttpServlet {
 		if(sSkip != null) {
 			skip = Integer.parseInt(sSkip);
 		}
-	
+		
+		String sDelete = request.getParameter("delete");
+		if(sDelete != null) {
+			try {
+				datos.Solicitud.getInstance().delete(Integer.parseInt(sDelete));
+				request.setAttribute("sol_deleted", true);
+				if((count-1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		
 		try {
-			if(toSearch == null || toSearch.isEmpty()) 
-			{
-				count = datos.Liga.getInstance().getCountPendientes(usuarioActual.getId());
+			if(toSearch == null || toSearch.contentEquals("")) {
+				count = datos.Solicitud.getInstance()
+						.getCountSolicitudesEnviadasLigaPendientes(usuario.getId());
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
 					++maxPages;
@@ -73,26 +68,26 @@ public class InscripcionLigaServlet extends HttpServlet {
 				
 				int currentPage = skip / LIMIT;
 				
-				ArrayList<negocio.Liga> ligas = datos.Liga.getInstance()
-						.getAllPendientes(usuarioActual.getId(), skip, LIMIT);
-				request.setAttribute("ligas", ligas);
+				ArrayList<negocio.Solicitud> solicitudes = datos.Solicitud.getInstance()
+						.getSolicitudesEnviadasLigaPendientes(usuario.getId(), skip, LIMIT);
+				request.setAttribute("solicitudes", solicitudes);
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
 				request.setAttribute("max_pages", maxPages);
 				request.setAttribute("count", count);
-			} 
-			else 
-			{
-				count = datos.Liga.getInstance().getCountPendientes(usuarioActual.getId(), toSearch);
+			} else {
+				count = datos.Solicitud.getInstance()
+						.getCountSolicitudesEnviadasLigaPendientes(usuario.getId(), toSearch);
 				int maxPages = count / LIMIT;
 				if(count % LIMIT != 0) {
 					++maxPages;
 				}
+				
 				int currentPage = skip / LIMIT;
 				
-				ArrayList<negocio.Liga> ligas = datos.Liga.getInstance()
-						.getAllPendientes(usuarioActual.getId(), toSearch, skip, LIMIT);
-				request.setAttribute("ligas", ligas);
+				ArrayList<negocio.Solicitud> solicitudes = datos.Solicitud.getInstance()
+						.getSolicitudesEnviadasLigaPendientes(usuario.getId(), skip, LIMIT, toSearch);
+				request.setAttribute("solicitudes", solicitudes);
 				request.setAttribute("skip", skip);
 				request.setAttribute("current_page", currentPage);
 				request.setAttribute("max_pages", maxPages);
@@ -102,7 +97,7 @@ public class InscripcionLigaServlet extends HttpServlet {
 			System.out.println(e.getMessage());
 		}
 		
-		request.getRequestDispatcher("inscripcionALiga.jsp").forward(request, response);
+		request.getRequestDispatcher("listSolicitudesEnviadasLiga.jsp").forward(request, response);
 	}
 
 	/**
@@ -111,7 +106,6 @@ public class InscripcionLigaServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
-		
 	}
 
 }

@@ -3,6 +3,8 @@ package negocio;
 import java.sql.Date;
 
 public class Solicitud {
+	public static final int MAX_DIAS_SOLICITUD = 10;
+	
 	private int id;
 	private Date fecha;
 	private Date vencimiento;

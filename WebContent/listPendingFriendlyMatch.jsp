@@ -65,14 +65,13 @@
 				<c:forEach items="${amistosos}" var="amistoso">
 					<tr>
 					<c:if test="${amistoso.getSolicitud().getJugadorUno().getId() != sessionScope.usuario.getId() }">
-					<td><p>${amistoso.getSolicitud().getJugadorUno().getNombre()} - ${amistoso.getSolicitud().getJugadorUno().getApodo()}</p></td>
+					<td>${amistoso.getSolicitud().getJugadorUno().getNombre()} - ${amistoso.getSolicitud().getJugadorUno().getApodo()}</td>
 					</c:if>
 					<c:if test="${amistoso.getSolicitud().getJugadorDos().getId() != sessionScope.usuario.getId() }">
-					<td><p>${amistoso.getSolicitud().getJugadorDos().getNombre()} - ${amistoso.getSolicitud().getJugadorDos().getApodo()}</p></td>
+					<td>${amistoso.getSolicitud().getJugadorDos().getNombre()} - ${amistoso.getSolicitud().getJugadorDos().getApodo()}</td>
 					</c:if>
-					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${amistoso.getSolicitud().getFecha()}"/></p></td>
+					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${amistoso.getSolicitud().getFecha()}"/></td>
 					<td>
-						<a class="btn btn-primary">Ver Perfil</a>
 						<a class="btn btn-success" style="margin-left:20px" href="pendingFriendlyMatch?register=${amistoso.getId()}">Registrar Resultado</a>
 						<a class="btn btn-danger" style="margin-left:20px" href="pendingFriendlyMatch?reject=${amistoso.getId()}&search=${search}">Rechazar</a>
 					</td>

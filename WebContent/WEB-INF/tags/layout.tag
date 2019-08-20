@@ -45,7 +45,7 @@
 		  				<li class="nav-item dropdown">
 		  					<a class="nav-link dropdown-toggle" href="#" id="dropAdmin" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Administrador</a>
 		  					<div class="dropdown-menu" aria-labelledby="dropAdmin">
-		  						<a class="dropdown-item" href="wwligas">Ligas</a>
+		  						<a class="dropdown-item" href="wwligas">Administrar Ligas</a>
 		  						<a class="dropdown-item" href="apelacionesAJuzgar?skip=0&search=">Apelaciones a Juzgar</a>
 		  					</div>
 		  				</li>
@@ -72,6 +72,9 @@
 	  					<a class="nav-link dropdown-toggle" href="#" id="dropLigas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ligas</a>
 	  					<div class="dropdown-menu" aria-labelledby="dropLigas">
 	  						<a class="dropdown-item" href="misLigas?skip=0">Mis Ligas</a>
+	  						<a class="dropdown-item" href="solicitudesEnviadasLiga?skip=0&search=">Solicitudes Enviadas</a>
+	  						<a class="dropdown-item" href="solicitudesRecibidasLiga?skip=0&search=">Solicitudes Recibidas</a>
+	  						<a class="dropdown-item" href="#">Partidos Pendientes</a>
 	  						<a class="dropdown-item" href="ligas?skip=0">Inscribirme a Liga</a>
 	  					</div>
 	  				</li>

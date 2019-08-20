@@ -18,7 +18,6 @@ import negocio.UsuarioEstadisticas;
 @WebServlet("/estadisticasLiga")
 public class StatsLigaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ArrayList<negocio.Usuario> usuariosLiga = null;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -31,24 +30,43 @@ public class StatsLigaServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		try {
+		try 
+		{
+			negocio.Usuario usuario = (negocio.Usuario)request.getSession().getAttribute("usuario");
+			
 			int idLiga = Integer.parseInt(request.getParameter("id"));
-			usuariosLiga = datos.Liga.getInstance().getAllUsuariosLiga(idLiga);
-			ArrayList<negocio.UsuarioEstadisticas> estadisticasUsuarios = new ArrayList<negocio.UsuarioEstadisticas>();
+			request.setAttribute("id", idLiga);
+			
+			String desafiar = request.getParameter("desafiar");
+			if(desafiar != null && !desafiar.isEmpty()) {
+				datos.Solicitud.getInstance().createSolicitudLiga(usuario.getId(), 
+						Integer.parseInt(desafiar), idLiga);
+				request.setAttribute("challenge_success", "La solicitud de partido al rival fue "
+						+ "enviada correctamente");
+			}
+			
+			ArrayList<negocio.Usuario> usuariosLiga = datos.Liga.getInstance()
+					.getAllUsuariosLiga(idLiga);
+			ArrayList<negocio.UsuarioEstadisticas> estadisticasUsuarios = 
+					new ArrayList<negocio.UsuarioEstadisticas>();
+			
 			// Busco los stats de los usuarios de la liga
 			for (negocio.Usuario user : usuariosLiga) {
 				negocio.UsuarioEstadisticas ue = new UsuarioEstadisticas();
 				
-				int golesContra=0;
-				int golesFavor=0;
-				int partGanados=0;
-				int partPerdidos=0;
-				int partEmpatados=0;
-				ArrayList<negocio.Solicitud> solis = datos.Solicitud.getInstance().getAllSolicitudesLigaUsuario(idLiga, user.getId());
+				int golesContra = 0;
+				int golesFavor = 0;
+				int partGanados = 0;
+				int partPerdidos = 0;
+				int partEmpatados = 0;
+				ArrayList<negocio.Solicitud> solis = datos.Solicitud
+						.getInstance().getAllSolicitudesLigaUsuario(idLiga, user.getId());
 				
 				for (negocio.Solicitud sol : solis) {
-					negocio.Partido partido = datos.Partido.getInstance().getOnePartidoSolicitud(sol);
-					ArrayList<negocio.Resultado> resultado = datos.Resultado.getInstance().getResultadoPartido(partido.getId());
+					negocio.Partido partido = datos.Partido.getInstance()
+							.getOnePartidoSolicitud(sol);
+					ArrayList<negocio.Resultado> resultado = datos.Resultado
+							.getInstance().getResultadoPartido(partido.getId());
 					int golesJugadorUsuario = 0;
 					int golesJugadorRival = 0;
 					for (negocio.Resultado re : resultado) {
@@ -79,17 +97,21 @@ public class StatsLigaServlet extends HttpServlet {
 				ue.setGolesDiferencia(golesFavor-golesContra);
 				ue.setPartEmpatados(partEmpatados);
 				ue.setPartGanados(partGanados);
-				ue.setPartGanados(partGanados);
-				ue.setPartJugados(partEmpatados+partGanados+partPerdidos);
-				ue.setPuntos((partGanados*3)+partEmpatados);
+				ue.setPartPerdidos(partPerdidos);
+				ue.setPartJugados(partEmpatados + partGanados+partPerdidos);
+				ue.setPuntos((partGanados * 3) + partEmpatados);
 				ue.setIdUsuario(user.getId());
 				ue.setNombre(user.getNombre());
-				// FALTA ORDENAR POR (PUNTOS), (DIFFGOLES), (GOLESFAVOR), GOLESCONTRA con ese sort
-				// LUEGO SETEAR LA POSICION DE A 1 EN EL FOREACH
-				ue.setPos(0);
+				ue.setPuedeJugar(!datos.Solicitud.getInstance().checkSolicitudLiga(usuario.getId(), 
+						user.getId(), idLiga));
+				
 				estadisticasUsuarios.add(ue);
 			}			
 			
+			estadisticasUsuarios = negocio.UsuarioEstadisticas
+					.determinarPosiciones(estadisticasUsuarios);
+			boolean ligaTerminada = datos.Liga.getInstance().checkLigaTerminada(idLiga);
+			request.setAttribute("liga_terminada", ligaTerminada);
 			request.setAttribute("estadisticasUsuarios", estadisticasUsuarios);
 			request.setAttribute("idLiga", idLiga);
 		} catch (ClassNotFoundException e) {

@@ -3,11 +3,30 @@
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@page import="negocio.Estado" %>
 <head>
 	<title>Winionline | Mis Ligas </title>
 </head>
 <t:layout>
 	<jsp:body>
+	
+		<c:if test="${unsuscribe_success != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Inscripcion Anulada</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${unsuscribe_success}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+	
 		<script>
 			function search(){
 				var toSearch = document.getElementById('txtSearch').value;
@@ -26,8 +45,8 @@
 				<tr>
 				<th scope="col">Nombre</th>
 				<th scope="col">Temporada</th>
-				<th scope="col">FechaInicio</th>
-				<th scope="col">FechaFin</th>				
+				<th scope="col">Fecha Inicio</th>
+				<th scope="col">Fecha Fin</th>				
 				<th scope="col">Estado</th>	
 				<th scope="col"></th>			
 				</tr>
@@ -40,7 +59,15 @@
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getInicio()}"/></td>
 					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${liga.getFin()}"/></td>	
 					<td>${liga.getEstado().getDescripcion()}</td>
-					<td><a class="btn btn-primary" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a></td>				
+					<c:if test="${liga.getEstado().getId() != 3}">
+					<td><a class="btn btn-primary" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a></td>
+					</c:if>
+					<c:if test="${liga.getEstado().getId() == 3}">
+					<td>
+						<a class="btn btn-danger" href="misLigas?unsuscribe=${liga.getId()}&skip=${skip}&search=${search}">Eliminar Inscripcion</a>
+						<a class="btn btn-primary disabled" style="margin-left:20px" href="estadisticasLiga?id=${liga.getId()}">Ver liga</a>
+					</td>
+					</c:if>				
 					</tr>
 				</c:forEach>
 			</tbody>
