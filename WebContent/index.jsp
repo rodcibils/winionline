@@ -178,7 +178,7 @@
 						</c:if>
 						<c:if test="${liga_pendientes > 0}">
 						<p class="card-text">Tiene ${liga_pendientes} partidos de liga pendientes</p>
-						<a href="#" class="btn btn-primary">Verificar</a>
+						<a href="partidosPendientesLiga?skip=0&search=" class="btn btn-primary">Verificar</a>
 						</c:if>
 					</div>
 				</div>
