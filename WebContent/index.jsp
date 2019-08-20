@@ -171,6 +171,18 @@
 					</div>
 				</div>
 				<div class="card bg-light">
+					<div class="card-header">Partidos de Liga Pendientes</div>
+					<div class="card-body">
+						<c:if test="${liga_pendientes == 0}">
+						<p class="card-text">No hay partidos de liga pendientes</p>
+						</c:if>
+						<c:if test="${liga_pendientes > 0}">
+						<p class="card-text">Tiene ${liga_pendientes} partidos de liga pendientes</p>
+						<a href="#" class="btn btn-primary">Verificar</a>
+						</c:if>
+					</div>
+				</div>
+				<div class="card bg-light">
 					<div class="card-header">Disputas en Curso</div>
 					<div class="card-body">
 						<c:choose>

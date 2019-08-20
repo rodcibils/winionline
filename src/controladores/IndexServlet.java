@@ -71,6 +71,10 @@ public class IndexServlet extends HttpServlet {
 					.getCountSolicitudesRecibidasLigaPendientes(usuario.getId());
 			request.setAttribute("liga_recibidas", cantSolRecLigaPend);
 			
+			int partLigaPendientes = datos.Partido.getInstance()
+					.getPartidosLigaPendientes(usuario.getId());
+			request.setAttribute("liga_pendientes", partLigaPendientes);
+			
 		} catch(Exception e) {
 			System.out.println(e.getMessage());
 		}

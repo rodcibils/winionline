@@ -8,16 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class AceptarAmistosoServlet
+ * Servlet implementation class AceptarPartidoLigaServlet
  */
-@WebServlet("/acceptFriendlyMatch")
-public class AceptarAmistosoServlet extends HttpServlet {
+@WebServlet("/aceptarPartidoLiga")
+public class AceptarPartidoLigaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AceptarAmistosoServlet() {
+    public AceptarPartidoLigaServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -25,9 +25,7 @@ public class AceptarAmistosoServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException 
-	{
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String idSolicitud = request.getParameter("solicitud");
 		int id = Integer.parseInt(idSolicitud);
 		try {
@@ -38,7 +36,7 @@ public class AceptarAmistosoServlet extends HttpServlet {
 			System.out.println(e.getMessage());
 		}
 		
-		request.getRequestDispatcher("receivedFriendRequest?skip=0").forward(request, response);
+		request.getRequestDispatcher("solicitudesRecibidasLiga?skip=0").forward(request, response);
 	}
 
 	/**

@@ -72,7 +72,7 @@
 					<td>${solicitud.getLiga().getNombre()} - (${solicitud.getLiga().getTemporada()})</td>
 					<td>
 						<a class="btn btn-danger" style="margin-left:20px" href="solicitudesRecibidasLiga?delete=${solicitud.getId()}&search=${search}">Rechazar</a>
-						<a class="btn btn-success" style="margin-left:20px" href="#">Aceptar</a>
+						<a class="btn btn-success" style="margin-left:20px" href="aceptarPartidoLiga?solicitud=${solicitud.getId()}">Aceptar</a>
 					</td>
 					</tr>
 				</c:forEach>
