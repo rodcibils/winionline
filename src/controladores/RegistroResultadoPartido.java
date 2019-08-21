@@ -35,13 +35,15 @@ public class RegistroResultadoPartido extends HttpServlet {
 		
 		try {
 			partido = datos.Partido.getInstance().getOne(Integer.parseInt(idPartido));
-			partido.setResultadoUno(datos.Resultado.getInstance().getOne(
-					partido.getSolicitud().getJugadorUno(), partido));
-			partido.setResultadoDos(datos.Resultado.getInstance().getOne(
-					partido.getSolicitud().getJugadorDos(), partido));
+			if(mode.contentEquals("edit")) {
+				partido.setResultadoUno(datos.Resultado.getInstance().getOne(
+						partido.getSolicitud().getJugadorUno(), partido));
+				partido.setResultadoDos(datos.Resultado.getInstance().getOne(
+						partido.getSolicitud().getJugadorDos(), partido));
+				request.setAttribute("old_guno", partido.getResultadoUno().getGoles());
+				request.setAttribute("old_gdos", partido.getResultadoDos().getGoles());
+			}
 			request.setAttribute("partido", partido);
-			request.setAttribute("old_guno", partido.getResultadoUno().getGoles());
-			request.setAttribute("old_gdos", partido.getResultadoDos().getGoles());
 			request.getRequestDispatcher("registerMatchResult.jsp").forward(request, response);
 		} catch(Exception e) {
 			System.out.println(e.getMessage());

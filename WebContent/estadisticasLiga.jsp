@@ -47,8 +47,8 @@
 					<tr>
 					<td>${index.index + 1}</td>
 					<td>${eu.getNombre()}</td>
-					<td>${eu.getPartJugados()}</td>
 					<td>${eu.getPuntos()}</td>
+					<td>${eu.getPartJugados()}</td>
 					<td>${eu.getPartGanados()}</td>	
 					<td>${eu.getPartEmpatados()}</td>
 					<td>${eu.getPartPerdidos()}</td>
@@ -61,7 +61,7 @@
 						<c:if test="${eu.isPuedeJugar() == true && eu.getIdUsuario() != sessionScope.usuario.getId()}">
 							<a class="btn btn-success" style="margin-left:20px" href="estadisticasLiga?desafiar=${eu.getIdUsuario()}&id=${id}">Desafiar</a>
 						</c:if>
-						<c:if test="${eu.isPuedeJugar() == false}">
+						<c:if test="${eu.isPuedeJugar() == false && eu.getIdUsuario() != sessionScope.usuario.getId()}">
 							<a class="btn btn-success disabled" style="margin-left:20px" href="#">Desafiar</a>
 						</c:if>
 						</c:if>

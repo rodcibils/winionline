@@ -444,14 +444,17 @@ public class Solicitud {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT * from solicitudes WHERE (jugador_uno=? OR jugador_dos=?) "
-				+ "AND estado=? AND liga=?";
+		String query = "SELECT * from solicitudes AS s "
+				+ "INNER JOIN partidos AS p ON s.id = p.solicitud "
+				+ "WHERE (s.jugador_uno=? OR s.jugador_dos=?) "
+				+ "AND s.estado=? AND s.liga=? AND p.estado = ?";
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, idUsuario);
 		stmt.setInt(2, idUsuario);
 		stmt.setInt(3, negocio.Estado.SOLICITUD_ACEPTADA);
 		stmt.setInt(4, idLiga);
+		stmt.setInt(5, negocio.Estado.PARTIDO_FINALIZADO);
 		
 		ResultSet rs = stmt.executeQuery();
 		ArrayList<negocio.Solicitud> solicitudes = new ArrayList<negocio.Solicitud>();
@@ -509,8 +512,9 @@ public class Solicitud {
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT * FROM solicitudes WHERE "
-				+ "((jugador_uno = ? AND jugador_dos = ?) OR (jugador_uno = ? AND jugador_dos = ?)) "
+		String query = "SELECT * FROM solicitudes "
+				+ "WHERE ((jugador_uno = ? AND jugador_dos = ?) OR "
+				+ "(jugador_uno = ? AND jugador_dos = ?)) "
 				+ "AND liga = ?";
 		
 		stmt = conn.prepareStatement(query);

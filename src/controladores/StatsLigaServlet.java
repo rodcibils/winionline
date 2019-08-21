@@ -82,28 +82,33 @@ public class StatsLigaServlet extends HttpServlet {
 					{
 						golesFavor += golesJugadorUsuario;
 						golesContra += golesJugadorRival;
-						if (golesJugadorUsuario > golesJugadorRival)
-							partGanados ++;
-						else
-							if (golesJugadorRival > golesJugadorUsuario)
-								partPerdidos ++;
-							else
-								partEmpatados ++;
+						if (golesJugadorUsuario > golesJugadorRival) {
+							++partGanados;
+						} else {
+							if (golesJugadorRival > golesJugadorUsuario) {
+								++partPerdidos;
+							} else {
+								++partEmpatados;
+							}
+						}
 					}
 				}
 				
 				ue.setGolesContra(golesContra);
 				ue.setGolesFavor(golesFavor);
-				ue.setGolesDiferencia(golesFavor-golesContra);
+				ue.setGolesDiferencia(golesFavor - golesContra);
 				ue.setPartEmpatados(partEmpatados);
 				ue.setPartGanados(partGanados);
 				ue.setPartPerdidos(partPerdidos);
-				ue.setPartJugados(partEmpatados + partGanados+partPerdidos);
+				ue.setPartJugados(partEmpatados + partGanados + partPerdidos);
 				ue.setPuntos((partGanados * 3) + partEmpatados);
 				ue.setIdUsuario(user.getId());
 				ue.setNombre(user.getNombre());
-				ue.setPuedeJugar(!datos.Solicitud.getInstance().checkSolicitudLiga(usuario.getId(), 
-						user.getId(), idLiga));
+				boolean noExisteSolicitud = !datos.Solicitud.getInstance().checkSolicitudLiga(usuario.getId(), 
+						user.getId(), idLiga);
+				boolean noHayPartidosNoRechazados = !datos.Partido.getInstance()
+						.checkPartidoRechazado(usuario.getId(), user.getId(), idLiga);
+				ue.setPuedeJugar(noExisteSolicitud && noHayPartidosNoRechazados);
 				
 				estadisticasUsuarios.add(ue);
 			}			
