@@ -4,10 +4,109 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <head>
-	<title>Winionline | Partidos de liga </title>
+	<title>Winionline | Partidos de Liga</title>
 </head>
 <t:layout>
-	<jsp:body>		
+	<jsp:body>
+	
+		<script>
+			function disputarClicked(id){
+				$('#btnDisputar').click(function(){
+					location.href = "partidosusuarioliga?dispute=" + id;
+				});
+				$('#matchDisputeModal').modal('show');
+			}
+		</script>
+		
+		<div id="matchDisputeModal" class="modal fade" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">Esta seguro que desea disputar este partido?</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>El resultado de este partido será sometido a juicio público por los usuarios de la 
+		        comunidad, que decidirán el ganador final. Esta acción no es reversible y en caso 
+		        de reiteración injustificada su cuenta puede ser baneada.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		        <button type="button" class="btn btn-primary" id="btnDisputar">Aceptar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		<c:if test="${err_dispute != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>No puede disputar el partido</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${err_dispute}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+		
+		<c:if test="${dispute_success != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Partido disputado</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${dispute_success}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+		
+		<c:if test="${err_edit != null}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>No puede editar el resultado de este partido</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        ${err_edit}
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+		<c:if test="${register_success == true}">
+			<div class="toast" id="myToast" data-delay="5000" style="position: absolute; top:85%; right:50px;">
+			    <div class="toast-header">
+			        <strong class="mr-auto"><i class="fa fa-grav"></i>Resultado de Partido Editado</strong>
+			        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+			    </div>
+			    <div class="toast-body">
+			        El resultado del partido se edito correctamente.
+			    </div>
+			</div>
+			<script>
+				$(document).ready(function(){
+					$("#myToast").toast('show');
+				});
+			</script>
+		</c:if>
+	
+		<p class="h3 text-light text-center" style="margin-top:30px">Partidos de ${nombre_usuario} en liga ${nombre_liga}</p>
 		<script>
 			function search(){
 				var toSearch = document.getElementById('txtSearch').value;
@@ -32,31 +131,48 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${partidosUsuarioLiga}" var="partido">
+				<c:forEach items="${partidos}" var="partido">
 					<tr>
-					<td><p>${amistoso.getResultadoDos().getJugador().getNombre()} - ${amistoso.getResultadoDos().getJugador().getApodo()}</p></td>
-					<td><p><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${amistoso.getFecha()}"/></p></td>
+					<c:if test="${partido.getResultadoUno().getJugador().getId() == idUsuario}">
+					<td>${partido.getResultadoDos().getJugador().getNombre()} - ${partido.getResultadoDos().getJugador().getApodo()}</td>
+					</c:if>
+					<c:if test="${partido.getResultadoDos().getJugador().getId() == idUsuario}">
+					<td>${partido.getResultadoUno().getJugador().getNombre()} - ${partido.getResultadoUno().getJugador().getApodo()}</td>
+					</c:if>
+					<td><fmt:formatDate type="date" pattern="dd/MM/yyyy" value="${partido.getFecha()}"/></td>
 					<td> 
-						<c:if test="${amistoso.getResultadoUno().getGoles() > amistoso.getResultadoDos().getGoles()}">
-							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (V)</p>
+					<c:if test="${partido.getResultadoUno().getJugador().getId() == idUsuario}">
+						<c:if test="${partido.getResultadoUno().getGoles() > partido.getResultadoDos().getGoles()}">
+							${partido.getResultadoUno().getGoles()} - ${partido.getResultadoDos().getGoles()} (V)
 						</c:if>
-						<c:if test="${amistoso.getResultadoUno().getGoles() < amistoso.getResultadoDos().getGoles()}">
-							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (D)</p>
+						<c:if test="${partido.getResultadoUno().getGoles() < partido.getResultadoDos().getGoles()}">
+							${partido.getResultadoUno().getGoles()} - ${partido.getResultadoDos().getGoles()} (D)
 						</c:if>
-						<c:if test="${amistoso.getResultadoUno().getGoles() == amistoso.getResultadoDos().getGoles()}">
-							<p>${amistoso.getResultadoUno().getGoles()} - ${amistoso.getResultadoDos().getGoles()} (E)</p>
+						<c:if test="${partido.getResultadoUno().getGoles() == partido.getResultadoDos().getGoles()}">
+							${partido.getResultadoUno().getGoles()} - ${partido.getResultadoDos().getGoles()} (E)
 						</c:if>
+					</c:if>
+					<c:if test="${partido.getResultadoDos().getJugador().getId() == idUsuario}">
+						<c:if test="${partido.getResultadoUno().getGoles() < partido.getResultadoDos().getGoles()}">
+							${partido.getResultadoUno().getGoles()} - ${partido.getResultadoDos().getGoles()} (V)
+						</c:if>
+						<c:if test="${partido.getResultadoUno().getGoles() > partido.getResultadoDos().getGoles()}">
+							${partido.getResultadoUno().getGoles()} - ${partido.getResultadoDos().getGoles()} (D)
+						</c:if>
+						<c:if test="${partido.getResultadoUno().getGoles() == partido.getResultadoDos().getGoles()}">
+							${partido.getResultadoUno().getGoles()} - ${partido.getResultadoDos().getGoles()} (E)
+						</c:if>
+					</c:if>
 					</td>
-					<td>${amistoso.getRegistro().getNombre()} - ${amistoso.getRegistro().getApodo()}</td>
+					<td>${partido.getRegistro().getNombre()} - ${partido.getRegistro().getApodo()}</td>
 					<td>
-						<a class="btn btn-primary">Ver Perfil</a>
-						<c:if test="${sessionScope.usuario.getId() == amistoso.getRegistro().getId()}">
-						<a class="btn btn-success" style="margin-left:20px" href="listFriendlyMatches?edit=${amistoso.getId()}">Editar Resultado</a>
+						<c:if test="${sessionScope.usuario.getId() == idUsuario && sessionScope.usuario.getId() == partido.getRegistro().getId()}">
+						<a class="btn btn-success" style="margin-left:20px" href="partidosusuarioliga?edit=${partido.getId()}">Editar Resultado</a>
 						<a class="btn btn-danger disabled" style="margin-left:20px">Disputar Resultado</a>
 						</c:if>
-						<c:if test="${sessionScope.usuario.getId() != amistoso.getRegistro().getId()}">
+						<c:if test="${sessionScope.usuario.getId() == idUsuario && sessionScope.usuario.getId() != partido.getRegistro().getId()}">
 						<a class="btn btn-success disabled" style="margin-left:20px">Editar Resultado</a>
-						<a class="btn btn-danger" style="margin-left:20px">Disputar Resultado</a>
+						<a class="btn btn-danger" style="margin-left:20px" onclick="disputarClicked(${partido.getId()})">Disputar Resultado</a>
 						</c:if>
 					</td>
 					</tr>
@@ -74,7 +190,7 @@
 				</c:if>
 				<c:if test="${skip > 0}">
 					<li class="page-item">
-					<a class="page-link" href="listFriendlyMatches?skip=${skip-10}&search=${search}" aria-label="Anterior">
+					<a class="page-link" href="partidosusuarioliga?skip=${skip-10}&search=${search}" aria-label="Anterior">
 						<span aria-hidden="true">&laquo;</span>
 					</a>
 					</li>
@@ -86,7 +202,7 @@
 					</li>
 				</c:if>
 				<c:if test="${current_page != index}">
-					<li class="page-item"><a class="page-link" href="listFriendlyMatches?skip=${index*10}&search=${search}">${index + 1}</a></li>
+					<li class="page-item"><a class="page-link" href="partidosusuarioliga?skip=${index*10}&search=${search}">${index + 1}</a></li>
 				</c:if>	
 				</c:forEach>
 				<c:if test="${current_page == max_pages-1}">
@@ -98,7 +214,7 @@
 				</c:if>
 				<c:if test="${current_page < max_pages-1}">
 				<li class="page-item">
-					<a class="page-link" href="listFriendlyMatches?skip=${skip+10}&search=${search}" aria-label="Siguiente">
+					<a class="page-link" href="partidosusuarioliga?skip=${skip+10}&search=${search}" aria-label="Siguiente">
 						<span aria-hidden="true">&raquo;</span>
 					</a>
 				</li>

@@ -76,6 +76,7 @@ public class ApelacionesAJuzgarServlet extends HttpServlet {
 					
 					datos.Resultado.getInstance().update(resultadoUno);
 					datos.Resultado.getInstance().update(resultadoDos);
+					datos.Partido.getInstance().finalizarPartido(parsedId, usuario.getId());
 				}
 				
 				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
