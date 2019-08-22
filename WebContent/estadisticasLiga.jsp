@@ -71,7 +71,8 @@
 			</tbody>
 		</table>
 		<ul class="pagination justify-content-center">
-			<li class="page-item"><button onclick="window.location='misLigas';return false;" class="btn btn-danger" style="margin:20px 5px 0px 5px">Volver</button></li>
+			<li class="page-item"><button onclick="window.location='misLigas';return false;" class="btn btn-danger" style="margin-top:20px">Volver</button></li>
+			<li class="page-item"><a class="btn btn-primary" style="margin-left:20px; margin-top:20px" href="estadisticasLiga?report=${idLiga}&id=${idLiga}">Imprimir Reporte</a></li>
 		</ul>
 	</jsp:body>
 </t:layout>

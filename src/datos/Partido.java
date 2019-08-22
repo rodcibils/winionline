@@ -18,6 +18,56 @@ public class Partido {
 		return instance;
 	}
 	
+	public ArrayList<negocio.Partido> getAllPartidosLiga(int idLiga) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT p.fecha, j_uno.nombre, j_uno.apodo, j_dos.nombre, j_dos.apodo, "
+				+ "r_uno.goles, r_dos.goles FROM partidos AS p "
+				+ "INNER JOIN solicitudes AS s ON p.solicitud = s.id "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "INNER JOIN resultados AS r_uno ON (r_uno.id_partido = p.id AND "
+				+ "r_uno.id_jugador = j_uno.id) "
+				+ "INNER JOIN resultados AS r_dos ON (r_dos.id_partido = p.id AND "
+				+ "r_dos.id_jugador = j_dos.id) "
+				+ "WHERE s.liga = ? AND p.estado = ? ORDER BY p.fecha";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, idLiga);
+		stmt.setInt(2, negocio.Estado.PARTIDO_FINALIZADO);
+		
+		ArrayList<negocio.Partido> partidos = new ArrayList<>();
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Partido partido = new negocio.Partido();
+			partido.setFecha(rs.getDate(1));
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setNombre(rs.getString(2));
+			jugadorUno.setApodo(rs.getString(3));
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setNombre(rs.getString(4));
+			jugadorDos.setApodo(rs.getString(5));
+			negocio.Resultado resultadoUno = new negocio.Resultado();
+			resultadoUno.setGoles(rs.getInt(6));
+			negocio.Resultado resultadoDos = new negocio.Resultado();
+			resultadoDos.setGoles(rs.getInt(7));
+			resultadoUno.setJugador(jugadorUno);
+			resultadoDos.setJugador(jugadorDos);
+			partido.setResultadoUno(resultadoUno);
+			partido.setResultadoDos(resultadoDos);
+			
+			partidos.add(partido);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return partidos;
+	}
+	
 	public int getPartidosLigaPendientes(int id) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;
