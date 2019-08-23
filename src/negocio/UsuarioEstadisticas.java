@@ -14,6 +14,7 @@ public class UsuarioEstadisticas {
 	private int golesContra;
 	private int golesDiferencia;
 	private boolean puedeJugar;
+	private int posicion;
 	
 	public static ArrayList<UsuarioEstadisticas> 
 		determinarPosiciones(ArrayList<UsuarioEstadisticas> jugadores)
@@ -134,5 +135,13 @@ public class UsuarioEstadisticas {
 
 	public void setPuedeJugar(boolean puedeJugar) {
 		this.puedeJugar = puedeJugar;
+	}
+
+	public int getPosicion() {
+		return posicion;
+	}
+
+	public void setPosicion(int posicion) {
+		this.posicion = posicion;
 	}
 }

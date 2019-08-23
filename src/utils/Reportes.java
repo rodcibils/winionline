@@ -24,7 +24,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import negocio.UsuarioEstadisticas;
 
-public class Reportes {
+public class Reportes 
+{
 		public String generarReporteLiga(negocio.Liga liga, 
 				ArrayList<negocio.UsuarioEstadisticas> estadisticas,
 				ArrayList<negocio.Partido> partidos, String userName) 
@@ -216,6 +217,214 @@ public class Reportes {
 			}
 			
 			document.add(matchTable);
+			
+			document.close();
+			
+			return fileName;
+		}
+		
+		public String generarReporteUsuario(String username,
+				ArrayList<negocio.Liga> ligas,
+				ArrayList<negocio.UsuarioEstadisticas> resultadosLigas,
+				ArrayList<negocio.Partido> partidosLiga,
+				ArrayList<negocio.Partido> amistosos) throws ClassNotFoundException, 
+				SQLException, DocumentException, MalformedURLException, IOException
+		{
+			Calendar c = Calendar.getInstance();
+			SimpleDateFormat dateWithHour = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			SimpleDateFormat onlyDate = new SimpleDateFormat("dd/MM/yyyy");
+			
+			Document document = new Document();
+			String fileName = username + "-" + onlyDate.format(c.getTime()) + ".pdf";
+			fileName = fileName.replace("/", "-");
+			String serverPath = datos.Parametro.getInstance().getReportesPath();
+			String path = serverPath + "/" + fileName;
+			PdfWriter.getInstance(document, new FileOutputStream(path));
+			document.open();
+			
+			String imgPath = serverPath + "/banner.jpg";
+			Image banner = Image.getInstance(imgPath);
+			banner.scalePercent(45);
+			banner.setAlignment(Element.ALIGN_CENTER);
+			document.add(banner);
+			
+			Font titleFont = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+			Font subtitleFont = FontFactory.getFont(FontFactory.COURIER, 13, BaseColor.BLACK);
+			
+			Paragraph title = new Paragraph("Reporte de historial general del usuario " + 
+					username, titleFont);
+			title.setSpacingBefore(20f);
+			title.setAlignment(Element.ALIGN_CENTER);
+			document.add(title);
+			
+			Paragraph subtitle = new Paragraph("al " + dateWithHour.format(c.getTime()), 
+					subtitleFont);
+			subtitle.setSpacingAfter(20f);
+			subtitle.setAlignment(Element.ALIGN_CENTER);
+			document.add(subtitle);
+			
+			Paragraph leaguesTitle = new Paragraph("Participaciones en ligas", subtitleFont);
+			leaguesTitle.setSpacingAfter(20f);
+			leaguesTitle.setAlignment(Element.ALIGN_CENTER);
+			document.add(leaguesTitle);
+			
+			for(int i=0; i<ligas.size(); ++i) {
+				negocio.Liga liga = ligas.get(i);
+				negocio.UsuarioEstadisticas stats = resultadosLigas.get(i);
+				
+				Paragraph nombreLiga = new Paragraph("Liga: " + liga.getNombre(), subtitleFont);
+				Paragraph temporadaLiga = new Paragraph("Temporada: " + 
+						Integer.toString(liga.getTemporada()), subtitleFont);
+				Paragraph inicioLiga = new Paragraph("Fecha inicio: " + 
+						onlyDate.format(liga.getInicio()), subtitleFont);
+				Paragraph finLiga = new Paragraph("Fecha fin: " + onlyDate.format(liga.getFin()), 
+						subtitleFont);
+				Paragraph posicionLiga = new Paragraph("Posicion: " + 
+						Integer.toString(stats.getPosicion()), subtitleFont);
+				Paragraph puntosLiga = new Paragraph("Puntos: " + Integer.toString(stats.getPuntos()),
+						subtitleFont);
+				Paragraph partidos = new Paragraph(
+						Integer.toString(stats.getPartJugados()) + " PJ (" + 
+						Integer.toString(stats.getPartGanados()) + " PG, " +
+						Integer.toString(stats.getPartEmpatados()) + " PE, " +
+						Integer.toString(stats.getPartPerdidos()) + " PP)", subtitleFont);
+				Paragraph golesLiga = new Paragraph(
+						Integer.toString(stats.getGolesFavor()) + " GF, " +
+						Integer.toString(stats.getGolesContra()) + " GC, " + 
+						Integer.toString(stats.getGolesDiferencia()) + " DG", subtitleFont);
+				
+				golesLiga.setSpacingAfter(20f);
+				
+				document.add(nombreLiga);
+				document.add(temporadaLiga);
+				document.add(inicioLiga);
+				document.add(finLiga);
+				document.add(posicionLiga);
+				document.add(puntosLiga);
+				document.add(partidos);
+				document.add(golesLiga);
+				
+				PdfPTable matchTable = new PdfPTable(6);
+				Stream.of("Fecha", "Jugador Uno", "", "", "", "Jugador Dos")
+				.forEach(columnTitle ->{
+					PdfPCell header = new PdfPCell();
+					header.setHorizontalAlignment(Element.ALIGN_CENTER);
+					header.setVerticalAlignment(Element.ALIGN_CENTER);
+					header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+					header.setBorderWidth(2);
+					header.setPhrase(new Phrase(columnTitle));
+					matchTable.addCell(header);
+				});
+				matchTable.setSpacingAfter(30f);
+				
+				for(int j=0; j<partidosLiga.size(); ++j) {
+					negocio.Partido partido = partidosLiga.get(j);
+					if(partido.getSolicitud().getLiga().getId() == liga.getId()) {
+						PdfPCell fechaCell = new PdfPCell(new Phrase(onlyDate.format(partido.getFecha())));
+						fechaCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						fechaCell.setVerticalAlignment(Element.ALIGN_CENTER);
+						matchTable.addCell(fechaCell);
+						
+						PdfPCell juCell = new PdfPCell(new Phrase(partido.getResultadoUno()
+								.getJugador().getNombre() + " (" + partido.getResultadoUno()
+								.getJugador().getApodo() + ")"));
+						juCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						juCell.setVerticalAlignment(Element.ALIGN_CENTER);
+						matchTable.addCell(juCell);
+						
+						PdfPCell ruCell = new PdfPCell(new Phrase(Integer.toString(partido
+								.getResultadoUno()
+								.getGoles())));
+						ruCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						ruCell.setVerticalAlignment(Element.ALIGN_CENTER);
+						matchTable.addCell(ruCell);
+						
+						PdfPCell vsCell = new PdfPCell(new Phrase("Vs."));
+						vsCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						vsCell.setVerticalAlignment(Element.ALIGN_CENTER);
+						matchTable.addCell(vsCell);
+						
+						PdfPCell rdCell = new PdfPCell(new Phrase(Integer.toString(partido
+								.getResultadoDos()
+								.getGoles())));
+						rdCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						rdCell.setVerticalAlignment(Element.ALIGN_CENTER);
+						matchTable.addCell(rdCell);
+						
+						PdfPCell jdCell = new PdfPCell(new Phrase(partido.getResultadoDos()
+								.getJugador().getNombre() + " (" + partido.getResultadoDos()
+								.getJugador().getApodo() + ")"));
+						jdCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+						jdCell.setVerticalAlignment(Element.ALIGN_CENTER);
+						matchTable.addCell(jdCell);
+					}
+				}
+				
+				document.add(matchTable);
+			}
+			
+			Paragraph amistososTitle = new Paragraph("Partidos Amistosos", subtitleFont);
+			amistososTitle.setSpacingBefore(20f);
+			amistososTitle.setSpacingAfter(20f);
+			amistososTitle.setAlignment(Element.ALIGN_CENTER);
+			document.add(amistososTitle);
+			
+			PdfPTable amistososTable = new PdfPTable(6);
+			Stream.of("Fecha", "Jugador Uno", "", "", "", "Jugador Dos")
+			.forEach(columnTitle ->{
+				PdfPCell header = new PdfPCell();
+				header.setHorizontalAlignment(Element.ALIGN_CENTER);
+				header.setVerticalAlignment(Element.ALIGN_CENTER);
+				header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+				header.setBorderWidth(2);
+				header.setPhrase(new Phrase(columnTitle));
+				amistososTable.addCell(header);
+			});
+			amistososTable.setSpacingAfter(30f);
+			
+			for(int i=0; i<amistosos.size(); ++i) {
+				negocio.Partido partido = amistosos.get(i);
+				
+				PdfPCell fechaCell = new PdfPCell(new Phrase(onlyDate.format(partido.getFecha())));
+				fechaCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				fechaCell.setVerticalAlignment(Element.ALIGN_CENTER);
+				amistososTable.addCell(fechaCell);
+				
+				PdfPCell juCell = new PdfPCell(new Phrase(partido.getResultadoUno()
+						.getJugador().getNombre() + " (" + partido.getResultadoUno()
+						.getJugador().getApodo() + ")"));
+				juCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				juCell.setVerticalAlignment(Element.ALIGN_CENTER);
+				amistososTable.addCell(juCell);
+				
+				PdfPCell ruCell = new PdfPCell(new Phrase(Integer.toString(partido
+						.getResultadoUno()
+						.getGoles())));
+				ruCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				ruCell.setVerticalAlignment(Element.ALIGN_CENTER);
+				amistososTable.addCell(ruCell);
+				
+				PdfPCell vsCell = new PdfPCell(new Phrase("Vs."));
+				vsCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				vsCell.setVerticalAlignment(Element.ALIGN_CENTER);
+				amistososTable.addCell(vsCell);
+				
+				PdfPCell rdCell = new PdfPCell(new Phrase(Integer.toString(partido
+						.getResultadoDos()
+						.getGoles())));
+				rdCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				rdCell.setVerticalAlignment(Element.ALIGN_CENTER);
+				amistososTable.addCell(rdCell);
+				
+				PdfPCell jdCell = new PdfPCell(new Phrase(partido.getResultadoDos()
+						.getJugador().getNombre() + " (" + partido.getResultadoDos()
+						.getJugador().getApodo() + ")"));
+				jdCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+				jdCell.setVerticalAlignment(Element.ALIGN_CENTER);
+				amistososTable.addCell(jdCell);
+			}
+			
+			document.add(amistososTable);
 			
 			document.close();
 			
