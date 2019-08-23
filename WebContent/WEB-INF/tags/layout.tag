@@ -54,6 +54,7 @@
 	  					<a class="nav-link dropdown-toggle" href="#" id="dropUsuario" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Usuario</a>
 	  					<div class="dropdown-menu" aria-labelledby="dropUsuario">
 	  						<a class="dropdown-item" href="usuarios">Lista de Usuarios</a>
+	  						<a class="dropdown-item" href="index?reporteUsuario=true">Reporte de Usuario</a>
 	  						<a class="dropdown-item" href="editUser">Editar Datos Personales</a>
 	  						<a class="dropdown-item" href="editPassword.jsp">Cambiar Contraseña</a>
 	  						<a class="dropdown-item" data-toggle="modal" data-target="#userDeleteModal">Eliminar Usuario</a>

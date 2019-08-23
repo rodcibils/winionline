@@ -20,6 +20,40 @@ public class Liga {
 		return instance;
 	}
 	
+	public ArrayList<negocio.Liga> getLigasUsuario(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT l.id, l.nombre, l.temporada, l.fecha_inicio, l.fecha_fin "
+				+ "FROM ligas AS l "
+				+ "INNER JOIN usuario_liga AS ul ON ul.id_liga = l.id "
+				+ "WHERE l.estado = ? AND ul.id_usuario = ? ORDER BY l.fecha_fin";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.LIGA_FINALIZADA);
+		stmt.setInt(2, id);
+		
+		ArrayList<negocio.Liga> ligas = new ArrayList<>();
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Liga liga = new negocio.Liga();
+			liga.setId(rs.getInt(1));
+			liga.setNombre(rs.getString(2));
+			liga.setTemporada(rs.getInt(3));
+			liga.setInicio(rs.getDate(4));
+			liga.setFin(rs.getDate(5));
+			
+			ligas.add(liga);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return ligas;
+	}
+	
 	public void insert(negocio.Liga liga) throws ClassNotFoundException, SQLException
 	{
 		PreparedStatement stmt;

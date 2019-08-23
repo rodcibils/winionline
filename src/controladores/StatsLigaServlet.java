@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import negocio.UsuarioEstadisticas;
+import utils.Reportes;
 
 /**
  * Servlet implementation class StatsLigaServlet
@@ -115,6 +116,23 @@ public class StatsLigaServlet extends HttpServlet {
 			
 			estadisticasUsuarios = negocio.UsuarioEstadisticas
 					.determinarPosiciones(estadisticasUsuarios);
+			
+			String report = request.getParameter("report");
+			if(report != null && !report.isEmpty()) {
+				Reportes generator = new Reportes();
+				try {
+					negocio.Liga liga = datos.Liga.getInstance().getOne(Integer.parseInt(report));
+					ArrayList<negocio.Partido> partidosLiga = datos.Partido.getInstance()
+							.getAllPartidosLiga(Integer.parseInt(report));
+					String fileName = generator.generarReporteLiga(liga, 
+							estadisticasUsuarios, partidosLiga, usuario.getNombre());
+					request.setAttribute("name", fileName);
+					request.getRequestDispatcher("downloadReporte").forward(request, response);
+				} catch(Exception e) {
+					System.out.println(e.getMessage());
+				}
+			}
+			
 			boolean ligaTerminada = datos.Liga.getInstance().checkLigaTerminada(idLiga);
 			request.setAttribute("liga_terminada", ligaTerminada);
 			request.setAttribute("estadisticasUsuarios", estadisticasUsuarios);
