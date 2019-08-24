@@ -44,7 +44,8 @@ public class ReporteConflictoServlet extends HttpServlet {
 				}
 				
 				Reportes reporte = new Reportes();
-				String filename = reporte.generarReporteDisputas(usuario.getNombre() + "-" + usuario.getApodo(), disputas, 
+				String filename = reporte.generarReporteDisputas(usuario.getNombre() + "-" 
+						+ usuario.getApodo(), disputas, 
 						usuario.getId());
 				request.setAttribute("name", filename);
 				request.getRequestDispatcher("downloadReporte").forward(request, response);
@@ -52,7 +53,23 @@ public class ReporteConflictoServlet extends HttpServlet {
 				System.out.println(e.getMessage());
 			}
 		} else if(item.contentEquals("apelaciones")) {
-			
+			try {
+				ArrayList<negocio.Apelacion> apelaciones = datos.Apelacion.getInstance()
+						.getApelacionesCerradas(usuario.getId());
+				
+				for(negocio.Apelacion apelacion : apelaciones) {
+					apelacion.setVotosIndividualizados(datos.Apelacion.getInstance()
+							.getVotosIndividualizados(apelacion.getDisputa().getPartido().getId()));
+				}
+				
+				Reportes reporte = new Reportes();
+				String filename = reporte.generarReporteApelaciones(usuario.getNombre() + "-" 
+						+ usuario.getApodo(), apelaciones, usuario.getId());
+				request.setAttribute("name", filename);
+				request.getRequestDispatcher("downloadReporte").forward(request, response);
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
 		}
 	}
 

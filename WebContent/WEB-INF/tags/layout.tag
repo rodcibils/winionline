@@ -88,7 +88,7 @@
 	  						<a class="dropdown-item" href="misApelacionesEnCurso?skip=0&search=">Mis Apelaciones en Curso</a>
 	  						<a class="dropdown-item" href="misApelacionesCerradas?skip=0&search=">Mis Apelaciones Cerradas</a>
 	  						<a class="dropdown-item" href="reporteConflicto?item=disputas">Reporte de Disputas</a>
-	  						<a class="dropdown-item" href="reporteConflicto?item=apelacion">Reporte de Apelaciones</a>
+	  						<a class="dropdown-item" href="reporteConflicto?item=apelaciones">Reporte de Apelaciones</a>
 	  					</div>
 	  				</li>
 	  				<li class="nav-item">

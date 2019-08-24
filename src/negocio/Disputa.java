@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Disputa {
 	public static final int MAX_DIAS_DISPUTA = 10;
-	public static final int ANTIGUEDAD_PARA_VOTAR = 15;
+	public static final int ANTIGUEDAD_PARA_VOTAR = 0;
 	public static final int MAX_DIAS_APELACION = 10;
 	
 	private Partido partido;

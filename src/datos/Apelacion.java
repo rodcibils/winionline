@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class Apelacion {
 	private static Apelacion instance = null;
@@ -14,6 +15,101 @@ public class Apelacion {
 		if(instance == null) instance = new Apelacion();
 		
 		return instance;
+	}
+	
+	public HashMap<negocio.Usuario, negocio.Usuario> getVotosIndividualizados(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT votante.id, votante.nombre, votante.apodo, votado.id, "
+				+ "votado.nombre, votado.apodo FROM usuario_apelacion AS ua "
+				+ "INNER JOIN usuarios AS votante ON votante.id = ua.id_usuario "
+				+ "INNER JOIN usuarios AS votado ON votado.id = ua.voto "
+				+ "WHERE ua.id_disputa = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		
+		HashMap<negocio.Usuario, negocio.Usuario> votos = new HashMap<>();
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Usuario votante = new negocio.Usuario();
+			votante.setId(rs.getInt(1));
+			votante.setNombre(rs.getString(2));
+			votante.setApodo(rs.getString(3));
+			negocio.Usuario votado = new negocio.Usuario();
+			votado.setId(rs.getInt(4));
+			votado.setNombre(rs.getString(5));
+			votado.setApodo(rs.getString(6));
+			
+			votos.put(votante, votado);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return votos;	
+		}
+	
+	public ArrayList<negocio.Apelacion> getApelacionesCerradas(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT a.fecha, a.cierre, p.id, p.fecha, "
+				+ "j_uno.id, j_uno.nombre, j_uno.apodo, j_dos.id, j_dos.nombre, j_dos.apodo "
+				+ "FROM apelaciones AS a "
+				+ "INNER JOIN disputas AS d ON d.id_partido = a.id_disputa "
+				+ "INNER JOIN partidos AS p ON p.id = d.id_partido "
+				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "INNER JOIN resultados AS r_uno ON (r_uno.id_partido = p.id AND "
+				+ "r_uno.id_jugador = j_uno.id) "
+				+ "INNER JOIN resultados AS r_dos ON (r_dos.id_partido = p.id AND "
+				+ "r_dos.id_jugador = j_dos.id) "
+				+ "WHERE a.estado = ? AND (j_uno.id = ? OR j_dos.id = ?)";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.APELACION_CERRADA);
+		stmt.setInt(2, id);
+		stmt.setInt(3, id);
+		
+		ArrayList<negocio.Apelacion> apelaciones = new ArrayList<>();
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Apelacion apelacion = new negocio.Apelacion();
+			apelacion.setFecha(rs.getDate(1));
+			apelacion.setCierre(rs.getDate(2));
+			negocio.Disputa disputa = new negocio.Disputa();
+			negocio.Partido partido = new negocio.Partido();
+			partido.setId(rs.getInt(3));
+			partido.setFecha(rs.getDate(4));
+			negocio.Solicitud solicitud = new negocio.Solicitud();
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setId(rs.getInt(5));
+			jugadorUno.setNombre(rs.getString(6));
+			jugadorUno.setApodo(rs.getString(7));
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setId(rs.getInt(8));
+			jugadorDos.setNombre(rs.getString(9));
+			jugadorDos.setApodo(rs.getString(10));
+			solicitud.setJugadorUno(jugadorUno);
+			solicitud.setJugadorDos(jugadorDos);
+			partido.setSolicitud(solicitud);
+			disputa.setPartido(partido);
+			apelacion.setDisputa(disputa);
+			
+			apelaciones.add(apelacion);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return apelaciones;
 	}
 	
 	public void votarApelacion(int idUsuario, int idApelacion, int idVoto) throws ClassNotFoundException, SQLException
