@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class AceptarAmistosoServlet
  */
@@ -35,7 +37,7 @@ public class AceptarAmistosoServlet extends HttpServlet {
 			datos.Partido.getInstance().createPartido(id);
 			request.setAttribute("accept_success", true);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "AceptarAmistosoServlet : 40");
 		}
 		
 		request.getRequestDispatcher("receivedFriendRequest?skip=0").forward(request, response);

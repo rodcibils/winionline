@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class InscripcionLigaServlet
  */
@@ -99,7 +101,7 @@ public class InscripcionLigaServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "InscripcionLigaServlet : 104");
 		}
 		
 		request.getRequestDispatcher("inscripcionALiga.jsp").forward(request, response);

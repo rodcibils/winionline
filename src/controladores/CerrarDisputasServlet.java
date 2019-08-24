@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class CerrarDisputasServlet
  */
@@ -66,7 +68,7 @@ public class CerrarDisputasServlet extends HttpServlet {
 			}
 			
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "CerrarDisputasServlet : 71");
 		}
 		
 		response.sendRedirect("index?disputas_success=true");

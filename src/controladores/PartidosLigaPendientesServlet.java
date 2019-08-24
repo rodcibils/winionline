@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class PartidosLigaPendientesServlet
  */
@@ -64,7 +66,7 @@ public class PartidosLigaPendientesServlet extends HttpServlet {
 					skip -= 10;
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "PartidosLigaPendientesServlet : 69");
 			}
 		}
 		
@@ -97,7 +99,7 @@ public class PartidosLigaPendientesServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "PartidosLigaPendientesServlet : 102");
 		}
 		
 		request.getRequestDispatcher("listPartidosPendientesLiga.jsp").forward(request, response);

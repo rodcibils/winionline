@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class CambiarContrasenaServlet
  */
@@ -80,7 +82,7 @@ public class CambiarContrasenaServlet extends HttpServlet {
 					request.getRequestDispatcher("editPassword.jsp").forward(request, response);
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "CambiarContrasenaServlet : 85");
 			}
 		}
 	}

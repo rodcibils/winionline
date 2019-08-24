@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class ImageServlet
  */
@@ -40,7 +42,7 @@ public class AvatarServlet extends HttpServlet {
 			try {
 				usuario = datos.Usuario.getInstance().getOne(Integer.parseInt(idUsuario));
 			}catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "AvatarServlet : 45");
 			}
 		}
 		response.setContentType("image");

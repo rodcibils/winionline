@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class AceptarPartidoLigaServlet
  */
@@ -33,7 +35,7 @@ public class AceptarPartidoLigaServlet extends HttpServlet {
 			datos.Partido.getInstance().createPartido(id);
 			request.setAttribute("accept_success", true);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "AceptarPartidoLigaServlet : 38");
 		}
 		
 		request.getRequestDispatcher("solicitudesRecibidasLiga?skip=0").forward(request, response);

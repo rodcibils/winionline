@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class AmistososPendientesServlet
  */
@@ -64,7 +66,7 @@ public class AmistososPendientesServlet extends HttpServlet {
 					skip -= 10;
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "Amistosos Pendientes Servlet : 69");
 			}
 		}
 		
@@ -97,7 +99,7 @@ public class AmistososPendientesServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "AmistososPendientesServlet : 102");
 		}
 		
 		request.getRequestDispatcher("listPendingFriendlyMatch.jsp").forward(request, response);

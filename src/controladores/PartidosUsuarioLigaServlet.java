@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 
 /**
  * Servlet implementation class PartidosUsuarioLigaServlet
@@ -58,7 +60,7 @@ public class PartidosUsuarioLigaServlet extends HttpServlet {
 							+ "correctamente");
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 63");
 			}
 		}
 		
@@ -83,7 +85,7 @@ public class PartidosUsuarioLigaServlet extends HttpServlet {
 					return;
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 88");
 			}
 		}
 		
@@ -146,7 +148,7 @@ public class PartidosUsuarioLigaServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 151");
 		}
 		request.getRequestDispatcher("partidosUsuarioLiga.jsp").forward(request, response);
 	}

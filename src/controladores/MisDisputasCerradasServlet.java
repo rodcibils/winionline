@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class MisDisputasCerradasServlet
  */
@@ -47,7 +49,7 @@ public class MisDisputasCerradasServlet extends HttpServlet {
 				request.setAttribute("apelar_success", "Disputa apelada con exito");
 				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "MisDisputasCerradasServlet : 52");
 			}
 		}
 		

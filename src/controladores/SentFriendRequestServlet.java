@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class SentFriendRequestServlet
  */
@@ -54,7 +56,7 @@ public class SentFriendRequestServlet extends HttpServlet {
 				request.setAttribute("friendly_sol_deleted", true);
 				if((count-1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			}catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "SentFriendRequestServlet : 59");
 			}
 		}
 		
@@ -95,7 +97,7 @@ public class SentFriendRequestServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "SentFriendRequestServlet : 100");
 		}
 		
 		request.getRequestDispatcher("listSentFriendlyMatchRequest.jsp").forward(request, response);

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
 import utils.Reportes;
 
 /**
@@ -50,7 +51,7 @@ public class ReporteConflictoServlet extends HttpServlet {
 				request.setAttribute("name", filename);
 				request.getRequestDispatcher("downloadReporte").forward(request, response);
 			}catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "ReporteConflictoServlet : 54");
 			}
 		} else if(item.contentEquals("apelaciones")) {
 			try {
@@ -68,7 +69,7 @@ public class ReporteConflictoServlet extends HttpServlet {
 				request.setAttribute("name", filename);
 				request.getRequestDispatcher("downloadReporte").forward(request, response);
 			}catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "ReporteConflictoServlet : 72");
 			}
 		}
 	}

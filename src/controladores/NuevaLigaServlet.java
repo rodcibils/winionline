@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class NuevaLigaServlet
  */
@@ -198,7 +200,7 @@ public class NuevaLigaServlet extends HttpServlet {
 				
 				response.sendRedirect("wwligas?new_league_success=true");
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "NuevaLigaServlet : 203");
 			}
 		}
 	}

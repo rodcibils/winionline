@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
 import utils.Utils;
 
 /**
@@ -49,7 +50,7 @@ public class DownloadEvidenciaServlet extends HttpServlet {
 			in.close();
 			out.flush();
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "DownloadEvidenciaServlet : 53");
 		}
 	}
 

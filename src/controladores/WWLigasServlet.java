@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class WWLigasServlet
  */
@@ -98,8 +100,7 @@ public class WWLigasServlet extends HttpServlet {
 			request.getRequestDispatcher("wwleague.jsp").forward(request, response);
 			
 		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.getInstance().register(e, "WWLigasServlet : 103");
 		}
 	}
 

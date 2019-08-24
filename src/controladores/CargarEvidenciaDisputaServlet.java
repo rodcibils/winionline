@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
 import negocio.Evidencia;
+import utils.Log;
 import utils.Utils;
 
 /**
@@ -86,7 +87,7 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 						}
 						buffer.close();
 					} catch(Exception e) {
-						System.out.println(e.getMessage());
+						Log.getInstance().register(e, "CargarEvidenciaDisputaServlet : 90");
 					}
 				}
 				evidencias.add(evidencia);
@@ -122,7 +123,7 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 			count = evidencias.size();
 			request.setAttribute("evidencias", evidencias);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "CargarEvidenciaDisputaServlet : 126");
 		}
 		
 		String err_video = request.getParameter("err_video");
@@ -160,10 +161,10 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 										Integer.toString(count) + "." + ext);
 								Files.copy(stream, file.toPath());
 							} catch(Exception e) {
-								System.out.println(e.getMessage());
+								Log.getInstance().register(e, "CargarEvidenciaDisputaSerlvet : 164");
 							}
 						} catch(Exception e) {
-							System.out.println(e.getMessage());
+							Log.getInstance().register(e, "CargarEvidenciaServlet : 167");
 						}
 					} else {
 						request.setAttribute("err_imagen", "El formato de imagen cargada no es valido");
@@ -181,7 +182,7 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 						List<String> content = Arrays.asList(video);
 						Files.write(file, content, StandardCharsets.UTF_8);
 					} catch(Exception e) {
-						System.out.println(e.getMessage());
+						Log.getInstance().register(e, "CargarEvidenciaDisputaServlet : 185");
 					}
 				} else {
 					request.setAttribute("err_video", "Las unicas url de video aceptadas deben ser de Youtube");

@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class VerEvidenciasServlet
  */
@@ -48,7 +50,7 @@ public class VerEvidenciasServlet extends HttpServlet {
 			out.close();
 			in.close();
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "VerEvidenciasServlet : 53");
 		}
 	}
 

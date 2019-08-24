@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class EliminarUsuarioServlet
  */
@@ -33,7 +35,7 @@ public class EliminarUsuarioServlet extends HttpServlet {
 			request.getSession().setAttribute("usuario", null);
 			response.sendRedirect("login.jsp?delete_success=true");
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "EliminarUsuarioServlet : 38");
 		}
 	}
 

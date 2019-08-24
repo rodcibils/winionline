@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import utils.Log;
 import utils.Utils;
 
 /**
@@ -152,14 +153,14 @@ public class EditarUsuarioServlet extends HttpServlet {
 						Files.copy(stream, file.toPath());
 						usuario.setAvatar(file.toPath().toString());
 					} catch(Exception e) {
-						System.out.println(e.getMessage());
+						Log.getInstance().register(e, "EditarUsuarioServlet : 156");
 					}
 				}
 				dUsuario.update(usuario);
 				request.getSession().setAttribute("usuario", usuario);
 				response.sendRedirect("index.jsp?update_success=true");
 			} catch(Exception e) {
-				System.out.print(e.getMessage());
+				Log.getInstance().register(e, "EditarUsuarioServlet : 163");
 			}
 		}
 	}

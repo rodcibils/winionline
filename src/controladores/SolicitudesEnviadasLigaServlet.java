@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class SolicitudesEnviadasLigaServlet
  */
@@ -53,7 +55,7 @@ public class SolicitudesEnviadasLigaServlet extends HttpServlet {
 				request.setAttribute("sol_deleted", true);
 				if((count-1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			}catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "SolicitudesEnviadasLigaServlet : 58");
 			}
 		}
 		
@@ -94,7 +96,7 @@ public class SolicitudesEnviadasLigaServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "SolicitudesEnviadasLigaServlet : 99");
 		}
 		
 		request.getRequestDispatcher("listSolicitudesEnviadasLiga.jsp").forward(request, response);
