@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import com.itextpdf.text.BaseColor;
@@ -25,7 +26,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import negocio.UsuarioEstadisticas;
 
 public class Reportes 
-{
+{		
 		public String generarReporteLiga(negocio.Liga liga, 
 				ArrayList<negocio.UsuarioEstadisticas> estadisticas,
 				ArrayList<negocio.Partido> partidos, String userName) 
@@ -429,5 +430,138 @@ public class Reportes
 			document.close();
 			
 			return fileName;
+		}
+		
+		public String generarReporteDisputas(String username, ArrayList<negocio.Disputa> disputas,
+				int id) throws ClassNotFoundException, SQLException, 
+				DocumentException, MalformedURLException, IOException
+		{
+			Calendar c = Calendar.getInstance();
+			SimpleDateFormat dateWithHour = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			SimpleDateFormat onlyDate = new SimpleDateFormat("dd/MM/yyyy");
+			
+			Document document = new Document();
+			String filename = username + "-" + onlyDate.format(c.getTime()) + ".pdf";
+			filename = filename.replace("/", "-");
+			String path = datos.Parametro.getInstance().getReportesPath();
+			PdfWriter.getInstance(document, new FileOutputStream(path + "/" + filename));
+			document.open();
+			
+			String imgPath = path + "/banner.jpg";
+			Image banner = Image.getInstance(imgPath);
+			banner.scalePercent(45);
+			banner.setAlignment(Element.ALIGN_CENTER);
+			document.add(banner);
+			
+			Font titleFont = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+			Font subtitleFont = FontFactory.getFont(FontFactory.COURIER, 13, BaseColor.BLACK);
+			
+			Paragraph title = new Paragraph("Reporte de disputas cerradas del usuario " + 
+					username, titleFont);
+			title.setSpacingBefore(20f);
+			title.setAlignment(Element.ALIGN_CENTER);
+			document.add(title);
+			
+			Paragraph subTitle = new Paragraph("al " + dateWithHour.format(c.getTime()), subtitleFont);
+			subTitle.setSpacingAfter(20f);
+			subTitle.setAlignment(Element.ALIGN_CENTER);
+			document.add(subTitle);
+			
+			for(negocio.Disputa disputa : disputas) {
+				Paragraph rivalP;
+				Paragraph resultadoP;
+				if(disputa.getPartido().getResultadoUno().getJugador().getId() == id) {
+					rivalP = new Paragraph("Rival: " + disputa.getPartido().getResultadoDos()
+							.getJugador().getNombre() + " (" + disputa.getPartido().getResultadoDos()
+							.getJugador().getApodo() + ")", subtitleFont);
+					if(disputa.getPartido().getResultadoUno().getGoles() > disputa.getPartido()
+							.getResultadoDos().getGoles())
+					{
+						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
+								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
+								.getPartido().getResultadoDos().getGoles()) + " (V)", subtitleFont);
+					} else if(disputa.getPartido().getResultadoUno().getGoles() < disputa.getPartido()
+							.getResultadoDos().getGoles())
+					{
+						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
+								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
+								.getPartido().getResultadoDos().getGoles()) + " (D)", subtitleFont);
+					} else {
+						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
+								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
+								.getPartido().getResultadoDos().getGoles()) + " (E)", subtitleFont);
+					}
+				} else {
+					rivalP = new Paragraph("Rival: " + disputa.getPartido().getResultadoUno()
+							.getJugador().getNombre() + " (" + disputa.getPartido().getResultadoUno()
+							.getJugador().getApodo() + ")", subtitleFont);
+					if(disputa.getPartido().getResultadoUno().getGoles() > disputa.getPartido()
+							.getResultadoDos().getGoles())
+					{
+						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
+								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
+								.getPartido().getResultadoDos().getGoles()) + " (D)", subtitleFont);
+					} else if(disputa.getPartido().getResultadoUno().getGoles() < disputa.getPartido()
+							.getResultadoDos().getGoles())
+					{
+						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
+								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
+								.getPartido().getResultadoDos().getGoles()) + " (V)", subtitleFont);
+					} else {
+						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
+								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
+								.getPartido().getResultadoDos().getGoles()) + " (E)", subtitleFont);
+					}
+				}
+				
+				Paragraph fechaPP = new Paragraph("Fecha partido: " + 
+						onlyDate.format(disputa.getPartido().getFecha()), subtitleFont);
+				Paragraph fechaDP = new Paragraph("Fecha disputa:" +
+						onlyDate.format(disputa.getFecha()), subtitleFont);
+				Paragraph fechaVDP = new Paragraph("Fecha vencimiento disputa: " + 
+						onlyDate.format(disputa.getVencimiento()), subtitleFont);
+				
+				document.add(rivalP);
+				document.add(resultadoP);
+				document.add(fechaPP);
+				document.add(fechaDP);
+				document.add(fechaVDP);
+				
+				PdfPTable votosTable = new PdfPTable(2);
+				Stream.of("Usuario", "Voto").forEach(columnTitle ->{
+					PdfPCell header = new PdfPCell();
+					header.setHorizontalAlignment(Element.ALIGN_CENTER);
+					header.setVerticalAlignment(Element.ALIGN_CENTER);
+					header.setBackgroundColor(BaseColor.LIGHT_GRAY);
+					header.setBorderWidth(2);
+					header.setPhrase(new Phrase(columnTitle));
+					votosTable.addCell(header);
+				});
+				
+				votosTable.setSpacingBefore(10f);
+				votosTable.setSpacingAfter(30f);
+				
+				for(Map.Entry<negocio.Usuario, negocio.Usuario> entry : disputa.getVotosIndividualizados().entrySet())
+				{
+					negocio.Usuario votante = entry.getKey();
+					negocio.Usuario votado = entry.getValue();
+					
+					PdfPCell votanteCell = new PdfPCell(new Phrase(votante.getNombre() + " (" + votante.getApodo() + ")"));
+					votanteCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					votanteCell.setVerticalAlignment(Element.ALIGN_CENTER);
+					votosTable.addCell(votanteCell);
+					
+					PdfPCell votadoCell = new PdfPCell(new Phrase(votado.getNombre() + " (" + votado.getApodo() + ")"));
+					votadoCell.setHorizontalAlignment(Element.ALIGN_CENTER);
+					votadoCell.setVerticalAlignment(Element.ALIGN_CENTER);
+					votosTable.addCell(votadoCell);
+				}
+				
+				document.add(votosTable);
+			}
+			
+			document.close();
+			
+			return filename;
 		}
 }
