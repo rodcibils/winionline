@@ -108,7 +108,8 @@ public class Disputa
 		PreparedStatement stmt;
 		Connection conn = ConnectionManager.getInstance().getConnection();
 		
-		String query = "SELECT votante.nombre, votante.apodo, votado.nombre, votado.apodo "
+		String query = "SELECT votante.id, votante.nombre, votante.apodo, "
+				+ "votado.id, votado.nombre, votado.apodo "
 				+ "FROM usuario_disputa AS ud "
 				+ "INNER JOIN usuarios AS votante ON ud.id_usuario = votante.id "
 				+ "INNER JOIN usuarios AS votado ON ud.id_voto = votado.id "
@@ -121,11 +122,13 @@ public class Disputa
 		ResultSet rs = stmt.executeQuery();
 		while(rs.next()) {
 			negocio.Usuario votante = new negocio.Usuario();
-			votante.setNombre(rs.getString(1));
-			votante.setApodo(rs.getString(2));
+			votante.setId(rs.getInt(1));
+			votante.setNombre(rs.getString(2));
+			votante.setApodo(rs.getString(3));
 			negocio.Usuario votado = new negocio.Usuario();
-			votado.setNombre(rs.getString(3));
-			votado.setApodo(rs.getString(4));
+			votado.setId(rs.getInt(4));
+			votado.setNombre(rs.getString(5));
+			votado.setApodo(rs.getString(6));
 			
 			votos.put(votante, votado);
 		}

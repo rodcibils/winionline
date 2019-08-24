@@ -474,44 +474,10 @@ public class Reportes
 					rivalP = new Paragraph("Rival: " + disputa.getPartido().getResultadoDos()
 							.getJugador().getNombre() + " (" + disputa.getPartido().getResultadoDos()
 							.getJugador().getApodo() + ")", subtitleFont);
-					if(disputa.getPartido().getResultadoUno().getGoles() > disputa.getPartido()
-							.getResultadoDos().getGoles())
-					{
-						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
-								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
-								.getPartido().getResultadoDos().getGoles()) + " (V)", subtitleFont);
-					} else if(disputa.getPartido().getResultadoUno().getGoles() < disputa.getPartido()
-							.getResultadoDos().getGoles())
-					{
-						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
-								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
-								.getPartido().getResultadoDos().getGoles()) + " (D)", subtitleFont);
-					} else {
-						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
-								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
-								.getPartido().getResultadoDos().getGoles()) + " (E)", subtitleFont);
-					}
 				} else {
 					rivalP = new Paragraph("Rival: " + disputa.getPartido().getResultadoUno()
 							.getJugador().getNombre() + " (" + disputa.getPartido().getResultadoUno()
 							.getJugador().getApodo() + ")", subtitleFont);
-					if(disputa.getPartido().getResultadoUno().getGoles() > disputa.getPartido()
-							.getResultadoDos().getGoles())
-					{
-						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
-								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
-								.getPartido().getResultadoDos().getGoles()) + " (D)", subtitleFont);
-					} else if(disputa.getPartido().getResultadoUno().getGoles() < disputa.getPartido()
-							.getResultadoDos().getGoles())
-					{
-						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
-								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
-								.getPartido().getResultadoDos().getGoles()) + " (V)", subtitleFont);
-					} else {
-						resultadoP = new Paragraph("Resultado: " + Integer.toString(disputa.getPartido()
-								.getResultadoUno().getGoles()) + " - " + Integer.toString(disputa
-								.getPartido().getResultadoDos().getGoles()) + " (E)", subtitleFont);
-					}
 				}
 				
 				Paragraph fechaPP = new Paragraph("Fecha partido: " + 
@@ -521,11 +487,8 @@ public class Reportes
 				Paragraph fechaVDP = new Paragraph("Fecha vencimiento disputa: " + 
 						onlyDate.format(disputa.getVencimiento()), subtitleFont);
 				
-				document.add(rivalP);
-				document.add(resultadoP);
-				document.add(fechaPP);
-				document.add(fechaDP);
-				document.add(fechaVDP);
+				int votosPropios = 0;
+				int votosRival = 0;
 				
 				PdfPTable votosTable = new PdfPTable(2);
 				Stream.of("Usuario", "Voto").forEach(columnTitle ->{
@@ -555,8 +518,30 @@ public class Reportes
 					votadoCell.setHorizontalAlignment(Element.ALIGN_CENTER);
 					votadoCell.setVerticalAlignment(Element.ALIGN_CENTER);
 					votosTable.addCell(votadoCell);
+					
+					if(votado.getId() == id) ++votosPropios;
+					else ++votosRival;
 				}
 				
+				if(votosPropios > votosRival) {
+					resultadoP = new Paragraph(new Phrase("Resultado: " 
+							+ Integer.toString(votosPropios) + " - " + 
+							Integer.toString(votosRival) + " (V)", subtitleFont));
+				} else if(votosPropios < votosRival){
+					resultadoP = new Paragraph(new Phrase("Resultado: " 
+							+ Integer.toString(votosPropios) + " - " + 
+							Integer.toString(votosRival) + " (D)", subtitleFont));
+				} else {
+					resultadoP = new Paragraph(new Phrase("Resultado: " 
+							+ Integer.toString(votosPropios) + " - " + 
+							Integer.toString(votosRival) + " (E)", subtitleFont));
+				}
+				
+				document.add(rivalP);
+				document.add(resultadoP);
+				document.add(fechaPP);
+				document.add(fechaDP);
+				document.add(fechaVDP);
 				document.add(votosTable);
 			}
 			
