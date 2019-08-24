@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import negocio.Evidencia;
+import utils.Log;
 import utils.Utils;
 
 /**
@@ -96,7 +97,7 @@ public class EvidenciaServlet extends HttpServlet {
 					return;
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "EvidenciaServlet : 100");
 			}
 		}
 		
@@ -125,7 +126,7 @@ public class EvidenciaServlet extends HttpServlet {
 							}
 							buffer.close();
 						}catch(Exception e) {
-							System.out.println(e.getMessage());
+							Log.getInstance().register(e, "EvidenciaServlet : 129");
 						}
 					}
 					evidencias.add(evidencia);
@@ -152,7 +153,7 @@ public class EvidenciaServlet extends HttpServlet {
 			}
 			request.setAttribute("evidencias", evidencias);
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "EvidenciaServlet : 156");
 		}
 		
 		request.setAttribute("id_disputa", idDisputa);

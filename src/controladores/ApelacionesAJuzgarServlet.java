@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class ApelacionesAJuzgarServlet
  */
@@ -82,7 +84,7 @@ public class ApelacionesAJuzgarServlet extends HttpServlet {
 				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
 				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			}catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "ApelacionesAJuzgarServlet : 87");
 			}
 		}
 		
@@ -150,7 +152,7 @@ public class ApelacionesAJuzgarServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "ApelacionesAJuzgarServlet : 155");
 		}
 		
 		request.getRequestDispatcher("listApelacionesAJuzgar.jsp").forward(request, response);

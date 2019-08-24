@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class UsuariosServlet
  */
@@ -48,15 +50,14 @@ public class UsuariosServlet extends HttpServlet {
 					request.setAttribute("challenge_success", false);
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "UsuariosServlet : 53");
 			}
 		}
 		
 		try {				
 			usuarios = datos.Usuario.getInstance().getAll(usuarioActual);
 		} catch (ClassNotFoundException | SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Log.getInstance().register(e1, "UsuariosServlet : 60");
 		}
 		
 		request.setAttribute("usuarios", usuarios);
@@ -111,7 +112,7 @@ public class UsuariosServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "UsuariosServlet : 115");
 		}
 		request.getRequestDispatcher("listUsuarios.jsp").forward(request, response);
 	}

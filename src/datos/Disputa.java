@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class Disputa 
 {
@@ -100,6 +101,103 @@ public class Disputa
 		ConnectionManager.getInstance().closeConnection();
 		
 		return count;
+	}
+	
+	public HashMap<negocio.Usuario, negocio.Usuario> getVotosIndividualizados(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT votante.id, votante.nombre, votante.apodo, "
+				+ "votado.id, votado.nombre, votado.apodo "
+				+ "FROM usuario_disputa AS ud "
+				+ "INNER JOIN usuarios AS votante ON ud.id_usuario = votante.id "
+				+ "INNER JOIN usuarios AS votado ON ud.id_voto = votado.id "
+				+ "WHERE ud.id_disputa = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		
+		HashMap<negocio.Usuario, negocio.Usuario> votos = new HashMap<>();
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Usuario votante = new negocio.Usuario();
+			votante.setId(rs.getInt(1));
+			votante.setNombre(rs.getString(2));
+			votante.setApodo(rs.getString(3));
+			negocio.Usuario votado = new negocio.Usuario();
+			votado.setId(rs.getInt(4));
+			votado.setNombre(rs.getString(5));
+			votado.setApodo(rs.getString(6));
+			
+			votos.put(votante, votado);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return votos;
+	}
+	
+	public ArrayList<negocio.Disputa> getDisputasCerradas(int id) throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT d.id_partido, d.fecha, d.vencimiento, p.fecha, r_uno.goles, r_dos.goles, "
+				+ "j_uno.id, j_uno.nombre, j_uno.apodo, "
+				+ "j_dos.id, j_dos.nombre, j_dos.apodo FROM disputas AS d "
+				+ "INNER JOIN partidos AS p ON p.id = d.id_partido "
+				+ "INNER JOIN solicitudes AS s ON s.id = p.solicitud "
+				+ "INNER JOIN resultados AS r_uno ON (r_uno.id_jugador = s.jugador_uno AND "
+				+ "r_uno.id_partido = d.id_partido) "
+				+ "INNER JOIN resultados AS r_dos ON (r_dos.id_jugador = s.jugador_dos "
+				+ "AND r_dos.id_partido = d.id_partido) "
+				+ "INNER JOIN usuarios AS j_uno ON j_uno.id = s.jugador_uno "
+				+ "INNER JOIN usuarios AS j_dos ON j_dos.id = s.jugador_dos "
+				+ "WHERE d.estado = ? AND (j_uno.id = ? OR j_dos.id = ?)";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, negocio.Estado.DISPUTA_CERRADA);
+		stmt.setInt(2, id);
+		stmt.setInt(3, id);
+		
+		ArrayList<negocio.Disputa> disputas = new ArrayList<>();
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			negocio.Disputa disputa = new negocio.Disputa();
+			negocio.Partido partido = new negocio.Partido();
+			partido.setId(rs.getInt(1));
+			disputa.setFecha(rs.getDate(2));
+			disputa.setVencimiento(rs.getDate(3));
+			partido.setFecha(rs.getDate(4));
+			negocio.Resultado resultadoUno = new negocio.Resultado();
+			resultadoUno.setGoles(rs.getInt(5));
+			negocio.Resultado resultadoDos = new negocio.Resultado();
+			resultadoDos.setGoles(rs.getInt(6));
+			negocio.Usuario jugadorUno = new negocio.Usuario();
+			jugadorUno.setId(rs.getInt(7));
+			jugadorUno.setNombre(rs.getString(8));
+			jugadorUno.setApodo(rs.getString(9));
+			negocio.Usuario jugadorDos = new negocio.Usuario();
+			jugadorDos.setId(rs.getInt(10));
+			jugadorDos.setNombre(rs.getString(11));
+			jugadorDos.setApodo(rs.getString(12));
+			resultadoUno.setJugador(jugadorUno);
+			resultadoDos.setJugador(jugadorDos);
+			partido.setResultadoUno(resultadoUno);
+			partido.setResultadoDos(resultadoDos);
+			disputa.setPartido(partido);
+			
+			disputas.add(disputa);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return disputas;
 	}
 	
 	public ArrayList<negocio.Disputa> getDisputasCerradas(int id, int skip, int limit) 

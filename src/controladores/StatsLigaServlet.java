@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import negocio.UsuarioEstadisticas;
+import utils.Log;
 import utils.Reportes;
 
 /**
@@ -129,7 +130,7 @@ public class StatsLigaServlet extends HttpServlet {
 					request.setAttribute("name", fileName);
 					request.getRequestDispatcher("downloadReporte").forward(request, response);
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					Log.getInstance().register(e, "StatsLigaServlet : 133");
 				}
 			}
 			
@@ -138,9 +139,9 @@ public class StatsLigaServlet extends HttpServlet {
 			request.setAttribute("estadisticasUsuarios", estadisticasUsuarios);
 			request.setAttribute("idLiga", idLiga);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			Log.getInstance().register(e, "StatsLigaServlet : 142");
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Log.getInstance().register(e, "StatsLigaServlet : 144");
 		}
 		request.getRequestDispatcher("estadisticasLiga.jsp").forward(request, response);
 	}

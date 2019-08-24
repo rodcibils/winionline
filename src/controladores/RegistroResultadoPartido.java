@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class RegistroResultadoPartido
  */
@@ -46,7 +48,7 @@ public class RegistroResultadoPartido extends HttpServlet {
 			request.setAttribute("partido", partido);
 			request.getRequestDispatcher("registerMatchResult.jsp").forward(request, response);
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "RegistroResultadoPartido : 51");
 		}
 	}
 
@@ -94,7 +96,7 @@ public class RegistroResultadoPartido extends HttpServlet {
 				request.setAttribute("register_success", true);
 				request.getRequestDispatcher(comingFrom).forward(request, response);
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "RegistroResultadoPartido : 99");
 			}
 			
 		} else {

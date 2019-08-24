@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class SolicitudesRecibidasLigaServlet
  */
@@ -55,7 +57,7 @@ public class SolicitudesRecibidasLigaServlet extends HttpServlet {
 					skip -= LIMIT;
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "SolicitudesRecibidasLigaServlet : 60");
 			}
 		}
 		
@@ -96,7 +98,7 @@ public class SolicitudesRecibidasLigaServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "SolicitudesRecibidasLigaServlet : 101");
 		}
 		
 		request.getRequestDispatcher("listSolicitudesRecibidasLiga.jsp").forward(request, response);

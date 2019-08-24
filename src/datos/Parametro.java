@@ -13,6 +13,7 @@ public class Parametro {
 	private static final int AVATARS = 2;
 	private static final int EVIDENCIAS = 3;
 	private static final int REPORTES = 4;
+	private static final int LOG = 5;
 	
 	public static Parametro getInstance() {
 		if(instance == null) instance = new Parametro();
@@ -122,6 +123,29 @@ public class Parametro {
 		
 		stmt = conn.prepareStatement(query);
 		stmt.setInt(1, REPORTES);
+		
+		ResultSet rs = stmt.executeQuery();
+		String path = "";
+		if(rs.next()) {
+			path = rs.getString(1);
+		}
+		
+		rs.close();
+		stmt.close();
+		ConnectionManager.getInstance().closeConnection();
+		
+		return path;
+	}
+	
+	public String getLogPath() throws ClassNotFoundException, SQLException
+	{
+		PreparedStatement stmt;
+		Connection conn = ConnectionManager.getInstance().getConnection();
+		
+		String query = "SELECT parametro FROM parametros WHERE id = ?";
+		
+		stmt = conn.prepareStatement(query);
+		stmt.setInt(1, LOG);
 		
 		ResultSet rs = stmt.executeQuery();
 		String path = "";

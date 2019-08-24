@@ -25,12 +25,13 @@ DROP TABLE IF EXISTS `apelaciones`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `apelaciones` (
-  `id_partido` int(11) NOT NULL,
+  `id_disputa` int(11) NOT NULL,
   `fecha` datetime DEFAULT NULL,
-  `resultado` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_partido`),
-  KEY `fk_apelaciones_disputa_idx` (`id_partido`),
-  CONSTRAINT `fk_apelaciones_disputa` FOREIGN KEY (`id_partido`) REFERENCES `disputas` (`id_partido`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  `cierre` datetime DEFAULT NULL,
+  `estado` int(11) NOT NULL,
+  PRIMARY KEY (`id_disputa`),
+  KEY `fk_apelaciones_disputa_idx` (`id_disputa`),
+  CONSTRAINT `fk_apelaciones_disputa` FOREIGN KEY (`id_disputa`) REFERENCES `disputas` (`id_partido`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -94,7 +95,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-INSERT INTO `estados` VALUES (14,'Disputa Apelada'),(13,'Disputa Cerrada'),(12,'Disputa En Curso'),(4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(11,'Partido Disputado'),(9,'Partido Finalizado'),(8,'Partido Pendiente'),(10,'Partido Rechazado'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
+INSERT INTO `estados` VALUES (16,'Apelacion Cerrada'),(15,'Apelacion En Curso'),(14,'Disputa Apelada'),(13,'Disputa Cerrada'),(12,'Disputa En Curso'),(4,'Liga Iniciada'),(3,'Liga No Iniciada'),(5,'Liga Terminada'),(11,'Partido Disputado'),(9,'Partido Finalizado'),(8,'Partido Pendiente'),(10,'Partido Rechazado'),(7,'Solicitud Aceptada'),(6,'Solicitud Pendiente'),(1,'Usuario Activo'),(2,'Usuario Eliminado');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +177,7 @@ CREATE TABLE `parametros` (
 
 LOCK TABLES `parametros` WRITE;
 /*!40000 ALTER TABLE `parametros` DISABLE KEYS */;
-INSERT INTO `parametros` VALUES (1,'1407661933'),(2,'/media/datos/eclipse-java/winionline/avatars'),(3,'/media/datos/eclipse-java/winionline/evidencias');
+INSERT INTO `parametros` VALUES (1,'1407661933'),(2,'/media/datos/eclipse-java/winionline/avatars'),(3,'/media/datos/eclipse-java/winionline/evidencias'),(4,'/media/datos/eclipse-java/winionline/reports'),(5,'/media/datos/eclipse-java/winionline/log');
 /*!40000 ALTER TABLE `parametros` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -314,13 +315,13 @@ DROP TABLE IF EXISTS `usuario_apelacion`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `usuario_apelacion` (
   `id_usuario` int(11) NOT NULL,
-  `id_partido` int(11) NOT NULL,
+  `id_disputa` int(11) NOT NULL,
   `voto` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id_usuario`,`id_partido`),
+  PRIMARY KEY (`id_usuario`,`id_disputa`),
   KEY `fk_usuario_apelacion_usuario_idx` (`id_usuario`),
   KEY `fk_usuario_apelacion_voto_idx` (`voto`),
-  KEY `fk_usuario_apelacion_disputa_idx` (`id_partido`),
-  CONSTRAINT `fk_usuario_apelacion_disputa` FOREIGN KEY (`id_partido`) REFERENCES `disputas` (`id_partido`),
+  KEY `fk_usuario_apelacion_disputa_idx` (`id_disputa`),
+  CONSTRAINT `fk_usuario_apelacion_disputa` FOREIGN KEY (`id_disputa`) REFERENCES `disputas` (`id_partido`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_usuario_apelacion_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_usuario_apelacion_voto` FOREIGN KEY (`voto`) REFERENCES `usuarios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -344,13 +345,13 @@ DROP TABLE IF EXISTS `usuario_disputa`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `usuario_disputa` (
   `id_usuario` int(11) NOT NULL,
-  `id_partido` int(11) NOT NULL,
+  `id_disputa` int(11) NOT NULL,
   `id_voto` int(11) NOT NULL,
-  PRIMARY KEY (`id_usuario`,`id_partido`,`id_voto`),
+  PRIMARY KEY (`id_usuario`,`id_disputa`,`id_voto`),
   KEY `fk_usuario_disputa_usuario_idx` (`id_usuario`),
-  KEY `fk_usuario_disputa_partido_idx` (`id_partido`),
+  KEY `fk_usuario_disputa_partido_idx` (`id_disputa`),
   KEY `fk_usuario_disputa_voto_idx` (`id_voto`),
-  CONSTRAINT `fk_usuario_disputa_partido` FOREIGN KEY (`id_partido`) REFERENCES `partidos` (`id`),
+  CONSTRAINT `fk_usuario_disputa_partido` FOREIGN KEY (`id_disputa`) REFERENCES `partidos` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_usuario_disputa_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id`),
   CONSTRAINT `fk_usuario_disputa_voto` FOREIGN KEY (`id_voto`) REFERENCES `usuarios` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -499,4 +500,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-11 16:57:29
+-- Dump completed on 2019-08-24 16:15:00

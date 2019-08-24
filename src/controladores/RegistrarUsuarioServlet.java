@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import utils.Log;
 import utils.Utils;
 
 /**
@@ -51,8 +52,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 			request.setAttribute("has_datepicker", true);
 			request.getRequestDispatcher("register.jsp").forward(request, response);
 		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.getInstance().register(e, "RegistrarUsuarioServlet : 55");
 		}
 	}
 
@@ -175,7 +175,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 							Files.copy(stream, file.toPath());
 							usuario.setAvatar(file.toPath().toString());
 						} catch(Exception e) {
-							System.out.println(e.getMessage());
+							Log.getInstance().register(e, "RegistrarUsuarioServlet : 178");
 						}
 					}
 					dUsuario.insert(usuario);
@@ -194,7 +194,7 @@ public class RegistrarUsuarioServlet extends HttpServlet {
 					request.getRequestDispatcher("register.jsp").forward(request, response);
 				}
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "RegistrarUsuarioServlet : 197");
 			}
 		}
 	}

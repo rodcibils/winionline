@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import negocio.Usuario;
+import utils.Log;
 
 /**
  * Servlet implementation class LoginUsuarioServlet
@@ -83,7 +84,7 @@ public class LoginUsuarioServlet extends HttpServlet {
 					request.getRequestDispatcher("login.jsp").forward(request, response);
 				}
 			}catch (Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "LoginUsuarioServlet : 87");
 			}
 		}
 	}

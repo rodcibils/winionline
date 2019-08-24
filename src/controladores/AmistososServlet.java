@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class AmistososServlet
  */
@@ -57,7 +59,7 @@ public class AmistososServlet extends HttpServlet {
 							+ "correctamente");
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "AmistososServlet : 62");
 			}
 		}
 		
@@ -82,7 +84,7 @@ public class AmistososServlet extends HttpServlet {
 					return;
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "AmistososServlet : 87");
 			}
 		}
 		
@@ -128,7 +130,7 @@ public class AmistososServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "Amistosos Servlet : 133");
 		}
 		
 		request.getRequestDispatcher("listAmistosos.jsp").forward(request, response);

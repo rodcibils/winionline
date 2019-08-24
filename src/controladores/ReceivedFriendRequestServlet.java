@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class ReceivedFriendRequestServlet
  */
@@ -55,7 +57,7 @@ public class ReceivedFriendRequestServlet extends HttpServlet {
 					skip -= LIMIT;
 				}
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "ReceivedFriendRequestServlet : 60");
 			}
 		}
 		
@@ -96,7 +98,7 @@ public class ReceivedFriendRequestServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "ReceivedFriendRequestServlet : 101");
 		}
 		
 		request.getRequestDispatcher("listReceivedFriendlyMatchRequest.jsp").forward(request, response);

@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class MisLigasServlet
  */
@@ -42,7 +44,7 @@ public class MisLigasServlet extends HttpServlet {
 				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 				request.setAttribute("unsuscribe_success", "Se ha removido correctamente la inscripcion a la liga");
 			} catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "MisLigasServlet : 47");
 			}
 		}
 		
@@ -95,7 +97,7 @@ public class MisLigasServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "MisLigasServlet : 100");
 		}
 		
 		request.getRequestDispatcher("misLigas.jsp").forward(request, response);

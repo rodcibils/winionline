@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
 import utils.Reportes;
 
 /**
@@ -42,7 +43,7 @@ public class IndexServlet extends HttpServlet {
 							.getCountApelacionesAJuzgar(usuario.getId());
 					request.setAttribute("apelaciones_admin", apelacionesAdmin);
 				} catch(Exception e) {
-					System.out.println(e.getMessage());
+					Log.getInstance().register(e, "Index Servlet : 46");
 				}
 			}
 			
@@ -164,7 +165,7 @@ public class IndexServlet extends HttpServlet {
 			}
 			
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "Index Servlet : 168");
 		}
 		
 		request.getRequestDispatcher("index.jsp").forward(request, response);

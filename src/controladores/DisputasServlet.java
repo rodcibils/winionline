@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class DisputasServlet
  */
@@ -44,7 +46,7 @@ public class DisputasServlet extends HttpServlet {
 				request.getRequestDispatcher("index").forward(request, response);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "DisputasServlet : 49");
 		}
 		
 		String toSearch = request.getParameter("search");
@@ -63,7 +65,7 @@ public class DisputasServlet extends HttpServlet {
 				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
 				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			}catch(Exception e) {
-				System.out.println(e.getMessage());
+				Log.getInstance().register(e, "DisputasServlet : 68");
 			}
 		}
 		
@@ -101,7 +103,7 @@ public class DisputasServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "DisputasServlet : 106");
 		}
 		
 		request.getRequestDispatcher("listDisputas.jsp").forward(request, response);

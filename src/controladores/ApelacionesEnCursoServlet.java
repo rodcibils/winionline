@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class ApelacionesEnCursoServlet
  */
@@ -98,7 +100,7 @@ public class ApelacionesEnCursoServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "ApelacionesEnCursoServlet : 103");
 		}
 		
 		request.getRequestDispatcher("listApelacionesEnCurso.jsp").forward(request, response);

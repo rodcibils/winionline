@@ -1,5 +1,7 @@
 package negocio;
 
+import java.util.HashMap;
+
 public class Apelacion {
 	public static int CANT_JUECES = 5;
 	
@@ -9,6 +11,8 @@ public class Apelacion {
 	
 	private int votosUno;
 	private int votosDos;
+	
+	private HashMap<Usuario, Usuario> votosIndividualizados;
 
 	public java.sql.Date getFecha() {
 		return fecha;
@@ -48,5 +52,13 @@ public class Apelacion {
 
 	public void setVotosDos(int votosDos) {
 		this.votosDos = votosDos;
+	}
+
+	public HashMap<Usuario, Usuario> getVotosIndividualizados() {
+		return votosIndividualizados;
+	}
+
+	public void setVotosIndividualizados(HashMap<Usuario, Usuario> votosIndividualizados) {
+		this.votosIndividualizados = votosIndividualizados;
 	}
 }

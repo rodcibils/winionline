@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class DownloadReporteServlet
  */
@@ -49,7 +51,7 @@ public class DownloadReporteServlet extends HttpServlet {
 			stream.close();
 			file.delete();
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "DownloadReporteServlet : 54");
 		}
 	}
 

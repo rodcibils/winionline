@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import utils.Log;
+
 /**
  * Servlet implementation class ApelacionesCerradasServlet
  */
@@ -102,7 +104,7 @@ public class ApelacionesCerradasServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			Log.getInstance().register(e, "ApelacionesCerradasServlet : 107");
 		}
 		
 		request.getRequestDispatcher("listMisApelacionesCerradas.jsp").forward(request, response);

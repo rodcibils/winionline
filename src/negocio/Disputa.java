@@ -1,8 +1,10 @@
 package negocio;
 
+import java.util.HashMap;
+
 public class Disputa {
 	public static final int MAX_DIAS_DISPUTA = 10;
-	public static final int ANTIGUEDAD_PARA_VOTAR = 15;
+	public static final int ANTIGUEDAD_PARA_VOTAR = 0;
 	public static final int MAX_DIAS_APELACION = 10;
 	
 	private Partido partido;
@@ -13,6 +15,8 @@ public class Disputa {
 	private int votosUno;
 	private int votosDos;
 	private boolean apelable;
+	
+	private HashMap<Usuario, Usuario> votosIndividualizados;
 	
 	public Partido getPartido() {
 		return partido;
@@ -68,5 +72,13 @@ public class Disputa {
 
 	public void setApelable(boolean apelable) {
 		this.apelable = apelable;
+	}
+
+	public HashMap<Usuario, Usuario> getVotosIndividualizados() {
+		return votosIndividualizados;
+	}
+
+	public void setVotosIndividualizados(HashMap<Usuario, Usuario> votosIndividualizados) {
+		this.votosIndividualizados = votosIndividualizados;
 	}
 }
