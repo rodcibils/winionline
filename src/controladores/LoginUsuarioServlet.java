@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import datos.ConnectionManager;
 import negocio.Usuario;
 import utils.Log;
 
@@ -84,7 +86,12 @@ public class LoginUsuarioServlet extends HttpServlet {
 					request.getRequestDispatcher("login.jsp").forward(request, response);
 				}
 			}catch (Exception e) {
-				Log.getInstance().register(e, "LoginUsuarioServlet : 87");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "LoginUsuarioServlet : 92");
+				}
+				Log.getInstance().register(e, "LoginUsuarioServlet : 94");
 			}
 		}
 	}

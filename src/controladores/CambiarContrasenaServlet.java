@@ -1,12 +1,15 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -82,7 +85,12 @@ public class CambiarContrasenaServlet extends HttpServlet {
 					request.getRequestDispatcher("editPassword.jsp").forward(request, response);
 				}
 			} catch(Exception e) {
-				Log.getInstance().register(e, "CambiarContrasenaServlet : 85");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "CambiarContrasenaServlet : 91");
+				}
+				Log.getInstance().register(e, "CambiarContrasenaServlet : 93");
 			}
 		}
 	}

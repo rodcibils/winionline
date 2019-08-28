@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -50,14 +51,24 @@ public class UsuariosServlet extends HttpServlet {
 					request.setAttribute("challenge_success", false);
 				}
 			} catch(Exception e) {
-				Log.getInstance().register(e, "UsuariosServlet : 53");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "UsuariosServlet : 57");
+				}
+				Log.getInstance().register(e, "UsuariosServlet : 59");
 			}
 		}
 		
 		try {				
 			usuarios = datos.Usuario.getInstance().getAll(usuarioActual);
 		} catch (ClassNotFoundException | SQLException e1) {
-			Log.getInstance().register(e1, "UsuariosServlet : 60");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e) {
+				Log.getInstance().register(e1, "UsuariosServlet : 69");
+			}
+			Log.getInstance().register(e1, "UsuariosServlet : 71");
 		}
 		
 		request.setAttribute("usuarios", usuarios);
@@ -112,7 +123,12 @@ public class UsuariosServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "UsuariosServlet : 115");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "UsuariosServlet : 129");
+			}
+			Log.getInstance().register(e, "UsuariosServlet : 131");
 		}
 		request.getRequestDispatcher("listUsuarios.jsp").forward(request, response);
 	}

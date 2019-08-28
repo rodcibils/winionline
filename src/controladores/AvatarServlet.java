@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -42,7 +44,12 @@ public class AvatarServlet extends HttpServlet {
 			try {
 				usuario = datos.Usuario.getInstance().getOne(Integer.parseInt(idUsuario));
 			}catch(Exception e) {
-				Log.getInstance().register(e, "AvatarServlet : 45");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "AvatarServlet : 50");
+				}
+				Log.getInstance().register(e, "AvatarServlet : 52");
 			}
 		}
 		response.setContentType("image");

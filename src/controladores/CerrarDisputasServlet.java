@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -68,7 +70,12 @@ public class CerrarDisputasServlet extends HttpServlet {
 			}
 			
 		}catch(Exception e) {
-			Log.getInstance().register(e, "CerrarDisputasServlet : 71");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "CerrarDisputasServlet : 76");
+			}
+			Log.getInstance().register(e, "CerrarDisputasServlet : 78");
 		}
 		
 		response.sendRedirect("index?disputas_success=true");

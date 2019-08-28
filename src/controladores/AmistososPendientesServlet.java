@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -66,7 +68,12 @@ public class AmistososPendientesServlet extends HttpServlet {
 					skip -= 10;
 				}
 			} catch(Exception e) {
-				Log.getInstance().register(e, "Amistosos Pendientes Servlet : 69");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "Amistosos Pendientes Servlet : 74");
+				}
+				Log.getInstance().register(e, "Amistosos Pendientes Servlet : 76");
 			}
 		}
 		
@@ -99,7 +106,12 @@ public class AmistososPendientesServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "AmistososPendientesServlet : 102");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "AmistososPendientesServlet : 112");
+			}
+			Log.getInstance().register(e, "AmistososPendientesServlet : 114");
 		}
 		
 		request.getRequestDispatcher("listPendingFriendlyMatch.jsp").forward(request, response);

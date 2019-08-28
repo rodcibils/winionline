@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -46,7 +48,12 @@ public class DisputasServlet extends HttpServlet {
 				request.getRequestDispatcher("index").forward(request, response);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "DisputasServlet : 49");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "DisputasServlet : 54");
+			}
+			Log.getInstance().register(e, "DisputasServlet : 56");
 		}
 		
 		String toSearch = request.getParameter("search");
@@ -65,7 +72,12 @@ public class DisputasServlet extends HttpServlet {
 				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
 				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			}catch(Exception e) {
-				Log.getInstance().register(e, "DisputasServlet : 68");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "DisputasServlet : 78");
+				}
+				Log.getInstance().register(e, "DisputasServlet : 80");
 			}
 		}
 		
@@ -103,7 +115,12 @@ public class DisputasServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "DisputasServlet : 106");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "DisputasServlet : 121");
+			}
+			Log.getInstance().register(e, "DisputasServlet : 123");
 		}
 		
 		request.getRequestDispatcher("listDisputas.jsp").forward(request, response);

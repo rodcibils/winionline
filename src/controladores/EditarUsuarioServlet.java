@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import datos.ConnectionManager;
 import utils.Log;
 import utils.Utils;
 
@@ -56,7 +58,12 @@ public class EditarUsuarioServlet extends HttpServlet {
 			}
 			request.getRequestDispatcher("editUser.jsp").forward(request, response);
 		} catch(Exception e) {
-			e.printStackTrace();
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "EditarUsuarioServlet : 64");
+			}
+			Log.getInstance().register(e, "EditarUsuarioServlet : 66");
 		}
 	}
 
@@ -160,7 +167,12 @@ public class EditarUsuarioServlet extends HttpServlet {
 				request.getSession().setAttribute("usuario", usuario);
 				response.sendRedirect("index.jsp?update_success=true");
 			} catch(Exception e) {
-				Log.getInstance().register(e, "EditarUsuarioServlet : 163");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "EditarUsuarioServlet : 173");
+				}
+				Log.getInstance().register(e, "EditarUsuarioServlet : 175");
 			}
 		}
 	}

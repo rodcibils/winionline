@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -47,8 +48,12 @@ public class InscripcionLigaServlet extends HttpServlet {
 				datos.Liga.getInstance().inscribir(usuarioActual.getId(), idLiga);
 				request.setAttribute("inscripto", "Se ha inscripto a la liga correctamente");
 			} catch (ClassNotFoundException | SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "InscripcionLigaServlet : 54");
+				}
+				Log.getInstance().register(e, "InscripcionLigaServlet : 56");
 			}
 		}
 		
@@ -101,7 +106,12 @@ public class InscripcionLigaServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "InscripcionLigaServlet : 104");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "InscripcionLigaServlet : 112");
+			}
+			Log.getInstance().register(e, "InscripcionLigaServlet : 114");
 		}
 		
 		request.getRequestDispatcher("inscripcionALiga.jsp").forward(request, response);

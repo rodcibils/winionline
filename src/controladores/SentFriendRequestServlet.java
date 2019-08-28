@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -56,7 +58,12 @@ public class SentFriendRequestServlet extends HttpServlet {
 				request.setAttribute("friendly_sol_deleted", true);
 				if((count-1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			}catch(Exception e) {
-				Log.getInstance().register(e, "SentFriendRequestServlet : 59");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "SentFriendRequestServlet : 64");
+				}
+				Log.getInstance().register(e, "SentFriendRequestServlet : 66");
 			}
 		}
 		
@@ -97,7 +104,12 @@ public class SentFriendRequestServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "SentFriendRequestServlet : 100");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "SentFriendRequestServlet : 110");
+			}
+			Log.getInstance().register(e, "SentFriendRequestServlet : 112");
 		}
 		
 		request.getRequestDispatcher("listSentFriendlyMatchRequest.jsp").forward(request, response);
