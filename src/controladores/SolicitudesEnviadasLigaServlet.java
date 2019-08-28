@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -55,7 +57,12 @@ public class SolicitudesEnviadasLigaServlet extends HttpServlet {
 				request.setAttribute("sol_deleted", true);
 				if((count-1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			}catch(Exception e) {
-				Log.getInstance().register(e, "SolicitudesEnviadasLigaServlet : 58");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "SolicitudesEnviadasLigaServlet : 63");
+				}
+				Log.getInstance().register(e, "SolicitudesEnviadasLigaServlet : 65");
 			}
 		}
 		
@@ -96,7 +103,12 @@ public class SolicitudesEnviadasLigaServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "SolicitudesEnviadasLigaServlet : 99");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "SolicitudesEnviadasLigaServlet : 109");
+			}
+			Log.getInstance().register(e, "SolicitudesEnviadasLigaServlet : 111");
 		}
 		
 		request.getRequestDispatcher("listSolicitudesEnviadasLiga.jsp").forward(request, response);

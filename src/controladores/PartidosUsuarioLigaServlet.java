@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 
@@ -60,7 +62,12 @@ public class PartidosUsuarioLigaServlet extends HttpServlet {
 							+ "correctamente");
 				}
 			} catch(Exception e) {
-				Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 63");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 68");
+				}
+				Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 70");
 			}
 		}
 		
@@ -85,7 +92,12 @@ public class PartidosUsuarioLigaServlet extends HttpServlet {
 					return;
 				}
 			} catch(Exception e) {
-				Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 88");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 98");
+				}
+				Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 100");
 			}
 		}
 		
@@ -148,7 +160,12 @@ public class PartidosUsuarioLigaServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 151");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 166");
+			}
+			Log.getInstance().register(e, "PartidosUsuarioLigaServlet : 168");
 		}
 		request.getRequestDispatcher("partidosUsuarioLiga.jsp").forward(request, response);
 	}

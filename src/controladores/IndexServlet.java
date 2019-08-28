@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 import utils.Reportes;
 
@@ -43,6 +45,7 @@ public class IndexServlet extends HttpServlet {
 							.getCountApelacionesAJuzgar(usuario.getId());
 					request.setAttribute("apelaciones_admin", apelacionesAdmin);
 				} catch(Exception e) {
+					ConnectionManager.getInstance().closeConnection();
 					Log.getInstance().register(e, "Index Servlet : 46");
 				}
 			}
@@ -165,7 +168,12 @@ public class IndexServlet extends HttpServlet {
 			}
 			
 		} catch(Exception e) {
-			Log.getInstance().register(e, "Index Servlet : 168");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "Index Servlet : 174");
+			}
+			Log.getInstance().register(e, "Index Servlet : 176");
 		}
 		
 		request.getRequestDispatcher("index.jsp").forward(request, response);

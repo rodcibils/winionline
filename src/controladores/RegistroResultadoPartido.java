@@ -1,12 +1,15 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -48,7 +51,12 @@ public class RegistroResultadoPartido extends HttpServlet {
 			request.setAttribute("partido", partido);
 			request.getRequestDispatcher("registerMatchResult.jsp").forward(request, response);
 		} catch(Exception e) {
-			Log.getInstance().register(e, "RegistroResultadoPartido : 51");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "RegistroResultadoPartido : 57");
+			}
+			Log.getInstance().register(e, "RegistroResultadoPartido : 59");
 		}
 	}
 
@@ -96,7 +104,12 @@ public class RegistroResultadoPartido extends HttpServlet {
 				request.setAttribute("register_success", true);
 				request.getRequestDispatcher(comingFrom).forward(request, response);
 			} catch(Exception e) {
-				Log.getInstance().register(e, "RegistroResultadoPartido : 99");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "RegistroResultadoPartido : 110");
+				}
+				Log.getInstance().register(e, "RegistroResultadoPartido : 112");
 			}
 			
 		} else {

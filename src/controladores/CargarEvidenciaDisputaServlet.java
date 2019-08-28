@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import datos.ConnectionManager;
 import negocio.Evidencia;
 import utils.Log;
 import utils.Utils;
@@ -123,7 +125,12 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 			count = evidencias.size();
 			request.setAttribute("evidencias", evidencias);
 		} catch(Exception e) {
-			Log.getInstance().register(e, "CargarEvidenciaDisputaServlet : 126");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "CargarEvidenciaDisputaServlet : 131");
+			}
+			Log.getInstance().register(e, "CargarEvidenciaDisputaServlet : 133");
 		}
 		
 		String err_video = request.getParameter("err_video");
@@ -161,10 +168,11 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 										Integer.toString(count) + "." + ext);
 								Files.copy(stream, file.toPath());
 							} catch(Exception e) {
-								Log.getInstance().register(e, "CargarEvidenciaDisputaSerlvet : 164");
+								ConnectionManager.getInstance().closeConnection();
+								Log.getInstance().register(e, "CargarEvidenciaDisputaSerlvet : 173");
 							}
 						} catch(Exception e) {
-							Log.getInstance().register(e, "CargarEvidenciaServlet : 167");
+							Log.getInstance().register(e, "CargarEvidenciaServlet : 175");
 						}
 					} else {
 						request.setAttribute("err_imagen", "El formato de imagen cargada no es valido");
@@ -182,7 +190,12 @@ public class CargarEvidenciaDisputaServlet extends HttpServlet {
 						List<String> content = Arrays.asList(video);
 						Files.write(file, content, StandardCharsets.UTF_8);
 					} catch(Exception e) {
-						Log.getInstance().register(e, "CargarEvidenciaDisputaServlet : 185");
+						try {
+							ConnectionManager.getInstance().closeConnection();
+						} catch (SQLException e1) {
+							Log.getInstance().register(e, "CargarEvidenciaDisputaServlet : 196");
+						}
+						Log.getInstance().register(e, "CargarEvidenciaDisputaServlet : 198");
 					}
 				} else {
 					request.setAttribute("err_video", "Las unicas url de video aceptadas deben ser de Youtube");

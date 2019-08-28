@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -44,7 +46,12 @@ public class MisLigasServlet extends HttpServlet {
 				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 				request.setAttribute("unsuscribe_success", "Se ha removido correctamente la inscripcion a la liga");
 			} catch(Exception e) {
-				Log.getInstance().register(e, "MisLigasServlet : 47");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "MisLigasServlet : 52");
+				}
+				Log.getInstance().register(e, "MisLigasServlet : 54");
 			}
 		}
 		
@@ -97,7 +104,12 @@ public class MisLigasServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "MisLigasServlet : 100");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "MisLigasServlet : 110");
+			}
+			Log.getInstance().register(e, "MisLigasServlet : 112");
 		}
 		
 		request.getRequestDispatcher("misLigas.jsp").forward(request, response);

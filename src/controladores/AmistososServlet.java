@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -59,7 +61,12 @@ public class AmistososServlet extends HttpServlet {
 							+ "correctamente");
 				}
 			} catch(Exception e) {
-				Log.getInstance().register(e, "AmistososServlet : 62");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "AmistososServlet : 67");
+				}
+				Log.getInstance().register(e, "AmistososServlet : 69");
 			}
 		}
 		
@@ -84,7 +91,12 @@ public class AmistososServlet extends HttpServlet {
 					return;
 				}
 			} catch(Exception e) {
-				Log.getInstance().register(e, "AmistososServlet : 87");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "AmistososServlet : 97");
+				}
+				Log.getInstance().register(e, "AmistososServlet : 99");
 			}
 		}
 		
@@ -130,7 +142,12 @@ public class AmistososServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "Amistosos Servlet : 133");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "Amistosos Servlet : 148");
+			}
+			Log.getInstance().register(e, "Amistosos Servlet : 150");
 		}
 		
 		request.getRequestDispatcher("listAmistosos.jsp").forward(request, response);

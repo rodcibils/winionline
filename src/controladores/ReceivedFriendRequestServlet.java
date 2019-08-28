@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -57,7 +59,12 @@ public class ReceivedFriendRequestServlet extends HttpServlet {
 					skip -= LIMIT;
 				}
 			} catch(Exception e) {
-				Log.getInstance().register(e, "ReceivedFriendRequestServlet : 60");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "ReceivedFriendRequestServlet : 65");
+				}
+				Log.getInstance().register(e, "ReceivedFriendRequestServlet : 67");
 			}
 		}
 		
@@ -98,7 +105,12 @@ public class ReceivedFriendRequestServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		} catch(Exception e) {
-			Log.getInstance().register(e, "ReceivedFriendRequestServlet : 101");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "ReceivedFriendRequestServlet : 111");
+			}
+			Log.getInstance().register(e, "ReceivedFriendRequestServlet : 113");
 		}
 		
 		request.getRequestDispatcher("listReceivedFriendlyMatchRequest.jsp").forward(request, response);

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import negocio.Evidencia;
 import utils.Log;
 import utils.Utils;
@@ -97,7 +99,12 @@ public class EvidenciaServlet extends HttpServlet {
 					return;
 				}
 			} catch(Exception e) {
-				Log.getInstance().register(e, "EvidenciaServlet : 100");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "EvidenciaServlet : 105");
+				}
+				Log.getInstance().register(e, "EvidenciaServlet : 107");
 			}
 		}
 		
@@ -153,7 +160,12 @@ public class EvidenciaServlet extends HttpServlet {
 			}
 			request.setAttribute("evidencias", evidencias);
 		}catch(Exception e) {
-			Log.getInstance().register(e, "EvidenciaServlet : 156");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "EvidenciaServlet : 166");
+			}
+			Log.getInstance().register(e, "EvidenciaServlet : 168");
 		}
 		
 		request.setAttribute("id_disputa", idDisputa);

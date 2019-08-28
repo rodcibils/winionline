@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 import utils.Utils;
 
@@ -50,7 +52,12 @@ public class DownloadEvidenciaServlet extends HttpServlet {
 			in.close();
 			out.flush();
 		} catch (Exception e) {
-			Log.getInstance().register(e, "DownloadEvidenciaServlet : 53");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "DownloadEvidenciaServlet : 58");
+			}
+			Log.getInstance().register(e, "DownloadEvidenciaServlet : 60");
 		}
 	}
 

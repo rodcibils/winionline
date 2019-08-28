@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -50,8 +51,12 @@ public class NuevaLigaServlet extends HttpServlet {
 					break;
 			}
 		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "NuevaLigaServlet : 57");
+			}
+			Log.getInstance().register(e, "NuevaLigaServlet : 59");
 		}
 
 		request.getRequestDispatcher("newLeague.jsp").forward(request, response);
@@ -200,7 +205,12 @@ public class NuevaLigaServlet extends HttpServlet {
 				
 				response.sendRedirect("wwligas?new_league_success=true");
 			} catch(Exception e) {
-				Log.getInstance().register(e, "NuevaLigaServlet : 203");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "NuevaLigaServlet : 211");
+				}
+				Log.getInstance().register(e, "NuevaLigaServlet : 213");
 			}
 		}
 	}

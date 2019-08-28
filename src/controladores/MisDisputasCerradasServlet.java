@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -49,7 +51,12 @@ public class MisDisputasCerradasServlet extends HttpServlet {
 				request.setAttribute("apelar_success", "Disputa apelada con exito");
 				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			} catch(Exception e) {
-				Log.getInstance().register(e, "MisDisputasCerradasServlet : 52");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "MisDisputasCerradasServlet : 57");
+				}
+				Log.getInstance().register(e, "MisDisputasCerradasServlet : 59");
 			}
 		}
 		
@@ -122,7 +129,12 @@ public class MisDisputasCerradasServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		}catch(Exception e) {
-			System.out.println(e.getMessage());
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "MisDisputasCerradasServlet : 135");
+			}
+			Log.getInstance().register(e, "MisDisputasCerradasServlet : 137");
 		}
 		
 		request.getRequestDispatcher("listMisDisputasCerradas.jsp").forward(request, response);

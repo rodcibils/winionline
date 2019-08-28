@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 import utils.Reportes;
 
@@ -51,7 +53,12 @@ public class ReporteConflictoServlet extends HttpServlet {
 				request.setAttribute("name", filename);
 				request.getRequestDispatcher("downloadReporte").forward(request, response);
 			}catch(Exception e) {
-				Log.getInstance().register(e, "ReporteConflictoServlet : 54");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "ReporteConflictoServlet : 59");
+				}
+				Log.getInstance().register(e, "ReporteConflictoServlet : 61");
 			}
 		} else if(item.contentEquals("apelaciones")) {
 			try {
@@ -69,7 +76,12 @@ public class ReporteConflictoServlet extends HttpServlet {
 				request.setAttribute("name", filename);
 				request.getRequestDispatcher("downloadReporte").forward(request, response);
 			}catch(Exception e) {
-				Log.getInstance().register(e, "ReporteConflictoServlet : 72");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "ReporteConflictoServlet : 82");
+				}
+				Log.getInstance().register(e, "ReporteConflictoServlet : 84");
 			}
 		}
 	}

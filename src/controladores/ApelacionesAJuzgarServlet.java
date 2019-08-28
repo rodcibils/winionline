@@ -1,6 +1,7 @@
 package controladores;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import datos.ConnectionManager;
 import utils.Log;
 
 /**
@@ -84,7 +86,12 @@ public class ApelacionesAJuzgarServlet extends HttpServlet {
 				request.setAttribute("vote_success", "El voto ha sido registrado exitosamente");
 				if((count - 1) % LIMIT == 0 && skip != 0) skip -= LIMIT;
 			}catch(Exception e) {
-				Log.getInstance().register(e, "ApelacionesAJuzgarServlet : 87");
+				try {
+					ConnectionManager.getInstance().closeConnection();
+				} catch (SQLException e1) {
+					Log.getInstance().register(e, "ApelacionesAJuzgarServlet : 92");
+				}
+				Log.getInstance().register(e, "ApelacionesAJuzgarServlet : 94");
 			}
 		}
 		
@@ -152,7 +159,12 @@ public class ApelacionesAJuzgarServlet extends HttpServlet {
 				request.setAttribute("count", count);
 			}
 		}catch(Exception e) {
-			Log.getInstance().register(e, "ApelacionesAJuzgarServlet : 155");
+			try {
+				ConnectionManager.getInstance().closeConnection();
+			} catch (SQLException e1) {
+				Log.getInstance().register(e, "ApelacionesAJuzgarServlet : 165");
+			}
+			Log.getInstance().register(e, "ApelacionesAJuzgarServlet : 167");
 		}
 		
 		request.getRequestDispatcher("listApelacionesAJuzgar.jsp").forward(request, response);
